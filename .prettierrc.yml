@@ -1,5 +1,6 @@
 overrides:
-  - files: "*.js"
+  - files: "*.ts"
     options:
       singleQuote: true
       trailingComma: all
+      tabWidth: 4
