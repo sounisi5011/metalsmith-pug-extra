@@ -49,5 +49,18 @@
     "sort-package-json": "^1.22.1",
     "ts-node": "^8.2.0",
     "typescript": "^3.5.1"
+  },
+  "ava": {
+    "files": [
+      "./test/"
+    ],
+    "snapshotDir": "./test/.snapshots/ava/",
+    "compileEnhancements": false,
+    "require": [
+      "ts-node/register/transpile-only"
+    ],
+    "extensions": [
+      "ts"
+    ]
   }
 }
