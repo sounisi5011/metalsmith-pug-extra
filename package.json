@@ -8,7 +8,9 @@
   "author": "sounisi5011",
   "main": "dist/index",
   "scripts": {
-    "lint": "eslint --ext .ts ./"
+    "lint": "eslint --ext .ts ./",
+    "test": "run-s lint test:ava",
+    "test:ava": "ava"
   },
   "husky": {
     "hooks": {
@@ -33,6 +35,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
+    "ava": "^2.1.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.3.0",
     "eslint-config-standard": "^12.0.0",
@@ -43,9 +46,24 @@
     "eslint-plugin-standard": "^4.0.0",
     "husky": "^2.4.1",
     "lint-staged": "^8.2.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
     "prettier-package-json": "^2.1.0",
     "sort-package-json": "^1.22.1",
+    "ts-node": "^8.2.0",
     "typescript": "^3.5.1"
+  },
+  "ava": {
+    "files": [
+      "./test/"
+    ],
+    "snapshotDir": "./test/.snapshots/ava/",
+    "compileEnhancements": false,
+    "require": [
+      "ts-node/register/transpile-only"
+    ],
+    "extensions": [
+      "ts"
+    ]
   }
 }
