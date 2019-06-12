@@ -29,6 +29,8 @@
     "eslint-plugin-standard": "^4.0.0",
     "husky": "^2.4.1",
     "lint-staged": "^8.2.0",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "prettier-package-json": "^2.1.0",
+    "sort-package-json": "^1.22.1"
   }
 }
