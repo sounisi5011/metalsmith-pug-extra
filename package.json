@@ -8,7 +8,9 @@
   "author": "sounisi5011",
   "main": "dist/index",
   "scripts": {
-    "lint": "eslint --ext .ts ./"
+    "lint": "eslint --ext .ts ./",
+    "test": "run-s lint test:ava",
+    "test:ava": "ava"
   },
   "husky": {
     "hooks": {
