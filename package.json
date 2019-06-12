@@ -6,5 +6,10 @@
   "repository": "git@github.com:sounisi5011/metalsmith-pug-extra.git",
   "license": "MIT",
   "author": "sounisi5011",
-  "main": "dist/index"
+  "main": "dist/index",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "husky": "^2.4.1",
+    "lint-staged": "^8.2.0"
+  }
 }
