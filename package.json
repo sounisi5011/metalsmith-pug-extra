@@ -1,0 +1,10 @@
+{
+  "name": "metalsmith-pug-extra",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Metalsmith plugin to convert or compile and render Pug files.",
+  "repository": "git@github.com:sounisi5011/metalsmith-pug-extra.git",
+  "license": "MIT",
+  "author": "sounisi5011",
+  "main": "dist/index"
+}
