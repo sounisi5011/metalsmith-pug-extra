@@ -25,7 +25,6 @@ interface Options extends pug.Options {
     renamer: (filename: string) => string;
     locals: pug.LocalsObject;
     useMetadata: boolean;
-    pugOptions: pug.Options;
 }
 
 function addFile(
@@ -57,7 +56,6 @@ async function render(
         renamer,
         locals,
         useMetadata,
-        pugOptions: pugOpts,
         ...otherOpts
     } = options;
 
@@ -67,7 +65,6 @@ async function render(
 
     const pugOptions: pug.Options = {
         ...otherOpts,
-        ...pugOpts,
         filename: metalsmith.path(metalsmith.source(), filename),
     };
 
@@ -89,7 +86,6 @@ const convertDefaultOptions: Options = {
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
     locals: {},
     useMetadata: false,
-    pugOptions: {},
 };
 
 export default function convert(
