@@ -85,7 +85,9 @@ async function render(
     const newFilename: string = options.renamer(filename);
     addFile(files, newFilename, convertedText);
 
-    delete files[filename];
+    if (filename !== newFilename) {
+        delete files[filename];
+    }
 }
 
 const convertDefaultOptions: Options = {
