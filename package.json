@@ -36,12 +36,12 @@
     ]
   },
   "dependencies": {
+    "@types/metalsmith": "^2.3.0",
+    "@types/pug": "^2.0.4",
     "multimatch": "^4.0.0",
     "pug": "^2.0.3"
   },
   "devDependencies": {
-    "@types/metalsmith": "^2.3.0",
-    "@types/pug": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
     "ava": "^2.1.0",
