@@ -9,7 +9,7 @@
   "main": "dist/index",
   "scripts": {
     "lint": "run-p lint:*",
-    "lint:eslint": "eslint --ext .ts ./",
+    "lint:eslint": "eslint --ext .ts --ignore-pattern ./.gitignore ./",
     "lint:tsc-src": "tsc --noEmit",
     "lint:tsc-test": "tsc -p ./test/ --noEmit",
     "test": "run-s lint test:ava",
