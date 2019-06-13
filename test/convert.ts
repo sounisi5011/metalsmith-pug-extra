@@ -315,3 +315,27 @@ test.serial(
             });
         }),
 );
+
+test.serial(
+    'should pass options to pug',
+    t =>
+        new Promise(resolve => {
+            const metalsmith = createMetalsmith().use(
+                pugConvert({
+                    doctype: 'xml',
+                }),
+            );
+
+            metalsmith.build(err => {
+                t.is(err, null, 'No build error');
+
+                assertFileContentsEquals(
+                    t,
+                    destPath(metalsmith, 'self-closing.html'),
+                    '<br></br>',
+                ).then(() => {
+                    resolve();
+                });
+            });
+        }),
+);

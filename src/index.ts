@@ -20,12 +20,10 @@ function isFile(value: unknown): value is File {
     return false;
 }
 
-interface Options {
+interface Options extends pug.Options {
     pattern: string | string[];
     renamer: (filename: string) => string;
     locals: pug.LocalsObject;
-    /** @see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/pug/index.d.ts#L28 */
-    filters: unknown;
     useMetadata: boolean;
     pugOptions: pug.Options;
 }
@@ -54,35 +52,31 @@ async function render(
         return;
     }
 
-    const locals: pug.LocalsObject = options.useMetadata
-        ? {
-              ...options.locals,
-              ...metalsmith.metadata(),
-              ...data,
-          }
-        : options.locals;
+    const {
+        pattern, // eslint-disable-line no-unused-vars, @typescript-eslint/no-unused-vars
+        renamer,
+        locals,
+        useMetadata,
+        pugOptions: pugOpts,
+        ...otherOpts
+    } = options;
+
+    if (useMetadata) {
+        Object.assign(locals, metalsmith.metadata(), data);
+    }
+
     const pugOptions: pug.Options = {
-        ...options.pugOptions,
+        ...otherOpts,
+        ...pugOpts,
         filename: metalsmith.path(metalsmith.source(), filename),
     };
-    const filters = options.filters;
-    if (isObject(filters)) {
-        Object.keys(filters).forEach(filter => {
-            if (isObject(pugOptions.filters)) {
-                pugOptions.filters[filter] = filters[filter];
-            } else {
-                pugOptions.filters = {
-                    [filter]: filters[filter],
-                };
-            }
-        });
-    }
+
     const convertedText: string = pug.compile(
         data.contents.toString(),
         pugOptions,
     )(locals);
 
-    const newFilename: string = options.renamer(filename);
+    const newFilename: string = renamer(filename);
     addFile(files, newFilename, convertedText);
 
     if (filename !== newFilename) {
@@ -94,7 +88,6 @@ const convertDefaultOptions: Options = {
     pattern: ['**/*.pug'],
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
     locals: {},
-    filters: {},
     useMetadata: false,
     pugOptions: {},
 };
