@@ -90,7 +90,7 @@ async function render(
 
 const convertDefaultOptions: Options = {
     pattern: ['**/*.pug'],
-    renamer: filename => filename.replace(/\.pug$/, '.html'),
+    renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
     locals: {},
     filters: {},
     useMetadata: false,

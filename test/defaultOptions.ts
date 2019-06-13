@@ -27,6 +27,14 @@ test('defaultOptions.renamer', t => {
         ['basename.pug.html', 'basename.pug.html'],
         ['basename.pug.', 'basename.pug.'],
 
+        ['index.jade', 'index.html'],
+        ['basename.jade', 'basename.html'],
+        ['.jade', '.html'],
+        ['basename.html.jade', 'basename.html.html'],
+        ['basename.jade.jade', 'basename.jade.html'],
+        ['basename.jade.html', 'basename.jade.html'],
+        ['basename.jade.', 'basename.jade.'],
+
         ['dirname/index.pug', 'dirname/index.html'],
         ['dirname/basename.pug', 'dirname/basename.html'],
         ['dirname/.pug', 'dirname/.html'],
