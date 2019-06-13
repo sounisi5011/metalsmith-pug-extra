@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import test from 'ava';
+import test, { ExecutionContext } from 'ava';
 import Metalsmith from 'metalsmith';
 import pugConvert from '../src';
 
@@ -18,6 +18,48 @@ function destPath(metalsmith, ...paths): string {
     );
 }
 
+function assertFileExists(
+    t: ExecutionContext,
+    filepath: string,
+): Promise<void> {
+    return new Promise(resolve => {
+        fs.stat(filepath, err => {
+            t.falsy(err, 'File exist');
+            resolve();
+        });
+    });
+}
+
+function assertFileNotExists(
+    t: ExecutionContext,
+    filepath: string,
+): Promise<void> {
+    return new Promise(resolve => {
+        fs.stat(filepath, err => {
+            t.truthy(err, 'File does not exist');
+            resolve();
+        });
+    });
+}
+
+function assertFileContentsEquals(
+    t: ExecutionContext,
+    filepath: string,
+    contents: string,
+): Promise<void> {
+    return new Promise(resolve => {
+        fs.readFile(filepath, (err, data) => {
+            t.falsy(err, 'No readFile error');
+
+            if (!err) {
+                t.is(data.toString(), contents, filepath);
+            }
+
+            resolve();
+        });
+    });
+}
+
 test.serial(
     'should render html',
     t =>
@@ -27,18 +69,20 @@ test.serial(
             metalsmith.build(err => {
                 t.is(err, null, 'No build error');
 
-                fs.readFile(destPath(metalsmith, 'index.html'), (err, data) => {
-                    t.falsy(err, 'No readFile error');
-
-                    if (!err) {
-                        t.is(data.toString(), '<h1>Hello World</h1>');
-                    }
-
-                    fs.stat(destPath(metalsmith, 'index.pug'), err => {
-                        t.truthy(err, 'File does not exist');
+                assertFileContentsEquals(
+                    t,
+                    destPath(metalsmith, 'index.html'),
+                    '<h1>Hello World</h1>',
+                )
+                    .then(() =>
+                        assertFileNotExists(
+                            t,
+                            destPath(metalsmith, 'index.pug'),
+                        ),
+                    )
+                    .then(() => {
                         resolve();
                     });
-                });
             });
         }),
 );
@@ -52,14 +96,16 @@ test.serial(
             metalsmith.build(err => {
                 t.is(err, null, 'No build error');
 
-                fs.stat(destPath(metalsmith, 'legacy.html'), err => {
-                    t.truthy(err, 'File does not exist');
-
-                    fs.stat(destPath(metalsmith, 'legacy.jade'), err => {
-                        t.falsy(err, 'File exist');
+                assertFileNotExists(t, destPath(metalsmith, 'legacy.html'))
+                    .then(() =>
+                        assertFileExists(
+                            t,
+                            destPath(metalsmith, 'legacy.jade'),
+                        ),
+                    )
+                    .then(() => {
                         resolve();
                     });
-                });
             });
         }),
 );
@@ -77,21 +123,20 @@ test.serial(
             metalsmith.build(err => {
                 t.is(err, null, 'No build error');
 
-                fs.readFile(
+                assertFileContentsEquals(
+                    t,
                     destPath(metalsmith, 'legacy.html'),
-                    (err, data) => {
-                        t.falsy(err, 'No readFile error');
-
-                        if (!err) {
-                            t.is(data.toString(), '<h1>Hello World</h1>');
-                        }
-
-                        fs.stat(destPath(metalsmith, 'legacy.jade'), err => {
-                            t.truthy(err, 'File does not exist');
-                            resolve();
-                        });
-                    },
-                );
+                    '<h1>Hello World</h1>',
+                )
+                    .then(() =>
+                        assertFileNotExists(
+                            t,
+                            destPath(metalsmith, 'legacy.jade'),
+                        ),
+                    )
+                    .then(() => {
+                        resolve();
+                    });
             });
         }),
 );
@@ -109,13 +154,11 @@ test.serial(
             metalsmith.build(err => {
                 t.is(err, null, 'No build error');
 
-                fs.readFile(destPath(metalsmith, 'index.pug'), (err, data) => {
-                    t.falsy(err, 'No readFile error');
-
-                    if (!err) {
-                        t.is(data.toString(), '<h1>Hello World</h1>');
-                    }
-
+                assertFileContentsEquals(
+                    t,
+                    destPath(metalsmith, 'index.pug'),
+                    '<h1>Hello World</h1>',
+                ).then(() => {
                     resolve();
                 });
             });
