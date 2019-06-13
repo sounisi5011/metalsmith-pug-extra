@@ -18,6 +18,17 @@ function destPath(metalsmith, ...paths): string {
     );
 }
 
+function setLocalsPlugin(locals: {
+    [index: string]: unknown;
+}): Metalsmith.Plugin {
+    return (files, metalsmith, done) => {
+        Object.values(files).forEach(file => {
+            Object.assign(file, locals);
+        });
+        done();
+    };
+}
+
 function assertFileExists(
     t: ExecutionContext,
     filepath: string,
@@ -158,6 +169,117 @@ test.serial(
                     t,
                     destPath(metalsmith, 'index.pug'),
                     '<h1>Hello World</h1>',
+                ).then(() => {
+                    resolve();
+                });
+            });
+        }),
+);
+
+test.serial(
+    'should render html with locals',
+    t =>
+        new Promise(resolve => {
+            const metalsmith = createMetalsmith().use(
+                pugConvert({
+                    locals: {
+                        A: 1,
+                        B: 2,
+                        E: 42,
+                    },
+                }),
+            );
+
+            metalsmith.build(err => {
+                t.is(err, null, 'No build error');
+
+                assertFileContentsEquals(
+                    t,
+                    destPath(metalsmith, 'locals.html'),
+                    'A:1 B:2 E:42 ',
+                ).then(() => {
+                    resolve();
+                });
+            });
+        }),
+);
+
+test.serial(
+    'should render html with locals only',
+    t =>
+        new Promise(resolve => {
+            const metalsmith = createMetalsmith()
+                .metadata({
+                    M_L_O: 'metadata',
+                    M_L: 'metadata',
+                    M_O: 'metadata',
+                })
+                .use(
+                    setLocalsPlugin({
+                        M_L_O: 'locals',
+                        M_L: 'locals',
+                        L_O: 'locals',
+                    }),
+                )
+                .use(
+                    pugConvert({
+                        locals: {
+                            M_L_O: 'options',
+                            L_O: 'options',
+                            M_O: 'options',
+                        },
+                    }),
+                );
+
+            metalsmith.build(err => {
+                t.is(err, null, 'No build error');
+
+                assertFileContentsEquals(
+                    t,
+                    destPath(metalsmith, 'locals.html'),
+                    'M_L_O:options L_O:options M_O:options ',
+                ).then(() => {
+                    resolve();
+                });
+            });
+        }),
+);
+
+test.serial(
+    'should render html with locals and metadata',
+    t =>
+        new Promise(resolve => {
+            const metalsmith = createMetalsmith()
+                .metadata({
+                    M_L_O: 'metadata',
+                    M_L: 'metadata',
+                    M_O: 'metadata',
+                })
+                .use(
+                    setLocalsPlugin({
+                        M_L_O: 'locals',
+                        M_L: 'locals',
+                        L_O: 'locals',
+                    }),
+                )
+                .use(
+                    pugConvert({
+                        locals: {
+                            M_L_O: 'options',
+                            L_O: 'options',
+                            M_O: 'options',
+                        },
+                        useMetadata: true,
+                    }),
+                );
+
+            metalsmith.build(err => {
+                t.is(err, null, 'No build error');
+
+                assertFileContentsEquals(
+                    t,
+                    destPath(metalsmith, 'locals.html'),
+                    'M_L_O:locals M_L:locals L_O:locals M_O:metadata ',
                 ).then(() => {
                     resolve();
                 });
