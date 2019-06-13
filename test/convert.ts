@@ -34,7 +34,10 @@ test.serial(
                         t.is(data.toString(), '<h1>Hello World</h1>');
                     }
 
-                    resolve();
+                    fs.stat(destPath(metalsmith, 'index.pug'), err => {
+                        t.truthy(err, 'File does not exist');
+                        resolve();
+                    });
                 });
             });
         }),
@@ -49,10 +52,13 @@ test.serial(
             metalsmith.build(err => {
                 t.is(err, null, 'No build error');
 
-                fs.readFile(destPath(metalsmith, 'legacy.html'), err => {
+                fs.stat(destPath(metalsmith, 'legacy.html'), err => {
                     t.truthy(err, 'File does not exist');
 
-                    resolve();
+                    fs.stat(destPath(metalsmith, 'legacy.jade'), err => {
+                        t.falsy(err, 'File exist');
+                        resolve();
+                    });
                 });
             });
         }),
@@ -80,9 +86,38 @@ test.serial(
                             t.is(data.toString(), '<h1>Hello World</h1>');
                         }
 
-                        resolve();
+                        fs.stat(destPath(metalsmith, 'legacy.jade'), err => {
+                            t.truthy(err, 'File does not exist');
+                            resolve();
+                        });
                     },
                 );
+            });
+        }),
+);
+
+test.serial(
+    'should render without changing the file name',
+    t =>
+        new Promise(resolve => {
+            const metalsmith = createMetalsmith().use(
+                pugConvert({
+                    renamer: filename => filename,
+                }),
+            );
+
+            metalsmith.build(err => {
+                t.is(err, null, 'No build error');
+
+                fs.readFile(destPath(metalsmith, 'index.pug'), (err, data) => {
+                    t.falsy(err, 'No readFile error');
+
+                    if (!err) {
+                        t.is(data.toString(), '<h1>Hello World</h1>');
+                    }
+
+                    resolve();
+                });
             });
         }),
 );
