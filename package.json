@@ -61,7 +61,7 @@
   },
   "ava": {
     "files": [
-      "./test/"
+      "./test/**/*.ts"
     ],
     "snapshotDir": "./test/.snapshots/ava/",
     "compileEnhancements": false,
