@@ -39,3 +39,53 @@ test.serial(
             });
         }),
 );
+
+test.serial(
+    'should not support .jade files by default',
+    t =>
+        new Promise(resolve => {
+            const metalsmith = createMetalsmith().use(pugConvert());
+
+            metalsmith.build((err, files) => {
+                t.is(err, null, 'No build error');
+
+                fs.readFile(
+                    destPath(metalsmith, 'legacy.html'),
+                    (err, data) => {
+                        t.truthy(err, 'File does not exist');
+
+                        resolve();
+                    },
+                );
+            });
+        }),
+);
+
+test.serial(
+    'should support .jade files by pattern options',
+    t =>
+        new Promise(resolve => {
+            const metalsmith = createMetalsmith().use(
+                pugConvert({
+                    pattern: '**/*.jade',
+                }),
+            );
+
+            metalsmith.build((err, files) => {
+                t.is(err, null, 'No build error');
+
+                fs.readFile(
+                    destPath(metalsmith, 'legacy.html'),
+                    (err, data) => {
+                        t.falsy(err, 'No readFile error');
+
+                        if (!err) {
+                            t.is(data.toString(), '<h1>Hello World</h1>');
+                        }
+
+                        resolve();
+                    },
+                );
+            });
+        }),
+);
