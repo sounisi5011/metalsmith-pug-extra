@@ -286,3 +286,32 @@ test.serial(
             });
         }),
 );
+
+test.serial(
+    'should render html with includes',
+    t =>
+        new Promise(resolve => {
+            const metalsmith = createMetalsmith()
+                .source('includes')
+                .use(pugConvert());
+
+            metalsmith.build(err => {
+                t.is(err, null, 'No build error');
+
+                assertFileContentsEquals(
+                    t,
+                    destPath(metalsmith, 'index.html'),
+                    '<h1>Hello World</h1><h2>hoge</h2>',
+                )
+                    .then(() =>
+                        assertFileNotExists(
+                            t,
+                            destPath(metalsmith, 'index.pug'),
+                        ),
+                    )
+                    .then(() => {
+                        resolve();
+                    });
+            });
+        }),
+);
