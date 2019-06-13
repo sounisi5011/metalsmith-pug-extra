@@ -1,6 +1,7 @@
 import Metalsmith from 'metalsmith';
 import match from 'multimatch';
 import pug from 'pug';
+import isUtf8 from 'is-utf8';
 
 function isObject(value: unknown): value is { [index: string]: unknown } {
     return typeof value === 'object' && value !== null;
@@ -53,6 +54,10 @@ async function render(
 ): Promise<void> {
     const data: unknown = files[filename];
     if (!isFile(data)) {
+        return;
+    }
+
+    if (!isUtf8(data.contents)) {
         return;
     }
 
