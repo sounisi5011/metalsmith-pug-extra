@@ -20,12 +20,17 @@ function isFile(value: unknown): value is File {
     return false;
 }
 
-interface Options extends pug.Options {
+interface CompileOptions {
     pattern: string | string[];
     renamer: (filename: string) => string;
+}
+
+interface RenderOptions {
     locals: pug.LocalsObject;
     useMetadata: boolean;
 }
+
+interface ConvertOptions extends CompileOptions, RenderOptions {}
 
 function addFile(
     files: Metalsmith.Files,
@@ -44,7 +49,7 @@ async function render(
     filename: string,
     files: Metalsmith.Files,
     metalsmith: Metalsmith,
-    options: Options,
+    options: ConvertOptions & pug.Options,
 ): Promise<void> {
     const data: unknown = files[filename];
     if (!isFile(data)) {
@@ -81,7 +86,7 @@ async function render(
     }
 }
 
-const convertDefaultOptions: Options = {
+const convertDefaultOptions: ConvertOptions = {
     pattern: ['**/*.pug'],
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
     locals: {},
@@ -89,9 +94,9 @@ const convertDefaultOptions: Options = {
 };
 
 export default function convert(
-    opts: Partial<Options> = {},
+    opts: Partial<ConvertOptions> & pug.Options = {},
 ): Metalsmith.Plugin {
-    const options: Options = {
+    const options: ConvertOptions & pug.Options = {
         ...convertDefaultOptions,
         ...opts,
     };
