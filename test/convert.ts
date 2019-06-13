@@ -11,7 +11,7 @@ function createMetalsmith(): Metalsmith {
         .clean(true);
 }
 
-function destPath(metalsmith, ...paths): string {
+function destPath(metalsmith: Metalsmith, ...paths: string[]): string {
     return path.join(
         path.relative(process.cwd(), metalsmith.destination()),
         ...paths,
@@ -25,7 +25,7 @@ function setLocalsPlugin(locals: {
         Object.values(files).forEach(file => {
             Object.assign(file, locals);
         });
-        done();
+        done(null, files, metalsmith);
     };
 }
 
