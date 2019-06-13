@@ -4,14 +4,14 @@ import test from 'ava';
 import Metalsmith from 'metalsmith';
 import pugConvert from '../src';
 
-function createMetalsmith() {
+function createMetalsmith(): Metalsmith {
     return Metalsmith(path.join(__dirname, 'fixtures'))
         .source('pages')
         .destination('build')
         .clean(true);
 }
 
-function destPath(metalsmith, ...paths) {
+function destPath(metalsmith, ...paths): string {
     return path.join(
         path.relative(process.cwd(), metalsmith.destination()),
         ...paths,
@@ -24,7 +24,7 @@ test.serial(
         new Promise(resolve => {
             const metalsmith = createMetalsmith().use(pugConvert());
 
-            metalsmith.build((err, files) => {
+            metalsmith.build(err => {
                 t.is(err, null, 'No build error');
 
                 fs.readFile(destPath(metalsmith, 'index.html'), (err, data) => {
@@ -46,17 +46,14 @@ test.serial(
         new Promise(resolve => {
             const metalsmith = createMetalsmith().use(pugConvert());
 
-            metalsmith.build((err, files) => {
+            metalsmith.build(err => {
                 t.is(err, null, 'No build error');
 
-                fs.readFile(
-                    destPath(metalsmith, 'legacy.html'),
-                    (err, data) => {
-                        t.truthy(err, 'File does not exist');
+                fs.readFile(destPath(metalsmith, 'legacy.html'), err => {
+                    t.truthy(err, 'File does not exist');
 
-                        resolve();
-                    },
-                );
+                    resolve();
+                });
             });
         }),
 );
@@ -71,7 +68,7 @@ test.serial(
                 }),
             );
 
-            metalsmith.build((err, files) => {
+            metalsmith.build(err => {
                 t.is(err, null, 'No build error');
 
                 fs.readFile(
