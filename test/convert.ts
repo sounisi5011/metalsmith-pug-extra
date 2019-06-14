@@ -71,271 +71,227 @@ function assertFileContentsEquals(
     });
 }
 
-test.serial(
-    'should render html',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith().use(pugConvert());
+function assertFileConverted({
+    t,
+    metalsmith,
+    sourceFilename,
+    destFilename,
+    destFileContents,
+}: {
+    t: ExecutionContext;
+    metalsmith: Metalsmith;
+    sourceFilename?: string;
+    destFilename: string;
+    destFileContents: string;
+}): Promise<void> {
+    return new Promise(resolve => {
+        metalsmith.build(err => {
+            t.is(err, null, 'No build error');
 
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileContentsEquals(
-                    t,
-                    destPath(metalsmith, 'index.html'),
-                    '<h1>Hello World</h1>',
-                )
-                    .then(() =>
-                        assertFileNotExists(
+            assertFileContentsEquals(
+                t,
+                destPath(metalsmith, destFilename),
+                destFileContents,
+            )
+                .then(() => {
+                    if (sourceFilename && sourceFilename !== destFilename) {
+                        return assertFileNotExists(
                             t,
-                            destPath(metalsmith, 'index.pug'),
-                        ),
-                    )
-                    .then(() => {
-                        resolve();
-                    });
-            });
-        }),
-);
-
-test.serial(
-    'should not support .jade files by default',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith().use(pugConvert());
-
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileNotExists(t, destPath(metalsmith, 'legacy.html'))
-                    .then(() =>
-                        assertFileExists(
-                            t,
-                            destPath(metalsmith, 'legacy.jade'),
-                        ),
-                    )
-                    .then(() => {
-                        resolve();
-                    });
-            });
-        }),
-);
-
-test.serial(
-    'should support .jade files by pattern options',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith().use(
-                pugConvert({
-                    pattern: '**/*.jade',
-                }),
-            );
-
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileContentsEquals(
-                    t,
-                    destPath(metalsmith, 'legacy.html'),
-                    '<h1>Hello World</h1>',
-                )
-                    .then(() =>
-                        assertFileNotExists(
-                            t,
-                            destPath(metalsmith, 'legacy.jade'),
-                        ),
-                    )
-                    .then(() => {
-                        resolve();
-                    });
-            });
-        }),
-);
-
-test.serial(
-    'should render without changing the file name',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith().use(
-                pugConvert({
-                    renamer: filename => filename,
-                }),
-            );
-
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileContentsEquals(
-                    t,
-                    destPath(metalsmith, 'index.pug'),
-                    '<h1>Hello World</h1>',
-                ).then(() => {
-                    resolve();
-                });
-            });
-        }),
-);
-
-test.serial(
-    'should render html with locals',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith().use(
-                pugConvert({
-                    locals: {
-                        A: 1,
-                        B: 2,
-                        E: 42,
-                    },
-                }),
-            );
-
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileContentsEquals(
-                    t,
-                    destPath(metalsmith, 'locals.html'),
-                    'A:1 B:2 E:42 ',
-                ).then(() => {
-                    resolve();
-                });
-            });
-        }),
-);
-
-test.serial(
-    'should render html with locals only',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith()
-                .metadata({
-                    M_L_O: 'metadata',
-                    M_L: 'metadata',
-                    M_O: 'metadata',
+                            destPath(metalsmith, sourceFilename),
+                        );
+                    }
+                    return undefined;
                 })
-                .use(
-                    setLocalsPlugin({
-                        M_L_O: 'locals',
-                        M_L: 'locals',
-                        L_O: 'locals',
-                    }),
-                )
-                .use(
-                    pugConvert({
-                        locals: {
-                            M_L_O: 'options',
-                            L_O: 'options',
-                            M_O: 'options',
-                        },
-                    }),
-                );
-
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileContentsEquals(
-                    t,
-                    destPath(metalsmith, 'locals.html'),
-                    'M_L_O:options L_O:options M_O:options ',
-                ).then(() => {
+                .then(() => {
                     resolve();
                 });
-            });
-        }),
-);
+        });
+    });
+}
 
-test.serial(
-    'should render html with locals and metadata',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith()
-                .metadata({
-                    M_L_O: 'metadata',
-                    M_L: 'metadata',
-                    M_O: 'metadata',
-                })
-                .use(
-                    setLocalsPlugin({
-                        M_L_O: 'locals',
-                        M_L: 'locals',
-                        L_O: 'locals',
-                    }),
+function assertFileNotConverted({
+    t,
+    metalsmith,
+    sourceFilename,
+    destFilename,
+}: {
+    t: ExecutionContext;
+    metalsmith: Metalsmith;
+    sourceFilename: string;
+    destFilename: string;
+}): Promise<void> {
+    return new Promise(resolve => {
+        metalsmith.build(err => {
+            t.is(err, null, 'No build error');
+
+            assertFileNotExists(t, destPath(metalsmith, destFilename))
+                .then(() =>
+                    assertFileExists(t, destPath(metalsmith, sourceFilename)),
                 )
-                .use(
-                    pugConvert({
-                        locals: {
-                            M_L_O: 'options',
-                            L_O: 'options',
-                            M_O: 'options',
-                        },
-                        useMetadata: true,
-                    }),
-                );
-
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileContentsEquals(
-                    t,
-                    destPath(metalsmith, 'locals.html'),
-                    'M_L_O:locals M_L:locals L_O:locals M_O:metadata ',
-                ).then(() => {
+                .then(() => {
                     resolve();
                 });
-            });
+        });
+    });
+}
+
+test.serial('should render html', async t => {
+    const metalsmith = createMetalsmith().use(pugConvert());
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.html',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
+
+test.serial('should not support .jade files by default', async t => {
+    const metalsmith = createMetalsmith().use(pugConvert());
+    await assertFileNotConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'legacy.jade',
+        destFilename: 'legacy.html',
+    });
+});
+
+test.serial('should support .jade files by pattern options', async t => {
+    const metalsmith = createMetalsmith().use(
+        pugConvert({
+            pattern: '**/*.jade',
         }),
-);
+    );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'legacy.jade',
+        destFilename: 'legacy.html',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
 
-test.serial(
-    'should render html with includes',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith()
-                .source('includes')
-                .use(pugConvert());
-
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileContentsEquals(
-                    t,
-                    destPath(metalsmith, 'index.html'),
-                    '<h1>Hello World</h1><h2>hoge</h2>',
-                )
-                    .then(() =>
-                        assertFileNotExists(
-                            t,
-                            destPath(metalsmith, 'index.pug'),
-                        ),
-                    )
-                    .then(() => {
-                        resolve();
-                    });
-            });
+test.serial('should render without changing the file name', async t => {
+    const metalsmith = createMetalsmith().use(
+        pugConvert({
+            renamer: filename => filename,
         }),
-);
+    );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.pug',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
 
-test.serial(
-    'should pass options to pug',
-    t =>
-        new Promise(resolve => {
-            const metalsmith = createMetalsmith().use(
-                pugConvert({
-                    doctype: 'xml',
-                }),
-            );
-
-            metalsmith.build(err => {
-                t.is(err, null, 'No build error');
-
-                assertFileContentsEquals(
-                    t,
-                    destPath(metalsmith, 'self-closing.html'),
-                    '<br></br>',
-                ).then(() => {
-                    resolve();
-                });
-            });
+test.serial('should render html with locals', async t => {
+    const metalsmith = createMetalsmith().use(
+        pugConvert({
+            locals: {
+                A: 1,
+                B: 2,
+                E: 42,
+            },
         }),
-);
+    );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:1 B:2 E:42 ',
+    });
+});
+
+test.serial('should render html with locals only', async t => {
+    const metalsmith = createMetalsmith()
+        .metadata({
+            M_L_O: 'metadata',
+            M_L: 'metadata',
+            M_O: 'metadata',
+        })
+        .use(
+            setLocalsPlugin({
+                M_L_O: 'locals',
+                M_L: 'locals',
+                L_O: 'locals',
+            }),
+        )
+        .use(
+            pugConvert({
+                locals: {
+                    M_L_O: 'options',
+                    L_O: 'options',
+                    M_O: 'options',
+                },
+            }),
+        );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'M_L_O:options L_O:options M_O:options ',
+    });
+});
+
+test.serial('should render html with locals and metadata', async t => {
+    const metalsmith = createMetalsmith()
+        .metadata({
+            M_L_O: 'metadata',
+            M_L: 'metadata',
+            M_O: 'metadata',
+        })
+        .use(
+            setLocalsPlugin({
+                M_L_O: 'locals',
+                M_L: 'locals',
+                L_O: 'locals',
+            }),
+        )
+        .use(
+            pugConvert({
+                locals: {
+                    M_L_O: 'options',
+                    L_O: 'options',
+                    M_O: 'options',
+                },
+                useMetadata: true,
+            }),
+        );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'M_L_O:locals M_L:locals L_O:locals M_O:metadata ',
+    });
+});
+
+test.serial('should render html with includes', async t => {
+    const metalsmith = createMetalsmith()
+        .source('includes')
+        .use(pugConvert());
+
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.html',
+        destFileContents: '<h1>Hello World</h1><h2>hoge</h2>',
+    });
+});
+
+test.serial('should pass options to pug', async t => {
+    const metalsmith = createMetalsmith().use(
+        pugConvert({
+            doctype: 'xml',
+        }),
+    );
+
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'self-closing.html',
+        destFileContents: '<br></br>',
+    });
+});
