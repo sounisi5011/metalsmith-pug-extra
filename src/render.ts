@@ -2,7 +2,12 @@ import Metalsmith from 'metalsmith';
 import pug from 'pug';
 import deepFreeze from 'deep-freeze-strict';
 
-import { FileInterface, isFile, freezeProperty } from './utils';
+import {
+    FileInterface,
+    isFile,
+    freezeProperty,
+    createEachPlugin,
+} from './utils';
 import compileTemplateMap from './compileTemplateMap';
 
 export interface RenderOptionsInterface {
@@ -53,30 +58,24 @@ export const render: RenderFuncInterface = function(opts = {}) {
         ...opts,
     };
 
-    return (files, metalsmith, done) => {
-        Promise.all(
-            Object.keys(files).map(async filename => {
-                const data: unknown = files[filename];
-                if (!isFile(data)) {
-                    return;
-                }
+    return createEachPlugin((filename, files, metalsmith) => {
+        const data: unknown = files[filename];
+        if (!isFile(data)) {
+            return;
+        }
 
-                const compileTemplate = compileTemplateMap.get(data.contents);
-                if (compileTemplate) {
-                    const convertedText = getConvertedText(
-                        compileTemplate,
-                        data,
-                        metalsmith,
-                        options,
-                    );
+        const compileTemplate = compileTemplateMap.get(data.contents);
+        if (compileTemplate) {
+            const convertedText = getConvertedText(
+                compileTemplate,
+                data,
+                metalsmith,
+                options,
+            );
 
-                    data.contents = Buffer.from(convertedText, 'utf8');
-                }
-            }),
-        )
-            .then(() => done(null, files, metalsmith))
-            .catch(error => done(error, files, metalsmith));
-    };
+            data.contents = Buffer.from(convertedText, 'utf8');
+        }
+    });
 };
 
 render.defaultOptions = renderDefaultOptions;

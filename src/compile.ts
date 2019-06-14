@@ -1,10 +1,15 @@
 import Metalsmith from 'metalsmith';
-import match from 'multimatch';
 import pug from 'pug';
 import isUtf8 from 'is-utf8';
 import deepFreeze from 'deep-freeze-strict';
 
-import { FileInterface, isFile, addFile, freezeProperty } from './utils';
+import {
+    FileInterface,
+    isFile,
+    addFile,
+    freezeProperty,
+    createEachPlugin,
+} from './utils';
 import compileTemplateMap from './compileTemplateMap';
 
 export interface CompileOptionsInterface {
@@ -69,33 +74,22 @@ export const compile: CompileFuncInterface = function(opts = {}) {
         ...opts,
     };
 
-    return (files, metalsmith, done) => {
-        const matchedFiles: string[] = match(
-            Object.keys(files),
-            options.pattern,
+    return createEachPlugin((filename, files, metalsmith) => {
+        const { compileTemplate, newFilename } = getCompileTemplate(
+            filename,
+            files,
+            metalsmith,
+            options,
         );
+        if (compileTemplate && newFilename) {
+            const newFile = addFile(files, newFilename, '');
+            compileTemplateMap.set(newFile.contents, compileTemplate);
 
-        Promise.all(
-            matchedFiles.map(async filename => {
-                const { compileTemplate, newFilename } = getCompileTemplate(
-                    filename,
-                    files,
-                    metalsmith,
-                    options,
-                );
-                if (compileTemplate && newFilename) {
-                    const newFile = addFile(files, newFilename, '');
-                    compileTemplateMap.set(newFile.contents, compileTemplate);
-
-                    if (filename !== newFilename) {
-                        delete files[filename];
-                    }
-                }
-            }),
-        )
-            .then(() => done(null, files, metalsmith))
-            .catch(error => done(error, files, metalsmith));
-    };
+            if (filename !== newFilename) {
+                delete files[filename];
+            }
+        }
+    }, options.pattern);
 };
 
 compile.defaultOptions = compileDefaultOptions;

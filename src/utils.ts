@@ -1,4 +1,5 @@
 import Metalsmith from 'metalsmith';
+import match from 'multimatch';
 
 export interface FileInterface {
     contents: Buffer;
@@ -35,4 +36,26 @@ export function addFile(
     };
     files[filename] = newFile;
     return newFile;
+}
+
+export function createEachPlugin(
+    callback: (
+        filename: string,
+        files: Metalsmith.Files,
+        metalsmith: Metalsmith,
+    ) => void | Promise<void>,
+    pattern?: string | string[],
+): Metalsmith.Plugin {
+    return (files, metalsmith, done) => {
+        const matchedFiles: string[] =
+            pattern !== undefined
+                ? match(Object.keys(files), pattern)
+                : Object.keys(files);
+
+        Promise.all(
+            matchedFiles.map(filename => callback(filename, files, metalsmith)),
+        )
+            .then(() => done(null, files, metalsmith))
+            .catch(error => done(error, files, metalsmith));
+    };
 }
