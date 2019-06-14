@@ -20,6 +20,7 @@ export interface CompileOptionsInterface {
     pattern: string | string[];
     renamer: (filename: string) => string;
     overwrite: boolean;
+    copyFileData: boolean;
 }
 
 export function getCompileOptions<T extends CompileOptionsInterface>(
@@ -27,8 +28,14 @@ export function getCompileOptions<T extends CompileOptionsInterface>(
 ): CompileOptionsInterface & {
     otherOptions: Omit<T, keyof CompileOptionsInterface>;
 } {
-    const { pattern, renamer, overwrite, ...otherOptions } = options;
-    return { pattern, renamer, overwrite, otherOptions };
+    const {
+        pattern,
+        renamer,
+        overwrite,
+        copyFileData,
+        ...otherOptions
+    } = options;
+    return { pattern, renamer, overwrite, copyFileData, otherOptions };
 }
 
 export function getCompileTemplate(
@@ -84,6 +91,7 @@ export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
     pattern: ['**/*.pug'],
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
     overwrite: true,
+    copyFileData: false,
 });
 
 export interface CompileFuncInterface {
@@ -101,14 +109,19 @@ export const compile: CompileFuncInterface = function(opts = {}) {
     };
 
     return createEachPlugin((filename, files, metalsmith) => {
-        const { compileTemplate, newFilename } = getCompileTemplate(
+        const { compileTemplate, newFilename, data } = getCompileTemplate(
             filename,
             files,
             metalsmith,
             options,
         );
         if (compileTemplate && newFilename) {
-            const newFile = addFile(files, newFilename, '');
+            const newFile = addFile(
+                files,
+                newFilename,
+                '',
+                options.copyFileData ? data : undefined,
+            );
             debug(`file created: ${newFilename}`);
             compileTemplateMap.set(newFile.contents, compileTemplate);
 

@@ -61,7 +61,12 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
                 options,
             );
 
-            addFile(files, newFilename, convertedText);
+            addFile(
+                files,
+                newFilename,
+                convertedText,
+                options.copyFileData ? data : undefined,
+            );
 
             if (filename !== newFilename) {
                 debug(`done convert ${filename}, renamed to ${newFilename}`);

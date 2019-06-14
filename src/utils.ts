@@ -43,10 +43,12 @@ export function addFile(
     files: Metalsmith.Files,
     filename: string,
     contents: string,
+    originalData?: FileInterface,
 ): FileInterface {
     const newFile = {
-        contents: Buffer.from(contents, 'utf8'),
         mode: '0644',
+        ...originalData,
+        contents: Buffer.from(contents, 'utf8'),
     };
     files[filename] = newFile;
     return newFile;

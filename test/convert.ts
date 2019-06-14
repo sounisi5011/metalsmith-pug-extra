@@ -753,3 +753,165 @@ test.serial(
         );
     },
 );
+
+test.serial(
+    'should copy from source file data to destination file data: convert()',
+    async t => {
+        const sourceFiles: Metalsmith.Files = {};
+        const destFiles: Metalsmith.Files = {};
+
+        const metalsmith = createMetalsmith()
+            .use(
+                setLocalsPlugin({
+                    hoge: 'fuga',
+                    x: 42,
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                Object.assign(sourceFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(
+                convert({
+                    copyFileData: true,
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                Object.assign(destFiles, files);
+                done(null, files, metalsmith);
+            });
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
+        t.deepEqual(
+            Object.keys(destFiles['index.html']).sort(),
+            Object.keys(sourceFiles['index.pug']).sort(),
+        );
+    },
+);
+
+test.serial(
+    'should not copy from source file data to destination file data: convert()',
+    async t => {
+        const sourceFiles: Metalsmith.Files = {};
+        const destFiles: Metalsmith.Files = {};
+
+        const metalsmith = createMetalsmith()
+            .use(
+                setLocalsPlugin({
+                    hoge: 'fuga',
+                    x: 42,
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                Object.assign(sourceFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(
+                convert({
+                    copyFileData: false,
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                Object.assign(destFiles, files);
+                done(null, files, metalsmith);
+            });
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
+        t.notDeepEqual(
+            Object.keys(destFiles['index.html']).sort(),
+            Object.keys(sourceFiles['index.pug']).sort(),
+        );
+    },
+);
+
+test.serial(
+    'should copy from source file data to compiled file data: compile()',
+    async t => {
+        const sourceFiles: Metalsmith.Files = {};
+        const compiledFiles: Metalsmith.Files = {};
+
+        const metalsmith = createMetalsmith()
+            .use(
+                setLocalsPlugin({
+                    hoge: 'fuga',
+                    x: 42,
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                Object.assign(sourceFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(
+                compile({
+                    copyFileData: true,
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                Object.assign(compiledFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(render());
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
+        t.deepEqual(
+            Object.keys(compiledFiles['index.html']).sort(),
+            Object.keys(sourceFiles['index.pug']).sort(),
+        );
+    },
+);
+
+test.serial(
+    'should not copy from source file data to compiled file data: compile()',
+    async t => {
+        const sourceFiles: Metalsmith.Files = {};
+        const compiledFiles: Metalsmith.Files = {};
+
+        const metalsmith = createMetalsmith()
+            .use(
+                setLocalsPlugin({
+                    hoge: 'fuga',
+                    x: 42,
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                Object.assign(sourceFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(
+                compile({
+                    copyFileData: false,
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                Object.assign(compiledFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(render());
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
+        t.notDeepEqual(
+            Object.keys(compiledFiles['index.html']).sort(),
+            Object.keys(sourceFiles['index.pug']).sort(),
+        );
+    },
+);
