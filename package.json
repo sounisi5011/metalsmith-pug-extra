@@ -36,8 +36,10 @@
     ]
   },
   "dependencies": {
+    "@types/deep-freeze-strict": "^1.1.0",
     "@types/metalsmith": "^2.3.0",
     "@types/pug": "^2.0.4",
+    "deep-freeze-strict": "^1.1.1",
     "is-utf8": "^0.2.1",
     "multimatch": "^4.0.0",
     "pug": "^2.0.3"
