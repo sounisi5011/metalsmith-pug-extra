@@ -2,7 +2,26 @@ import fs from 'fs';
 import path from 'path';
 import test, { ExecutionContext } from 'ava';
 import Metalsmith from 'metalsmith';
+import pug from 'pug';
+import sinon from 'sinon';
+
 import pugConvert, { compile, render } from '../src';
+import { isObject } from '../src/utils';
+
+function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
+    if (isObject(obj)) {
+        // @ts-ignore: TS2322
+        const newObj: T = {};
+        return Object.entries(obj)
+            .filter(([key]) => !keyList.includes(key))
+            .reduce((obj, [key, value]) => {
+                // @ts-ignore: TS7053
+                obj[key] = value;
+                return obj;
+            }, newObj);
+    }
+    return obj;
+}
 
 function createMetalsmith(): Metalsmith {
     return Metalsmith(path.join(__dirname, 'fixtures'))
@@ -549,3 +568,68 @@ test.serial('should pass options to pug: compile() & render()', async t => {
         destFileContents: '<br></br>',
     });
 });
+
+test.serial('Validate options passed to Pug API: convert()', async t => {
+    const spy = sinon.spy(pug, 'compile');
+
+    const compileOptions = {
+        ...pugConvert.defaultOptions,
+        doctype: 'xml',
+        cache: false,
+        another: 10,
+        hoge: 'fuga',
+        x: 42,
+    };
+    const metalsmith = createMetalsmith().use(pugConvert(compileOptions));
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    spy.args.forEach(([, pugOptions]) => {
+        t.deepEqual(
+            objIgnoreKeys(pugOptions, ['filename']),
+            objIgnoreKeys(
+                compileOptions,
+                Object.keys(pugConvert.defaultOptions),
+            ),
+            "Pug's options do not include convert.defaultOptions",
+        );
+    });
+
+    spy.restore();
+});
+
+test.serial(
+    'Validate options passed to Pug API: compile() & render()',
+    async t => {
+        const spy = sinon.spy(pug, 'compile');
+
+        const compileOptions = {
+            ...pugConvert.defaultOptions,
+            doctype: 'xml',
+            cache: false,
+            another: 10,
+            hoge: 'fuga',
+            x: 42,
+        };
+        const metalsmith = createMetalsmith().use(compile(compileOptions));
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        spy.args.forEach(([, pugOptions]) => {
+            t.deepEqual(
+                objIgnoreKeys(pugOptions, ['filename']),
+                objIgnoreKeys(
+                    compileOptions,
+                    Object.keys(compile.defaultOptions),
+                ),
+                "Pug's options do not include compile.defaultOptions",
+            );
+        });
+
+        spy.restore();
+    },
+);
