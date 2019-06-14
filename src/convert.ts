@@ -1,6 +1,7 @@
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
 import deepFreeze from 'deep-freeze-strict';
+import createDebug from 'debug';
 
 import { addFile, freezeProperty, createEachPlugin } from './utils';
 import {
@@ -14,6 +15,8 @@ import {
     getConvertedText,
     getRenderOptions,
 } from './render';
+
+const debug = createDebug('metalsmith-pug-extra:convert');
 
 interface ConvertOptionsInterface
     extends CompileOptionsInterface,
@@ -48,8 +51,11 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
         );
 
         if (compileTemplate && newFilename && data) {
+            debug(`converting ${filename}`);
+
             const convertedText = getConvertedText(
                 compileTemplate,
+                filename,
                 data,
                 metalsmith,
                 options,
@@ -58,7 +64,11 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
             addFile(files, newFilename, convertedText);
 
             if (filename !== newFilename) {
+                debug(`done convert ${filename}, renamed to ${newFilename}`);
                 delete files[filename];
+                debug(`file deleted: ${filename}`);
+            } else {
+                debug(`done convert ${filename}`);
             }
         }
     }, options.pattern);

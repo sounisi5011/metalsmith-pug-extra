@@ -2,6 +2,7 @@ import Metalsmith from 'metalsmith';
 import pug from 'pug';
 import isUtf8 from 'is-utf8';
 import deepFreeze from 'deep-freeze-strict';
+import createDebug from 'debug';
 
 import {
     FileInterface,
@@ -12,6 +13,8 @@ import {
     createEachPlugin,
 } from './utils';
 import compileTemplateMap from './compileTemplateMap';
+
+const debug = createDebug('metalsmith-pug-extra:compile');
 
 export interface CompileOptionsInterface {
     pattern: string | string[];
@@ -38,12 +41,16 @@ export function getCompileTemplate(
     newFilename?: string;
     data?: FileInterface;
 } {
+    debug(`validating ${filename}`);
+
     const data: unknown = files[filename];
     if (!isFile(data)) {
+        debug(`validation failed, ${filename} is not valid file data`);
         return {};
     }
 
     if (!isUtf8(data.contents)) {
+        debug(`validation failed, ${filename} is not utf-8`);
         return {};
     }
 
@@ -60,12 +67,15 @@ export function getCompileTemplate(
     );
 
     if (!overwrite && dupFilename) {
+        debug(`compile failed, ${filename} is duplicated of ${dupFilename}`);
         return {};
     }
 
     pugOptions.filename = absoluteFilepath;
 
+    debug(`compiling ${filename}`);
     const compileTemplate = pug.compile(data.contents.toString(), pugOptions);
+    debug(`done compile ${filename}`);
 
     return { compileTemplate, newFilename: dupFilename || newFilename, data };
 }
@@ -99,10 +109,12 @@ export const compile: CompileFuncInterface = function(opts = {}) {
         );
         if (compileTemplate && newFilename) {
             const newFile = addFile(files, newFilename, '');
+            debug(`file created: ${newFilename}`);
             compileTemplateMap.set(newFile.contents, compileTemplate);
 
             if (filename !== newFilename) {
                 delete files[filename];
+                debug(`file deleted: ${filename}`);
             }
         }
     }, options.pattern);

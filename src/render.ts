@@ -1,6 +1,7 @@
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
 import deepFreeze from 'deep-freeze-strict';
+import createDebug from 'debug';
 
 import {
     FileInterface,
@@ -9,6 +10,8 @@ import {
     createEachPlugin,
 } from './utils';
 import compileTemplateMap from './compileTemplateMap';
+
+const debug = createDebug('metalsmith-pug-extra:render');
 
 export interface RenderOptionsInterface {
     locals: pug.LocalsObject;
@@ -26,6 +29,7 @@ export function getRenderOptions<T extends RenderOptionsInterface>(
 
 export function getConvertedText(
     compileTemplate: pug.compileTemplate,
+    filename: string,
     data: FileInterface,
     metalsmith: Metalsmith,
     options: RenderOptionsInterface,
@@ -36,7 +40,9 @@ export function getConvertedText(
         Object.assign(locals, metalsmith.metadata(), data);
     }
 
+    debug(`rendering ${filename}`);
     const convertedText = compileTemplate(locals);
+    debug(`done rendering ${filename}`);
 
     return convertedText;
 }
@@ -68,12 +74,14 @@ export const render: RenderFuncInterface = function(opts = {}) {
         if (compileTemplate) {
             const convertedText = getConvertedText(
                 compileTemplate,
+                filename,
                 data,
                 metalsmith,
                 options,
             );
 
             data.contents = Buffer.from(convertedText, 'utf8');
+            debug(`file contents updated: ${filename}`);
         }
     });
 };
