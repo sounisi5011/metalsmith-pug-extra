@@ -242,7 +242,6 @@ test.serial('should not overwrite duplicate files: convert()', async t => {
     await assertFileConverted({
         t,
         metalsmith,
-        sourceFilename: 'index.pug',
         destFilename: 'index.html',
         destFileContents: '<img>\n',
     });
@@ -261,7 +260,6 @@ test.serial(
         await assertFileConverted({
             t,
             metalsmith,
-            sourceFilename: 'index.pug',
             destFilename: 'index.html',
             destFileContents: '<img>\n',
         });
