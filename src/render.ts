@@ -12,8 +12,8 @@ export interface RenderOptionsInterface {
 export function getRenderOptions<T extends RenderOptionsInterface>(
     options: T,
 ): {
-    locals: pug.LocalsObject;
-    useMetadata: boolean;
+    locals: RenderOptionsInterface['locals'];
+    useMetadata: RenderOptionsInterface['useMetadata'];
     otherOptions: Omit<T, keyof RenderOptionsInterface>;
 } {
     const { locals, useMetadata, ...otherOptions } = options;

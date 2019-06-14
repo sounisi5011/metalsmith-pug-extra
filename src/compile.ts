@@ -11,6 +11,17 @@ export interface CompileOptionsInterface {
     renamer: (filename: string) => string;
 }
 
+export function getCompileOptions<T extends CompileOptionsInterface>(
+    options: T,
+): {
+    pattern: CompileOptionsInterface['pattern'];
+    renamer: CompileOptionsInterface['renamer'];
+    otherOptions: Omit<T, keyof CompileOptionsInterface>;
+} {
+    const { pattern, renamer, ...otherOptions } = options;
+    return { pattern, renamer, otherOptions };
+}
+
 export function getCompileTemplate(
     filename: string,
     files: Metalsmith.Files,
@@ -30,11 +41,7 @@ export function getCompileTemplate(
         return {};
     }
 
-    const {
-        pattern, // eslint-disable-line no-unused-vars, @typescript-eslint/no-unused-vars
-        renamer,
-        ...pugOptions
-    } = options;
+    const { renamer, otherOptions: pugOptions } = getCompileOptions(options);
     const newFilename: string = renamer(filename);
 
     pugOptions.filename = metalsmith.path(metalsmith.source(), filename);
