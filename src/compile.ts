@@ -58,7 +58,7 @@ export const compileDefaultOptions: CompileOptionsInterface = {
 
 export interface CompileFuncInterface {
     (
-        options: Partial<CompileOptionsInterface> & pug.Options,
+        options?: Partial<CompileOptionsInterface> & pug.Options,
     ): Metalsmith.Plugin;
     defaultOptions: CompileOptionsInterface;
 }
