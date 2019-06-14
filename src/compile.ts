@@ -14,9 +14,7 @@ export interface CompileOptionsInterface {
 
 export function getCompileOptions<T extends CompileOptionsInterface>(
     options: T,
-): {
-    pattern: CompileOptionsInterface['pattern'];
-    renamer: CompileOptionsInterface['renamer'];
+): CompileOptionsInterface & {
     otherOptions: Omit<T, keyof CompileOptionsInterface>;
 } {
     const { pattern, renamer, ...otherOptions } = options;
