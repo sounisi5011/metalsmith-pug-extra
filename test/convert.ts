@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import test, { ExecutionContext } from 'ava';
 import Metalsmith from 'metalsmith';
-import pugConvert from '../src';
+import pugConvert, { compile, render } from '../src';
 
 function createMetalsmith(): Metalsmith {
     return Metalsmith(path.join(__dirname, 'fixtures'))
@@ -71,7 +71,22 @@ function assertFileContentsEquals(
     });
 }
 
-function assertFileConverted({
+function assertMetalsmithBuild({
+    t,
+    metalsmith,
+}: {
+    t: ExecutionContext;
+    metalsmith: Metalsmith;
+}): Promise<void> {
+    return new Promise(resolve => {
+        metalsmith.build(err => {
+            t.is(err, null, 'No build error');
+            resolve();
+        });
+    });
+}
+
+async function assertFileConverted({
     t,
     metalsmith,
     sourceFilename,
@@ -84,32 +99,21 @@ function assertFileConverted({
     destFilename: string;
     destFileContents: string;
 }): Promise<void> {
-    return new Promise(resolve => {
-        metalsmith.build(err => {
-            t.is(err, null, 'No build error');
-
-            assertFileContentsEquals(
-                t,
-                destPath(metalsmith, destFilename),
-                destFileContents,
-            )
-                .then(() => {
-                    if (sourceFilename && sourceFilename !== destFilename) {
-                        return assertFileNotExists(
-                            t,
-                            destPath(metalsmith, sourceFilename),
-                        );
-                    }
-                    return undefined;
-                })
-                .then(() => {
-                    resolve();
-                });
-        });
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
     });
+    await assertFileContentsEquals(
+        t,
+        destPath(metalsmith, destFilename),
+        destFileContents,
+    );
+    if (sourceFilename && sourceFilename !== destFilename) {
+        await assertFileNotExists(t, destPath(metalsmith, sourceFilename));
+    }
 }
 
-function assertFileNotConverted({
+async function assertFileNotConverted({
     t,
     metalsmith,
     sourceFilename,
@@ -120,22 +124,26 @@ function assertFileNotConverted({
     sourceFilename: string;
     destFilename: string;
 }): Promise<void> {
-    return new Promise(resolve => {
-        metalsmith.build(err => {
-            t.is(err, null, 'No build error');
-
-            assertFileNotExists(t, destPath(metalsmith, destFilename))
-                .then(() =>
-                    assertFileExists(t, destPath(metalsmith, sourceFilename)),
-                )
-                .then(() => {
-                    resolve();
-                });
-        });
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
     });
+    await assertFileNotExists(t, destPath(metalsmith, destFilename));
+    await assertFileExists(t, destPath(metalsmith, sourceFilename));
 }
 
-test.serial('should render html', async t => {
+function assertFilesPlugin(
+    t: ExecutionContext,
+    fileNameList: string[],
+    message?: string,
+): Metalsmith.Plugin {
+    return (files, metalsmith, done) => {
+        t.deepEqual(Object.keys(files).sort(), fileNameList.sort(), message);
+        done(null, files, metalsmith);
+    };
+}
+
+test.serial('should render html: convert()', async t => {
     const metalsmith = createMetalsmith().use(pugConvert());
     await assertFileConverted({
         t,
@@ -146,7 +154,61 @@ test.serial('should render html', async t => {
     });
 });
 
-test.serial('should not support .jade files by default', async t => {
+test.serial('should render html: compile() & render()', async t => {
+    const metalsmith = createMetalsmith()
+        .use(compile())
+        .use(render());
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.html',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
+
+test.serial('should render html with lazy evaluation', async t => {
+    const metalsmith = createMetalsmith()
+        .use(
+            assertFilesPlugin(
+                t,
+                ['index.pug', 'legacy.jade', 'locals.pug', 'self-closing.pug'],
+                'Before compile',
+            ),
+        )
+        .use(compile())
+        .use(
+            assertFilesPlugin(
+                t,
+                [
+                    'index.html',
+                    'legacy.jade',
+                    'locals.html',
+                    'self-closing.html',
+                ],
+                'After compile & Before render',
+            ),
+        )
+        .use(render())
+        .use(
+            assertFilesPlugin(
+                t,
+                [
+                    'index.html',
+                    'legacy.jade',
+                    'locals.html',
+                    'self-closing.html',
+                ],
+                'After render',
+            ),
+        );
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+});
+
+test.serial('should not support .jade files by default: convert()', async t => {
     const metalsmith = createMetalsmith().use(pugConvert());
     await assertFileNotConverted({
         t,
@@ -156,37 +218,98 @@ test.serial('should not support .jade files by default', async t => {
     });
 });
 
-test.serial('should support .jade files by pattern options', async t => {
-    const metalsmith = createMetalsmith().use(
-        pugConvert({
-            pattern: '**/*.jade',
-        }),
-    );
-    await assertFileConverted({
-        t,
-        metalsmith,
-        sourceFilename: 'legacy.jade',
-        destFilename: 'legacy.html',
-        destFileContents: '<h1>Hello World</h1>',
-    });
-});
+test.serial(
+    'should not support .jade files by default: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .use(compile())
+            .use(render());
+        await assertFileNotConverted({
+            t,
+            metalsmith,
+            sourceFilename: 'legacy.jade',
+            destFilename: 'legacy.html',
+        });
+    },
+);
 
-test.serial('should render without changing the file name', async t => {
-    const metalsmith = createMetalsmith().use(
-        pugConvert({
-            renamer: filename => filename,
-        }),
-    );
-    await assertFileConverted({
-        t,
-        metalsmith,
-        sourceFilename: 'index.pug',
-        destFilename: 'index.pug',
-        destFileContents: '<h1>Hello World</h1>',
-    });
-});
+test.serial(
+    'should support .jade files by pattern options: convert()',
+    async t => {
+        const metalsmith = createMetalsmith().use(
+            pugConvert({
+                pattern: '**/*.jade',
+            }),
+        );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            sourceFilename: 'legacy.jade',
+            destFilename: 'legacy.html',
+            destFileContents: '<h1>Hello World</h1>',
+        });
+    },
+);
 
-test.serial('should render html with locals', async t => {
+test.serial(
+    'should support .jade files by pattern options: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .use(
+                compile({
+                    pattern: '**/*.jade',
+                }),
+            )
+            .use(render());
+        await assertFileConverted({
+            t,
+            metalsmith,
+            sourceFilename: 'legacy.jade',
+            destFilename: 'legacy.html',
+            destFileContents: '<h1>Hello World</h1>',
+        });
+    },
+);
+
+test.serial(
+    'should render without changing the file name: convert()',
+    async t => {
+        const metalsmith = createMetalsmith().use(
+            pugConvert({
+                renamer: filename => filename,
+            }),
+        );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            sourceFilename: 'index.pug',
+            destFilename: 'index.pug',
+            destFileContents: '<h1>Hello World</h1>',
+        });
+    },
+);
+
+test.serial(
+    'should render without changing the file name: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .use(
+                compile({
+                    renamer: filename => filename,
+                }),
+            )
+            .use(render());
+        await assertFileConverted({
+            t,
+            metalsmith,
+            sourceFilename: 'index.pug',
+            destFilename: 'index.pug',
+            destFileContents: '<h1>Hello World</h1>',
+        });
+    },
+);
+
+test.serial('should render html with locals: convert()', async t => {
     const metalsmith = createMetalsmith().use(
         pugConvert({
             locals: {
@@ -204,7 +327,27 @@ test.serial('should render html with locals', async t => {
     });
 });
 
-test.serial('should render html with locals only', async t => {
+test.serial('should render html with locals: compile() & render()', async t => {
+    const metalsmith = createMetalsmith()
+        .use(compile())
+        .use(
+            render({
+                locals: {
+                    A: 1,
+                    B: 2,
+                    E: 42,
+                },
+            }),
+        );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:1 B:2 E:42 ',
+    });
+});
+
+test.serial('should render html with locals only: convert()', async t => {
     const metalsmith = createMetalsmith()
         .metadata({
             M_L_O: 'metadata',
@@ -235,39 +378,115 @@ test.serial('should render html with locals only', async t => {
     });
 });
 
-test.serial('should render html with locals and metadata', async t => {
-    const metalsmith = createMetalsmith()
-        .metadata({
-            M_L_O: 'metadata',
-            M_L: 'metadata',
-            M_O: 'metadata',
-        })
-        .use(
-            setLocalsPlugin({
-                M_L_O: 'locals',
-                M_L: 'locals',
-                L_O: 'locals',
-            }),
-        )
-        .use(
-            pugConvert({
-                locals: {
-                    M_L_O: 'options',
-                    L_O: 'options',
-                    M_O: 'options',
-                },
-                useMetadata: true,
-            }),
-        );
-    await assertFileConverted({
-        t,
-        metalsmith,
-        destFilename: 'locals.html',
-        destFileContents: 'M_L_O:locals M_L:locals L_O:locals M_O:metadata ',
-    });
-});
+test.serial(
+    'should render html with locals only: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({
+                M_L_O: 'metadata',
+                M_L: 'metadata',
+                M_O: 'metadata',
+            })
+            .use(compile())
+            .use(
+                setLocalsPlugin({
+                    M_L_O: 'locals',
+                    M_L: 'locals',
+                    L_O: 'locals',
+                }),
+            )
+            .use(
+                render({
+                    locals: {
+                        M_L_O: 'options',
+                        L_O: 'options',
+                        M_O: 'options',
+                    },
+                }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'M_L_O:options L_O:options M_O:options ',
+        });
+    },
+);
 
-test.serial('should render html with includes', async t => {
+test.serial(
+    'should render html with locals and metadata: convert()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({
+                M_L_O: 'metadata',
+                M_L: 'metadata',
+                M_O: 'metadata',
+            })
+            .use(
+                setLocalsPlugin({
+                    M_L_O: 'locals',
+                    M_L: 'locals',
+                    L_O: 'locals',
+                }),
+            )
+            .use(
+                pugConvert({
+                    locals: {
+                        M_L_O: 'options',
+                        L_O: 'options',
+                        M_O: 'options',
+                    },
+                    useMetadata: true,
+                }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents:
+                'M_L_O:locals M_L:locals L_O:locals M_O:metadata ',
+        });
+    },
+);
+
+test.serial(
+    'should render html with locals and metadata: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({
+                M_L_O: 'metadata',
+                M_L: 'metadata',
+                M_O: 'metadata',
+            })
+            .use(compile())
+            .use(
+                setLocalsPlugin({
+                    M_L_O: 'locals',
+                    M_L: 'locals',
+                    L_O: 'locals',
+                }),
+            )
+            .use(
+                render({
+                    locals: {
+                        M_L_O: 'options',
+                        L_O: 'options',
+                        M_O: 'options',
+                    },
+                    useMetadata: true,
+                }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents:
+                'M_L_O:locals M_L:locals L_O:locals M_O:metadata ',
+        });
+    },
+);
+
+test.serial('should render html with includes: convert()', async t => {
     const metalsmith = createMetalsmith()
         .source('includes')
         .use(pugConvert());
@@ -281,12 +500,47 @@ test.serial('should render html with includes', async t => {
     });
 });
 
-test.serial('should pass options to pug', async t => {
+test.serial(
+    'should render html with includes: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .source('includes')
+            .use(compile())
+            .use(render());
+
+        await assertFileConverted({
+            t,
+            metalsmith,
+            sourceFilename: 'index.pug',
+            destFilename: 'index.html',
+            destFileContents: '<h1>Hello World</h1><h2>hoge</h2>',
+        });
+    },
+);
+
+test.serial('should pass options to pug: convert()', async t => {
     const metalsmith = createMetalsmith().use(
         pugConvert({
             doctype: 'xml',
         }),
     );
+
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'self-closing.html',
+        destFileContents: '<br></br>',
+    });
+});
+
+test.serial('should pass options to pug: compile() & render()', async t => {
+    const metalsmith = createMetalsmith()
+        .use(
+            compile({
+                doctype: 'xml',
+            }),
+        )
+        .use(render());
 
     await assertFileConverted({
         t,
