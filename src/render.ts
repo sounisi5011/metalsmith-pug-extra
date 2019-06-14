@@ -27,7 +27,7 @@ export function getRenderOptions<T extends RenderOptionsInterface>(
     return { locals: { ...locals }, useMetadata, otherOptions };
 }
 
-export function getConvertedText(
+export function getRenderedText(
     compileTemplate: pug.compileTemplate,
     filename: string,
     data: FileInterface,
@@ -72,7 +72,7 @@ export const render: RenderFuncInterface = function(opts = {}) {
 
         const compileTemplate = compileTemplateMap.get(data.contents);
         if (compileTemplate) {
-            const convertedText = getConvertedText(
+            const convertedText = getRenderedText(
                 compileTemplate,
                 filename,
                 data,

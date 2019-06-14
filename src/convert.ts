@@ -12,8 +12,8 @@ import {
 import {
     RenderOptionsInterface,
     renderDefaultOptions,
-    getConvertedText,
     getRenderOptions,
+    getRenderedText,
 } from './render';
 
 const debug = createDebug('metalsmith-pug-extra:convert');
@@ -53,7 +53,7 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
         if (compileTemplate && newFilename && data) {
             debug(`converting ${filename}`);
 
-            const convertedText = getConvertedText(
+            const convertedText = getRenderedText(
                 compileTemplate,
                 filename,
                 data,
