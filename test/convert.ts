@@ -191,7 +191,13 @@ test.serial('should render html with lazy evaluation', async t => {
         .use(
             assertFilesPlugin(
                 t,
-                ['index.pug', 'legacy.jade', 'locals.pug', 'self-closing.pug'],
+                [
+                    'index.html',
+                    'index.pug',
+                    'legacy.jade',
+                    'locals.pug',
+                    'self-closing.pug',
+                ],
                 'Before compile',
             ),
         )
@@ -226,6 +232,41 @@ test.serial('should render html with lazy evaluation', async t => {
         metalsmith,
     });
 });
+
+test.serial('should not overwrite duplicate files: convert()', async t => {
+    const metalsmith = createMetalsmith().use(
+        pugConvert({
+            overwrite: false,
+        }),
+    );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.html',
+        destFileContents: '<img>\n',
+    });
+});
+
+test.serial(
+    'should not overwrite duplicate files: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .use(
+                compile({
+                    overwrite: false,
+                }),
+            )
+            .use(render());
+        await assertFileConverted({
+            t,
+            metalsmith,
+            sourceFilename: 'index.pug',
+            destFilename: 'index.html',
+            destFileContents: '<img>\n',
+        });
+    },
+);
 
 test.serial('should not support .jade files by default: convert()', async t => {
     const metalsmith = createMetalsmith().use(pugConvert());
