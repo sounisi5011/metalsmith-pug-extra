@@ -5,7 +5,7 @@ import Metalsmith from 'metalsmith';
 import pug from 'pug';
 import sinon from 'sinon';
 
-import pugConvert, { compile, render } from '../src';
+import convert, { compile, render } from '../src';
 import { isObject } from '../src/utils';
 
 function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
@@ -163,7 +163,7 @@ function assertFilesPlugin(
 }
 
 test.serial('should render html: convert()', async t => {
-    const metalsmith = createMetalsmith().use(pugConvert());
+    const metalsmith = createMetalsmith().use(convert());
     await assertFileConverted({
         t,
         metalsmith,
@@ -235,7 +235,7 @@ test.serial('should render html with lazy evaluation', async t => {
 
 test.serial('should not overwrite duplicate files: convert()', async t => {
     const metalsmith = createMetalsmith().use(
-        pugConvert({
+        convert({
             overwrite: false,
         }),
     );
@@ -267,7 +267,7 @@ test.serial(
 );
 
 test.serial('should not support .jade files by default: convert()', async t => {
-    const metalsmith = createMetalsmith().use(pugConvert());
+    const metalsmith = createMetalsmith().use(convert());
     await assertFileNotConverted({
         t,
         metalsmith,
@@ -295,7 +295,7 @@ test.serial(
     'should support .jade files by pattern options: convert()',
     async t => {
         const metalsmith = createMetalsmith().use(
-            pugConvert({
+            convert({
                 pattern: '**/*.jade',
             }),
         );
@@ -333,7 +333,7 @@ test.serial(
     'should render without changing the file name: convert()',
     async t => {
         const metalsmith = createMetalsmith().use(
-            pugConvert({
+            convert({
                 renamer: filename => filename,
             }),
         );
@@ -369,7 +369,7 @@ test.serial(
 
 test.serial('should render html with locals: convert()', async t => {
     const metalsmith = createMetalsmith().use(
-        pugConvert({
+        convert({
             locals: {
                 A: 1,
                 B: 2,
@@ -420,7 +420,7 @@ test.serial('should render html with locals only: convert()', async t => {
             }),
         )
         .use(
-            pugConvert({
+            convert({
                 locals: {
                     M_L_O: 'options',
                     L_O: 'options',
@@ -488,7 +488,7 @@ test.serial(
                 }),
             )
             .use(
-                pugConvert({
+                convert({
                     locals: {
                         M_L_O: 'options',
                         L_O: 'options',
@@ -547,7 +547,7 @@ test.serial(
 test.serial('should render html with includes: convert()', async t => {
     const metalsmith = createMetalsmith()
         .source('includes')
-        .use(pugConvert());
+        .use(convert());
 
     await assertFileConverted({
         t,
@@ -578,7 +578,7 @@ test.serial(
 
 test.serial('should pass options to pug: convert()', async t => {
     const metalsmith = createMetalsmith().use(
-        pugConvert({
+        convert({
             doctype: 'xml',
         }),
     );
@@ -612,14 +612,14 @@ test.serial('Validate options passed to Pug API: convert()', async t => {
     const spy = sinon.spy(pug, 'compile');
 
     const compileOptions = {
-        ...pugConvert.defaultOptions,
+        ...convert.defaultOptions,
         doctype: 'xml',
         cache: false,
         another: 10,
         hoge: 'fuga',
         x: 42,
     };
-    const metalsmith = createMetalsmith().use(pugConvert(compileOptions));
+    const metalsmith = createMetalsmith().use(convert(compileOptions));
     await assertMetalsmithBuild({
         t,
         metalsmith,
@@ -628,10 +628,7 @@ test.serial('Validate options passed to Pug API: convert()', async t => {
     spy.args.forEach(([, pugOptions]) => {
         t.deepEqual(
             objIgnoreKeys(pugOptions, ['filename']),
-            objIgnoreKeys(
-                compileOptions,
-                Object.keys(pugConvert.defaultOptions),
-            ),
+            objIgnoreKeys(compileOptions, Object.keys(convert.defaultOptions)),
             "Pug's options do not include convert.defaultOptions",
         );
     });
@@ -645,7 +642,7 @@ test.serial(
         const spy = sinon.spy(pug, 'compile');
 
         const compileOptions = {
-            ...pugConvert.defaultOptions,
+            ...convert.defaultOptions,
             doctype: 'xml',
             cache: false,
             another: 10,

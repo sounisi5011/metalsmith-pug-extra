@@ -1,14 +1,14 @@
 import test from 'ava';
-import pugConvert, { compile, render } from '../src';
+import convert, { compile, render } from '../src';
 
-const methodMap = new Map<string, pugConvert | compile | render>([
-    ['convert()', pugConvert],
+const methodMap = new Map<string, convert | compile | render>([
+    ['convert()', convert],
     ['compile()', compile],
     ['render()', render],
 ]);
 
-const compileMethodMap = new Map<string, pugConvert | compile>([
-    ['convert()', pugConvert],
+const compileMethodMap = new Map<string, convert | compile>([
+    ['convert()', convert],
     ['compile()', compile],
 ]);
 

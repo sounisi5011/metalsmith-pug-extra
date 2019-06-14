@@ -1,12 +1,8 @@
 import test from 'ava';
 import cloneDeep from 'lodash.clonedeep';
 
-import {
-    getCompileOptions,
-    compileDefaultOptions,
-    compile,
-} from '../src/compile';
-import { getRenderOptions, renderDefaultOptions, render } from '../src/render';
+import { getCompileOptions, compile } from '../src/compile';
+import { getRenderOptions, render } from '../src/render';
 import { convert } from '../src/convert';
 
 function ignoreTypeError(callback: () => void): void {
@@ -132,7 +128,7 @@ test('getCompileOptions().otherOptions excludes CompileOptionsInterface', t => {
     };
 
     t.deepEqual(
-        getCompileOptions({ ...pugOptions, ...compileDefaultOptions })
+        getCompileOptions({ ...pugOptions, ...compile.defaultOptions })
             .otherOptions,
         pugOptions,
     );
@@ -161,7 +157,7 @@ test('getRenderOptions().otherOptions excludes RenderOptionsInterface', t => {
     };
 
     t.deepEqual(
-        getRenderOptions({ ...pugOptions, ...renderDefaultOptions })
+        getRenderOptions({ ...pugOptions, ...render.defaultOptions })
             .otherOptions,
         pugOptions,
     );
