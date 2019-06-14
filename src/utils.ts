@@ -1,3 +1,5 @@
+import path from 'path';
+
 import Metalsmith from 'metalsmith';
 import match from 'multimatch';
 
@@ -23,6 +25,18 @@ export function isFile(value: unknown): value is FileInterface {
         );
     }
     return false;
+}
+
+export function findEqualsPath(
+    baseDirpath: string,
+    filepath: string,
+    pathList: string[],
+): string | undefined {
+    const absoluteFilepath = path.resolve(baseDirpath, filepath);
+    return pathList.find(
+        targetPath =>
+            path.resolve(baseDirpath, targetPath) === absoluteFilepath,
+    );
 }
 
 export function addFile(

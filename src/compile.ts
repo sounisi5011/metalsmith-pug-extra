@@ -7,6 +7,7 @@ import {
     FileInterface,
     isFile,
     addFile,
+    findEqualsPath,
     freezeProperty,
     createEachPlugin,
 } from './utils';
@@ -15,6 +16,7 @@ import compileTemplateMap from './compileTemplateMap';
 export interface CompileOptionsInterface {
     pattern: string | string[];
     renamer: (filename: string) => string;
+    overwrite: boolean;
 }
 
 export function getCompileOptions<T extends CompileOptionsInterface>(
@@ -22,8 +24,8 @@ export function getCompileOptions<T extends CompileOptionsInterface>(
 ): CompileOptionsInterface & {
     otherOptions: Omit<T, keyof CompileOptionsInterface>;
 } {
-    const { pattern, renamer, ...otherOptions } = options;
-    return { pattern, renamer, otherOptions };
+    const { pattern, renamer, overwrite, ...otherOptions } = options;
+    return { pattern, renamer, overwrite, otherOptions };
 }
 
 export function getCompileTemplate(
@@ -45,19 +47,33 @@ export function getCompileTemplate(
         return {};
     }
 
-    const { renamer, otherOptions: pugOptions } = getCompileOptions(options);
+    const { renamer, overwrite, otherOptions: pugOptions } = getCompileOptions(
+        options,
+    );
     const newFilename: string = renamer(filename);
 
-    pugOptions.filename = metalsmith.path(metalsmith.source(), filename);
+    const absoluteFilepath = metalsmith.path(metalsmith.source(), filename);
+    const dupFilename = findEqualsPath(
+        metalsmith.path(metalsmith.destination()),
+        newFilename,
+        Object.keys(files),
+    );
+
+    if (!overwrite && dupFilename) {
+        return {};
+    }
+
+    pugOptions.filename = absoluteFilepath;
 
     const compileTemplate = pug.compile(data.contents.toString(), pugOptions);
 
-    return { compileTemplate, newFilename, data };
+    return { compileTemplate, newFilename: dupFilename || newFilename, data };
 }
 
 export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
     pattern: ['**/*.pug'],
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
+    overwrite: true,
 });
 
 export interface CompileFuncInterface {
