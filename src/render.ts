@@ -1,7 +1,8 @@
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
+import deepFreeze from 'deep-freeze-strict';
 
-import { FileInterface, isFile } from './utils';
+import { FileInterface, isFile, freezeProperty } from './utils';
 import compileTemplateMap from './compileTemplateMap';
 
 export interface RenderOptionsInterface {
@@ -37,10 +38,10 @@ export function getConvertedText(
     return convertedText;
 }
 
-export const renderDefaultOptions: RenderOptionsInterface = {
+export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
     locals: {},
     useMetadata: false,
-};
+});
 
 export interface RenderFuncInterface {
     (options?: Partial<RenderOptionsInterface>): Metalsmith.Plugin;
@@ -80,4 +81,5 @@ export const render: RenderFuncInterface = function(opts = {}) {
     };
 };
 
-render.defaultOptions = { ...renderDefaultOptions };
+render.defaultOptions = renderDefaultOptions;
+freezeProperty(render, 'defaultOptions');

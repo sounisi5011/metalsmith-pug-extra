@@ -11,6 +11,10 @@ export function isObject(
     return typeof value === 'object' && value !== null;
 }
 
+export function freezeProperty(obj: object, prop: string): void {
+    Object.defineProperty(obj, prop, { configurable: false, writable: false });
+}
+
 export function isFile(value: unknown): value is FileInterface {
     if (isObject(value)) {
         return (

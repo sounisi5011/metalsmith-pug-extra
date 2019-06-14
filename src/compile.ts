@@ -2,8 +2,9 @@ import Metalsmith from 'metalsmith';
 import match from 'multimatch';
 import pug from 'pug';
 import isUtf8 from 'is-utf8';
+import deepFreeze from 'deep-freeze-strict';
 
-import { FileInterface, isFile, addFile } from './utils';
+import { FileInterface, isFile, addFile, freezeProperty } from './utils';
 import compileTemplateMap from './compileTemplateMap';
 
 export interface CompileOptionsInterface {
@@ -51,10 +52,10 @@ export function getCompileTemplate(
     return { compileTemplate, newFilename, data };
 }
 
-export const compileDefaultOptions: CompileOptionsInterface = {
+export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
     pattern: ['**/*.pug'],
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
-};
+});
 
 export interface CompileFuncInterface {
     (
@@ -99,4 +100,5 @@ export const compile: CompileFuncInterface = function(opts = {}) {
     };
 };
 
-compile.defaultOptions = { ...compileDefaultOptions };
+compile.defaultOptions = compileDefaultOptions;
+freezeProperty(compile, 'defaultOptions');

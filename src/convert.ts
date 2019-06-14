@@ -1,8 +1,9 @@
 import Metalsmith from 'metalsmith';
 import match from 'multimatch';
 import pug from 'pug';
+import deepFreeze from 'deep-freeze-strict';
 
-import { addFile } from './utils';
+import { addFile, freezeProperty } from './utils';
 import {
     CompileOptionsInterface,
     compileDefaultOptions,
@@ -26,10 +27,10 @@ interface ConvertFuncInterface {
     defaultOptions: ConvertOptionsInterface;
 }
 
-const convertDefaultOptions: ConvertOptionsInterface = {
+const convertDefaultOptions: ConvertOptionsInterface = deepFreeze({
     ...compileDefaultOptions,
     ...renderDefaultOptions,
-};
+});
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const convert: ConvertFuncInterface = function(opts = {}) {
@@ -81,4 +82,5 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
     };
 };
 
-convert.defaultOptions = { ...convertDefaultOptions };
+convert.defaultOptions = convertDefaultOptions;
+freezeProperty(convert, 'defaultOptions');
