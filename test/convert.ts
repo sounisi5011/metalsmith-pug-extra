@@ -669,3 +669,87 @@ test.serial(
         spy.restore();
     },
 );
+
+test.serial(
+    'should destroys an object reference from source file to destination file: convert()',
+    async t => {
+        const sourceFiles: Metalsmith.Files = {};
+        const destFiles: Metalsmith.Files = {};
+
+        const metalsmith = createMetalsmith()
+            .use((files, metalsmith, done) => {
+                Object.assign(sourceFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(convert())
+            .use((files, metalsmith, done) => {
+                Object.assign(destFiles, files);
+                done(null, files, metalsmith);
+            });
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
+    },
+);
+
+test.serial(
+    'should destroys an object reference from source file to compiled file: compile()',
+    async t => {
+        const sourceFiles: Metalsmith.Files = {};
+        const compiledFiles: Metalsmith.Files = {};
+
+        const metalsmith = createMetalsmith()
+            .use((files, metalsmith, done) => {
+                Object.assign(sourceFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(compile())
+            .use((files, metalsmith, done) => {
+                Object.assign(compiledFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(render());
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
+    },
+);
+
+test.serial(
+    'should keep an object reference from compiled file to rendered file: render()',
+    async t => {
+        const compiledFiles: Metalsmith.Files = {};
+        const renderedFiles: Metalsmith.Files = {};
+
+        const metalsmith = createMetalsmith()
+            .use(compile())
+            .use((files, metalsmith, done) => {
+                Object.assign(compiledFiles, files);
+                done(null, files, metalsmith);
+            })
+            .use(render())
+            .use((files, metalsmith, done) => {
+                Object.assign(renderedFiles, files);
+                done(null, files, metalsmith);
+            });
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.true(compiledFiles['index.html'] === renderedFiles['index.html']);
+        t.true(
+            renderedFiles['index.html'].contents.length > 0,
+            'file contents updated',
+        );
+    },
+);
