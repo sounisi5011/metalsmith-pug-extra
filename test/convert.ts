@@ -407,32 +407,19 @@ test.serial('should render html with locals: compile() & render()', async t => {
 
 test.serial('should render html with locals only: convert()', async t => {
     const metalsmith = createMetalsmith()
-        .metadata({
-            M_L_O: 'metadata',
-            M_L: 'metadata',
-            M_O: 'metadata',
-        })
-        .use(
-            setLocalsPlugin({
-                M_L_O: 'locals',
-                M_L: 'locals',
-                L_O: 'locals',
-            }),
-        )
+        .metadata({ A: 1 })
+        .use(setLocalsPlugin({ B: 2 }))
         .use(
             convert({
-                locals: {
-                    M_L_O: 'options',
-                    L_O: 'options',
-                    M_O: 'options',
-                },
+                locals: { C: 3 },
+                useMetadata: false,
             }),
         );
     await assertFileConverted({
         t,
         metalsmith,
         destFilename: 'locals.html',
-        destFileContents: 'M_L_O:options L_O:options M_O:options ',
+        destFileContents: 'C:3 ',
     });
 });
 
@@ -440,33 +427,20 @@ test.serial(
     'should render html with locals only: compile() & render()',
     async t => {
         const metalsmith = createMetalsmith()
-            .metadata({
-                M_L_O: 'metadata',
-                M_L: 'metadata',
-                M_O: 'metadata',
-            })
+            .metadata({ A: 1 })
             .use(compile())
-            .use(
-                setLocalsPlugin({
-                    M_L_O: 'locals',
-                    M_L: 'locals',
-                    L_O: 'locals',
-                }),
-            )
+            .use(setLocalsPlugin({ B: 2 }))
             .use(
                 render({
-                    locals: {
-                        M_L_O: 'options',
-                        L_O: 'options',
-                        M_O: 'options',
-                    },
+                    locals: { C: 3 },
+                    useMetadata: false,
                 }),
             );
         await assertFileConverted({
             t,
             metalsmith,
             destFilename: 'locals.html',
-            destFileContents: 'M_L_O:options L_O:options M_O:options ',
+            destFileContents: 'C:3 ',
         });
     },
 );
@@ -475,25 +449,11 @@ test.serial(
     'should render html with locals and metadata: convert()',
     async t => {
         const metalsmith = createMetalsmith()
-            .metadata({
-                M_L_O: 'metadata',
-                M_L: 'metadata',
-                M_O: 'metadata',
-            })
-            .use(
-                setLocalsPlugin({
-                    M_L_O: 'locals',
-                    M_L: 'locals',
-                    L_O: 'locals',
-                }),
-            )
+            .metadata({ A: 1 })
+            .use(setLocalsPlugin({ B: 2 }))
             .use(
                 convert({
-                    locals: {
-                        M_L_O: 'options',
-                        L_O: 'options',
-                        M_O: 'options',
-                    },
+                    locals: { C: 3 },
                     useMetadata: true,
                 }),
             );
@@ -501,8 +461,7 @@ test.serial(
             t,
             metalsmith,
             destFilename: 'locals.html',
-            destFileContents:
-                'M_L_O:locals M_L:locals L_O:locals M_O:metadata ',
+            destFileContents: 'A:1 B:2 C:3 ',
         });
     },
 );
@@ -511,26 +470,12 @@ test.serial(
     'should render html with locals and metadata: compile() & render()',
     async t => {
         const metalsmith = createMetalsmith()
-            .metadata({
-                M_L_O: 'metadata',
-                M_L: 'metadata',
-                M_O: 'metadata',
-            })
+            .metadata({ A: 1 })
             .use(compile())
-            .use(
-                setLocalsPlugin({
-                    M_L_O: 'locals',
-                    M_L: 'locals',
-                    L_O: 'locals',
-                }),
-            )
+            .use(setLocalsPlugin({ B: 2 }))
             .use(
                 render({
-                    locals: {
-                        M_L_O: 'options',
-                        L_O: 'options',
-                        M_O: 'options',
-                    },
+                    locals: { C: 3 },
                     useMetadata: true,
                 }),
             );
@@ -538,8 +483,147 @@ test.serial(
             t,
             metalsmith,
             destFilename: 'locals.html',
-            destFileContents:
-                'M_L_O:locals M_L:locals L_O:locals M_O:metadata ',
+            destFileContents: 'A:1 B:2 C:3 ',
+        });
+    },
+);
+
+test.serial(
+    'files[filename] needs to overwrite Metalsmith.metadata(): convert()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({ A: 'Metalsmith.metadata()' })
+            .use(setLocalsPlugin({ A: 'files[filename]' }))
+            .use(convert({ useMetadata: true }));
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'A:files[filename] ',
+        });
+    },
+);
+
+test.serial(
+    'files[filename] needs to overwrite Metalsmith.metadata(): compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({ A: 'Metalsmith.metadata()' })
+            .use(compile())
+            .use(setLocalsPlugin({ A: 'files[filename]' }))
+            .use(render({ useMetadata: true }));
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'A:files[filename] ',
+        });
+    },
+);
+
+test.serial(
+    'files[filename] needs to overwrite options.locals: convert()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .use(setLocalsPlugin({ A: 'files[filename]' }))
+            .use(
+                convert({ locals: { A: 'options.locals' }, useMetadata: true }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'A:files[filename] ',
+        });
+    },
+);
+
+test.serial(
+    'files[filename] needs to overwrite options.locals: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .use(compile())
+            .use(setLocalsPlugin({ A: 'files[filename]' }))
+            .use(
+                render({ locals: { A: 'options.locals' }, useMetadata: true }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'A:files[filename] ',
+        });
+    },
+);
+
+test.serial(
+    'Metalsmith.metadata() needs to overwrite options.locals: convert()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({ A: 'Metalsmith.metadata()' })
+            .use(
+                convert({ locals: { A: 'options.locals' }, useMetadata: true }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'A:Metalsmith.metadata() ',
+        });
+    },
+);
+
+test.serial(
+    'Metalsmith.metadata() needs to overwrite options.locals: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({ A: 'Metalsmith.metadata()' })
+            .use(compile())
+            .use(
+                render({ locals: { A: 'options.locals' }, useMetadata: true }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'A:Metalsmith.metadata() ',
+        });
+    },
+);
+
+test.serial(
+    'files[filename] needs to overwrite Metalsmith.metadata() and options.locals: convert()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({ A: 'Metalsmith.metadata()' })
+            .use(setLocalsPlugin({ A: 'files[filename]' }))
+            .use(
+                convert({ locals: { A: 'options.locals' }, useMetadata: true }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'A:files[filename] ',
+        });
+    },
+);
+
+test.serial(
+    'files[filename] needs to overwrite Metalsmith.metadata() and options.locals: compile() & render()',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .metadata({ A: 'Metalsmith.metadata()' })
+            .use(compile())
+            .use(setLocalsPlugin({ A: 'files[filename]' }))
+            .use(
+                render({ locals: { A: 'options.locals' }, useMetadata: true }),
+            );
+        await assertFileConverted({
+            t,
+            metalsmith,
+            destFilename: 'locals.html',
+            destFileContents: 'A:files[filename] ',
         });
     },
 );
