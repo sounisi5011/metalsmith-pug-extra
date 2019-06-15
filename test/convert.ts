@@ -2,6 +2,7 @@ import test, { ExecutionContext } from 'ava';
 import fs from 'fs';
 import cloneDeep from 'lodash.clonedeep';
 import Metalsmith from 'metalsmith';
+import os from 'os';
 import path from 'path';
 import pug from 'pug';
 import sinon from 'sinon';
@@ -78,12 +79,25 @@ function assertFileContentsEquals(
     filepath: string,
     contents: string,
 ): Promise<void> {
+    const unixTextRegExp = /^(?:[^\r\n]|\n)+$/;
+    const windowsTextRegExp = /^(?:[^\r\n]|\r\n)+$/;
+
     return new Promise(resolve => {
         fs.readFile(filepath, (err, data) => {
             t.falsy(err, 'No readFile error');
 
             if (!err) {
-                t.is(data.toString(), contents, filepath);
+                const fileText = data.toString();
+
+                if (
+                    os.EOL === '\r\n' &&
+                    windowsTextRegExp.test(fileText) &&
+                    unixTextRegExp.test(contents)
+                ) {
+                    t.is(fileText.replace(/\r\n/g, '\n'), contents, filepath);
+                } else {
+                    t.is(fileText, contents, filepath);
+                }
             }
 
             resolve();
