@@ -4,6 +4,7 @@ import test, { ExecutionContext } from 'ava';
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
 import sinon from 'sinon';
+import cloneDeep from 'lodash.clonedeep';
 
 import convert, { compile, render } from '../src';
 import { isObject } from '../src/utils';
@@ -997,5 +998,52 @@ test.serial(
             Object.keys(compiledFiles['index.html']).sort(),
             Object.keys(sourceFiles['index.pug']).sort(),
         );
+    },
+);
+
+test.serial('should not change options value: convert()', async t => {
+    const convertOptions = {
+        locals: { C: 3 },
+        useMetadata: true,
+    };
+    const beforeOptions = cloneDeep(convertOptions);
+
+    const metalsmith = createMetalsmith()
+        .metadata({ A: 1 })
+        .use(setLocalsPlugin({ B: 2 }))
+        .use(convert(convertOptions));
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.deepEqual(convertOptions, beforeOptions);
+});
+
+test.serial(
+    'should not change options value: compile() & render()',
+    async t => {
+        const compileOptions = {};
+        const renderOptions = {
+            locals: { C: 3 },
+            useMetadata: true,
+        };
+        const beforeCompileOptions = cloneDeep(compileOptions);
+        const beforeRenderOptions = cloneDeep(renderOptions);
+
+        const metalsmith = createMetalsmith()
+            .metadata({ A: 1 })
+            .use(compile())
+            .use(setLocalsPlugin({ B: 2 }))
+            .use(render(renderOptions));
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.deepEqual(compileOptions, beforeCompileOptions);
+        t.deepEqual(renderOptions, beforeRenderOptions);
     },
 );
