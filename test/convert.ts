@@ -1065,44 +1065,54 @@ test.serial(
 );
 
 test.serial(
-    'should change locals value by the template logic: convert()',
+    'should not change locals value by the template logic: convert()',
     async t => {
-        const locals = {
-            count: 1,
-        };
-        const beforeLocals = cloneDeep(locals);
+        for (const useMetadata of [true, false]) {
+            const locals = {
+                count: 1,
+                state: {
+                    count: 1,
+                },
+            };
+            const beforeLocals = cloneDeep(locals);
 
-        const metalsmith = createMetalsmith()
-            .source('change-locals')
-            .use(convert({ locals, self: true }));
+            const metalsmith = createMetalsmith()
+                .source('change-locals')
+                .use(convert({ locals, useMetadata, self: true }));
 
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
+            await assertMetalsmithBuild({
+                t,
+                metalsmith,
+            });
 
-        t.notDeepEqual(locals, beforeLocals);
+            t.deepEqual(locals, beforeLocals, `useMetadata: ${useMetadata}`);
+        }
     },
 );
 
 test.serial(
-    'should change locals value by the template logic: compile() & render()',
+    'should not change locals value by the template logic: compile() & render()',
     async t => {
-        const locals = {
-            count: 1,
-        };
-        const beforeLocals = cloneDeep(locals);
+        for (const useMetadata of [true, false]) {
+            const locals = {
+                count: 1,
+                state: {
+                    count: 1,
+                },
+            };
+            const beforeLocals = cloneDeep(locals);
 
-        const metalsmith = createMetalsmith()
-            .source('change-locals')
-            .use(compile({ self: true }))
-            .use(render({ locals }));
+            const metalsmith = createMetalsmith()
+                .source('change-locals')
+                .use(compile({ self: true }))
+                .use(render({ locals, useMetadata }));
 
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
+            await assertMetalsmithBuild({
+                t,
+                metalsmith,
+            });
 
-        t.notDeepEqual(locals, beforeLocals);
+            t.deepEqual(locals, beforeLocals, `useMetadata: ${useMetadata}`);
+        }
     },
 );
