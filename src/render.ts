@@ -24,7 +24,7 @@ export function getRenderOptions<T extends RenderOptionsInterface>(
     otherOptions: Omit<T, keyof RenderOptionsInterface>;
 } {
     const { locals, useMetadata, ...otherOptions } = options;
-    return { locals: { ...locals }, useMetadata, otherOptions };
+    return { locals, useMetadata, otherOptions };
 }
 
 export function getRenderedText(
@@ -35,13 +35,12 @@ export function getRenderedText(
     options: RenderOptionsInterface,
 ): string {
     const { locals, useMetadata } = getRenderOptions(options);
-
-    if (useMetadata) {
-        Object.assign(locals, metalsmith.metadata(), data);
-    }
+    const pugOptions = useMetadata
+        ? { ...locals, ...metalsmith.metadata(), ...data }
+        : locals;
 
     debug(`rendering ${filename}`);
-    const convertedText = compileTemplate(locals);
+    const convertedText = compileTemplate(pugOptions);
     debug(`done rendering ${filename}`);
 
     return convertedText;

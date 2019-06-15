@@ -134,21 +134,6 @@ test('getCompileOptions().otherOptions excludes CompileOptionsInterface', t => {
     );
 });
 
-test('getRenderOptions().locals is destroy the reference', t => {
-    const options = {
-        locals: {},
-        useMetadata: true,
-    };
-    const { locals } = getRenderOptions(options);
-
-    Object.assign(locals, {
-        hoge: 'fuga',
-        x: 42,
-    });
-
-    t.notDeepEqual(locals, options.locals);
-});
-
 test('getRenderOptions().otherOptions excludes RenderOptionsInterface', t => {
     const pugOptions = {
         basedir: __dirname,
