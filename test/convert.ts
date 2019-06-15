@@ -1063,3 +1063,46 @@ test.serial(
         }
     },
 );
+
+test.serial(
+    'should change locals value by the template logic: convert()',
+    async t => {
+        const locals = {
+            count: 1,
+        };
+        const beforeLocals = cloneDeep(locals);
+
+        const metalsmith = createMetalsmith()
+            .source('change-locals')
+            .use(convert({ locals, self: true }));
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.notDeepEqual(locals, beforeLocals);
+    },
+);
+
+test.serial(
+    'should change locals value by the template logic: compile() & render()',
+    async t => {
+        const locals = {
+            count: 1,
+        };
+        const beforeLocals = cloneDeep(locals);
+
+        const metalsmith = createMetalsmith()
+            .source('change-locals')
+            .use(compile({ self: true }))
+            .use(render({ locals }));
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.notDeepEqual(locals, beforeLocals);
+    },
+);
