@@ -1,3 +1,4 @@
+import cloneDeep from 'clone-deep';
 import createDebug from 'debug';
 import deepFreeze from 'deep-freeze-strict';
 import Metalsmith from 'metalsmith';
@@ -48,12 +49,12 @@ export function getRenderedText(
     options: RenderOptionsInterface,
 ): string {
     const { locals, useMetadata } = getRenderOptions(options);
-    const pugOptions = useMetadata
-        ? { ...locals, ...metalsmith.metadata(), ...data }
-        : locals;
+    const pugLocals = cloneDeep(
+        useMetadata ? { ...locals, ...metalsmith.metadata(), ...data } : locals,
+    );
 
     debug(`rendering ${filename}`);
-    const convertedText = compileTemplate(pugOptions);
+    const convertedText = compileTemplate(pugLocals);
     debug(`done rendering ${filename}`);
 
     return convertedText;
