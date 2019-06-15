@@ -5,9 +5,12 @@ import Metalsmith from 'metalsmith';
 import path from 'path';
 import pug from 'pug';
 import sinon from 'sinon';
+import util from 'util';
 
 import convert, { compile, render } from '../src';
 import { isObject } from '../src/utils';
+
+const readFile = util.promisify(fs.readFile);
 
 function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
     if (isObject(obj)) {
@@ -47,6 +50,12 @@ function setLocalsPlugin(locals: {
         });
         done(null, files, metalsmith);
     };
+}
+
+async function getSourceContents(metalsmith: Metalsmith, filename: string) {
+    return (await readFile(
+        metalsmith.path(metalsmith.source(), filename),
+    )).toString();
 }
 
 function assertFileExists(
@@ -244,7 +253,7 @@ test.serial('should not overwrite duplicate files: convert()', async t => {
         t,
         metalsmith,
         destFilename: 'index.html',
-        destFileContents: '<img>\n',
+        destFileContents: await getSourceContents(metalsmith, 'index.html'),
     });
 });
 
@@ -262,7 +271,7 @@ test.serial(
             t,
             metalsmith,
             destFilename: 'index.html',
-            destFileContents: '<img>\n',
+            destFileContents: await getSourceContents(metalsmith, 'index.html'),
         });
     },
 );
