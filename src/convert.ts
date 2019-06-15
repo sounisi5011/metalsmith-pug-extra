@@ -1,9 +1,8 @@
+import createDebug from 'debug';
+import deepFreeze from 'deep-freeze-strict';
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
-import deepFreeze from 'deep-freeze-strict';
-import createDebug from 'debug';
 
-import { addFile, freezeProperty, createEachPlugin } from './utils';
 import {
     CompileOptionsInterface,
     compileDefaultOptions,
@@ -11,16 +10,17 @@ import {
 } from './compile';
 import {
     RenderOptionsInterface,
-    renderDefaultOptions,
     getRenderOptions,
     getRenderedText,
+    renderDefaultOptions,
 } from './render';
+import { addFile, createEachPlugin, freezeProperty } from './utils';
 
 const debug = createDebug('metalsmith-pug-extra:convert');
 
-interface ConvertOptionsInterface
-    extends CompileOptionsInterface,
-        RenderOptionsInterface {}
+/*
+ * Interfaces
+ */
 
 interface ConvertFuncInterface {
     (
@@ -29,10 +29,22 @@ interface ConvertFuncInterface {
     defaultOptions: ConvertOptionsInterface;
 }
 
+interface ConvertOptionsInterface
+    extends CompileOptionsInterface,
+        RenderOptionsInterface {}
+
+/*
+ * Default options
+ */
+
 const convertDefaultOptions: ConvertOptionsInterface = deepFreeze({
     ...compileDefaultOptions,
     ...renderDefaultOptions,
 });
+
+/*
+ * Main function
+ */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const convert: ConvertFuncInterface = function(opts = {}) {

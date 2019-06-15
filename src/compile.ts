@@ -1,20 +1,31 @@
+import createDebug from 'debug';
+import deepFreeze from 'deep-freeze-strict';
+import isUtf8 from 'is-utf8';
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
-import isUtf8 from 'is-utf8';
-import deepFreeze from 'deep-freeze-strict';
-import createDebug from 'debug';
 
+import compileTemplateMap from './compileTemplateMap';
 import {
     FileInterface,
-    isFile,
     addFile,
+    createEachPlugin,
     findEqualsPath,
     freezeProperty,
-    createEachPlugin,
+    isFile,
 } from './utils';
-import compileTemplateMap from './compileTemplateMap';
 
 const debug = createDebug('metalsmith-pug-extra:compile');
+
+/*
+ * Interfaces
+ */
+
+export interface CompileFuncInterface {
+    (
+        options?: Partial<CompileOptionsInterface> & pug.Options,
+    ): Metalsmith.Plugin;
+    defaultOptions: CompileOptionsInterface;
+}
 
 export interface CompileOptionsInterface {
     pattern: string | string[];
@@ -22,6 +33,10 @@ export interface CompileOptionsInterface {
     overwrite: boolean;
     copyFileData: boolean;
 }
+
+/*
+ * Utility functions
+ */
 
 export function getCompileOptions<T extends CompileOptionsInterface>(
     options: T,
@@ -87,6 +102,10 @@ export function getCompileTemplate(
     return { compileTemplate, newFilename: dupFilename || newFilename, data };
 }
 
+/*
+ * Default options
+ */
+
 export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
     pattern: ['**/*.pug'],
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
@@ -94,12 +113,9 @@ export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
     copyFileData: false,
 });
 
-export interface CompileFuncInterface {
-    (
-        options?: Partial<CompileOptionsInterface> & pug.Options,
-    ): Metalsmith.Plugin;
-    defaultOptions: CompileOptionsInterface;
-}
+/*
+ * Main function
+ */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const compile: CompileFuncInterface = function(opts = {}) {

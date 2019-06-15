@@ -1,4 +1,5 @@
 import test from 'ava';
+
 import convert, { compile, render } from '../src';
 
 const methodMap = new Map<string, convert | compile | render>([

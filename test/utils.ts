@@ -1,9 +1,9 @@
 import test from 'ava';
 import cloneDeep from 'lodash.clonedeep';
 
-import { getCompileOptions, compile } from '../src/compile';
-import { getRenderOptions, render } from '../src/render';
+import { compile, getCompileOptions } from '../src/compile';
 import { convert } from '../src/convert';
+import { getRenderOptions, render } from '../src/render';
 
 function ignoreTypeError(callback: () => void): void {
     try {

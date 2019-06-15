@@ -1,22 +1,35 @@
+import createDebug from 'debug';
+import deepFreeze from 'deep-freeze-strict';
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
-import deepFreeze from 'deep-freeze-strict';
-import createDebug from 'debug';
 
+import compileTemplateMap from './compileTemplateMap';
 import {
     FileInterface,
-    isFile,
-    freezeProperty,
     createEachPlugin,
+    freezeProperty,
+    isFile,
 } from './utils';
-import compileTemplateMap from './compileTemplateMap';
 
 const debug = createDebug('metalsmith-pug-extra:render');
+
+/*
+ * Interfaces
+ */
+
+export interface RenderFuncInterface {
+    (options?: Partial<RenderOptionsInterface>): Metalsmith.Plugin;
+    defaultOptions: RenderOptionsInterface;
+}
 
 export interface RenderOptionsInterface {
     locals: pug.LocalsObject;
     useMetadata: boolean;
 }
+
+/*
+ * Utility functions
+ */
 
 export function getRenderOptions<T extends RenderOptionsInterface>(
     options: T,
@@ -46,15 +59,18 @@ export function getRenderedText(
     return convertedText;
 }
 
+/*
+ * Default options
+ */
+
 export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
     locals: {},
     useMetadata: false,
 });
 
-export interface RenderFuncInterface {
-    (options?: Partial<RenderOptionsInterface>): Metalsmith.Plugin;
-    defaultOptions: RenderOptionsInterface;
-}
+/*
+ * Main function
+ */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const render: RenderFuncInterface = function(opts = {}) {

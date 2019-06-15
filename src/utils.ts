@@ -1,7 +1,6 @@
-import path from 'path';
-
 import Metalsmith from 'metalsmith';
 import match from 'multimatch';
+import path from 'path';
 
 export interface FileInterface {
     contents: Buffer;

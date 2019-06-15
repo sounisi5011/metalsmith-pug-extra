@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
 import test, { ExecutionContext } from 'ava';
+import fs from 'fs';
+import cloneDeep from 'lodash.clonedeep';
 import Metalsmith from 'metalsmith';
+import path from 'path';
 import pug from 'pug';
 import sinon from 'sinon';
-import cloneDeep from 'lodash.clonedeep';
 
 import convert, { compile, render } from '../src';
 import { isObject } from '../src/utils';
