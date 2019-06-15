@@ -1002,48 +1002,64 @@ test.serial(
 );
 
 test.serial('should not change options value: convert()', async t => {
-    const convertOptions = {
-        locals: { C: 3 },
-        useMetadata: true,
-    };
-    const beforeOptions = cloneDeep(convertOptions);
-
-    const metalsmith = createMetalsmith()
-        .metadata({ A: 1 })
-        .use(setLocalsPlugin({ B: 2 }))
-        .use(convert(convertOptions));
-
-    await assertMetalsmithBuild({
-        t,
-        metalsmith,
-    });
-
-    t.deepEqual(convertOptions, beforeOptions);
-});
-
-test.serial(
-    'should not change options value: compile() & render()',
-    async t => {
-        const compileOptions = {};
-        const renderOptions = {
+    for (const useMetadata of [true, false]) {
+        const convertOptions = {
             locals: { C: 3 },
-            useMetadata: true,
+            useMetadata,
         };
-        const beforeCompileOptions = cloneDeep(compileOptions);
-        const beforeRenderOptions = cloneDeep(renderOptions);
+        const beforeOptions = cloneDeep(convertOptions);
 
         const metalsmith = createMetalsmith()
             .metadata({ A: 1 })
-            .use(compile())
             .use(setLocalsPlugin({ B: 2 }))
-            .use(render(renderOptions));
+            .use(convert(convertOptions));
 
         await assertMetalsmithBuild({
             t,
             metalsmith,
         });
 
-        t.deepEqual(compileOptions, beforeCompileOptions);
-        t.deepEqual(renderOptions, beforeRenderOptions);
+        t.deepEqual(
+            convertOptions,
+            beforeOptions,
+            `useMetadata: ${useMetadata}`,
+        );
+    }
+});
+
+test.serial(
+    'should not change options value: compile() & render()',
+    async t => {
+        for (const useMetadata of [true, false]) {
+            const compileOptions = {};
+            const renderOptions = {
+                locals: { C: 3 },
+                useMetadata,
+            };
+            const beforeCompileOptions = cloneDeep(compileOptions);
+            const beforeRenderOptions = cloneDeep(renderOptions);
+
+            const metalsmith = createMetalsmith()
+                .metadata({ A: 1 })
+                .use(compile())
+                .use(setLocalsPlugin({ B: 2 }))
+                .use(render(renderOptions));
+
+            await assertMetalsmithBuild({
+                t,
+                metalsmith,
+            });
+
+            t.deepEqual(
+                compileOptions,
+                beforeCompileOptions,
+                `useMetadata: ${useMetadata}`,
+            );
+            t.deepEqual(
+                renderOptions,
+                beforeRenderOptions,
+                `useMetadata: ${useMetadata}`,
+            );
+        }
     },
 );
