@@ -1,6 +1,6 @@
-import cloneDeep from 'clone-deep';
 import createDebug from 'debug';
 import deepFreeze from 'deep-freeze-strict';
+import cloneDeep from 'lodash.clonedeep';
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
 
