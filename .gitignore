@@ -62,3 +62,6 @@ typings/
 
 # Output directory
 /dist/
+
+# Test output directory
+/test/fixtures/build/
