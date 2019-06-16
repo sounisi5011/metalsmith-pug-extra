@@ -139,7 +139,7 @@ export const compile: CompileFuncInterface = function(opts = {}) {
                 options.copyFileData ? data : undefined,
             );
             debug(`file created: ${newFilename}`);
-            compileTemplateMap.set(newFile.contents, compileTemplate);
+            compileTemplateMap.set(newFile, compileTemplate);
 
             if (filename !== newFilename) {
                 delete files[filename];
