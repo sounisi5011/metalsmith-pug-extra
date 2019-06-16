@@ -86,7 +86,7 @@ export const render: RenderFuncInterface = function(opts = {}) {
             return;
         }
 
-        const compileTemplate = compileTemplateMap.get(data.contents);
+        const compileTemplate = compileTemplateMap.get(data);
         if (compileTemplate) {
             const convertedText = getRenderedText(
                 compileTemplate,

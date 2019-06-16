@@ -248,6 +248,28 @@ test.serial('should render html with lazy evaluation', async t => {
     });
 });
 
+/**
+ * @see https://github.com/sounisi5011/metalsmith-pug-extra/issues/19
+ */
+test.serial('should render html even if the contents change', async t => {
+    const metalsmith = createMetalsmith()
+        .use(compile())
+        .use((files, metalsmith, done) => {
+            Object.values(files).forEach(data => {
+                data.contents = Buffer.from(data.contents.toString());
+            });
+            done(null, files, metalsmith);
+        })
+        .use(render());
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.html',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
+
 test.serial('should not overwrite duplicate files: convert()', async t => {
     const metalsmith = createMetalsmith().use(
         convert({

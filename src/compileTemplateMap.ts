@@ -1,5 +1,10 @@
 import pug from 'pug';
 
-const compileTemplateMap: WeakMap<Buffer, pug.compileTemplate> = new WeakMap();
+import { FileInterface } from './utils';
+
+const compileTemplateMap: WeakMap<
+    FileInterface,
+    pug.compileTemplate
+> = new WeakMap();
 
 export default compileTemplateMap;
