@@ -1,7 +1,6 @@
 {
   "name": "metalsmith-pug-extra",
   "version": "1.0.0",
-  "private": true,
   "description": "Metalsmith plugin to convert or compile and render Pug files.",
   "keywords": [
     "metalsmith",
