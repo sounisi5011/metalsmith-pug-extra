@@ -3,10 +3,31 @@
   "version": "0.0.0",
   "private": true,
   "description": "Metalsmith plugin to convert or compile and render Pug files.",
-  "repository": "git@github.com:sounisi5011/metalsmith-pug-extra.git",
+  "keywords": [
+    "metalsmith",
+    "metalsmith-plugin",
+    "plugin",
+    "pug",
+    "template",
+    "transform"
+  ],
+  "homepage": "https://github.com/sounisi5011/metalsmith-pug-extra#readme",
+  "bugs": {
+    "url": "https://github.com/sounisi5011/metalsmith-pug-extra/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sounisi5011/metalsmith-pug-extra.git"
+  },
   "license": "MIT",
   "author": "sounisi5011",
+  "files": [
+    "dist/"
+  ],
   "main": "dist/index",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .ts ./",
