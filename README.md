@@ -113,6 +113,7 @@ Except for differences in options, this is equivalent to such as [metalsmith-pug
 | **`copyFileData`** | `boolean`                      | `✖`      | `false`        | Copy the data of the file before conversion to the file after conversion |
 | **`locals`**       | `Object`                       | `✖`      | `{}`           | Pass additional locals to the template                  |
 | **`useMetadata`**  | `boolean`                      | `✖`      | `false`        | Expose [Metalsmith's global metadata](https://metalsmith.io/#-metadata-json-) and file data to the [Pug] template |
+| **`*`**            |                                |          |                | Parameters to pass in the [`options`](https://pugjs.org/api/reference.html#options) argument of [`pug.compile()`](https://pugjs.org/api/reference.html#pugcompilesource-options) |
 
 ### `compile(options?)`
 
@@ -129,6 +130,7 @@ You can use other plugins to generate locals before converting the template with
 | **`renamer`**      | `(filename: string) => string` | `✖`      | `filename => filename.replace(/\.(?:pug\|jade)$/, '.html')` | Change the file name |
 | **`overwrite`**    | `boolean`                      | `✖`      | `true`         | Overwrite duplicate files |
 | **`copyFileData`** | `boolean`                      | `✖`      | `false`        | Copy the data of the file before conversion to the file after conversion |
+| **`*`**            |                                |          |                | Parameters to pass in the [`options`](https://pugjs.org/api/reference.html#options) argument of [`pug.compile()`](https://pugjs.org/api/reference.html#pugcompilesource-options) |
 
 ### `render(options?)`
 
