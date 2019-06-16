@@ -7,7 +7,7 @@ import path from 'path';
 import pug from 'pug';
 import sinon from 'sinon';
 
-import convert, { compile, render } from '../src';
+import { compile, convert, render } from '../src';
 import { isObject } from '../src/utils';
 
 function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
