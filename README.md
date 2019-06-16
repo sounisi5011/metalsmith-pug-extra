@@ -49,6 +49,8 @@ or
 
 ## Usage
 
+### [`convert()`](#convertoptions)
+
 ```js
 const Metalsmith = require('metalsmith');
 const { convert } = require('metalsmith-pug-extra');
@@ -66,6 +68,8 @@ const options = {
 Metalsmith(__dirname)
   .use(convert(options))
 ```
+
+### [`compile()`](#compileoptions) & [`render()`](#renderoptions)
 
 ```js
 const Metalsmith = require('metalsmith');
