@@ -1,0 +1,26 @@
+environment:
+  matrix:
+    - nodejs_version: "10"
+    - nodejs_version: "8"
+    - nodejs_version: "8.15.0"
+
+platform:
+  - x86
+  - x64
+
+init:
+  - git config --global core.autocrlf false
+
+install:
+  - ps: Install-Product node $env:nodejs_version $env:platform
+  - npm install
+
+test_script:
+  - node --version
+  - npm --version
+  - npm test
+
+cache:
+  - node_modules
+
+build: off
