@@ -115,6 +115,19 @@ Except for differences in options, this is equivalent to such as [metalsmith-pug
 | **`useMetadata`**  | `boolean`                      | `✖`      | `false`        | Expose [Metalsmith's global metadata](https://metalsmith.io/#-metadata-json-) and file data to the [Pug] template |
 | **`*`**            |                                |          |                | Parameters to pass in the [`options`](https://pugjs.org/api/reference.html#options) argument of [`pug.compile()`](https://pugjs.org/api/reference.html#pugcompilesource-options) |
 
+### `convert.defaultOptions`
+
+Initial value of the option argument of the `convert()` function.
+It can be used to specify an option based on the default value.
+
+```js
+Metalsmith(__dirname)
+  .use(convert({
+    pattern: [ ...convert.defaultOptions.pattern, '!_*/**', '!**/_*', '!**/_*/**' ]
+    // equals to: [ '**/*.pug', '!_*/**', '!**/_*', '!**/_*/**' ]
+  }))
+```
+
 ### `compile(options?)`
 
 Returns a plugin that compiles [Pug] templates.
@@ -132,6 +145,11 @@ You can use other plugins to generate locals before converting the template with
 | **`copyFileData`** | `boolean`                      | `✖`      | `false`        | Copy the data of the file before conversion to the file after conversion |
 | **`*`**            |                                |          |                | Parameters to pass in the [`options`](https://pugjs.org/api/reference.html#options) argument of [`pug.compile()`](https://pugjs.org/api/reference.html#pugcompilesource-options) |
 
+### `compile.defaultOptions`
+
+Initial value of the option argument of the `compile()` function.
+It can be used to specify an option based on the default value.
+
 ### `render(options?)`
 
 #### Options
@@ -142,3 +160,8 @@ Converts a file processed by the `compile()` plugin from template to HTML.
 | ------------------ | ------------------------------ | -------- | -------------- | ---------------------------------------------------- |
 | **`locals`**       | `Object`                       | `✖`      | `{}`           | Pass additional locals to the template                  |
 | **`useMetadata`**  | `boolean`                      | `✖`      | `false`        | Expose [Metalsmith's global metadata](https://metalsmith.io/#-metadata-json-) and file data to the [Pug] template |
+
+### `render.defaultOptions`
+
+Initial value of the option argument of the `render()` function.
+It can be used to specify an option based on the default value.
