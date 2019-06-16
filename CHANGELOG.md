@@ -2,7 +2,7 @@
 
 ## [1.0.1] (2019-06-16)
 
-[1.0.1]: https://github.com/sounisi5011/v1.0.0...v1.0.1
+[1.0.1]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.0.0...v1.0.1
 
 ### Bug Fixes
 
