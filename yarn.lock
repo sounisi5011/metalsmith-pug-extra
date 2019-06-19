@@ -1766,10 +1766,10 @@ eslint-plugin-promise@4.1.1:
   resolved "https://registry.yarnpkg.com/eslint-plugin-promise/-/eslint-plugin-promise-4.1.1.tgz#1e08cb68b5b2cd8839f8d5864c796f56d82746db"
   integrity sha512-faAHw7uzlNPy7b45J1guyjazw28M+7gJokKUjC5JSFoYfUEyy6Gw/i7YQvmv2Yk00sUjWcmzXQLpU1Ki/C2IZQ==
 
-eslint-plugin-simple-import-sort@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-3.1.1.tgz#a5e7c9f2819d9590c0046d835debf445689955e3"
-  integrity sha512-ik1YH6gFjdXEZTeePCDEkjBqQO95IfG/uqZkI+5Kl8GESq4eVYrNC21+XXML3rEuj/XVVfUZbwPkCXOW+ecjhw==
+eslint-plugin-simple-import-sort@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-4.0.0.tgz#048736c170b9b43f0a8c3ef85ba53881c389f3ff"
+  integrity sha512-QsxOMrXhhqvSiTmZafPc/lvSET9lhblaO2kaaSbFo1FVU/AW9mFQDXadiHJ5OqG6i0N6+Qd+RZ95iQbkg4p+0w==
   dependencies:
     validate-npm-package-name "^3.0.0"
 
