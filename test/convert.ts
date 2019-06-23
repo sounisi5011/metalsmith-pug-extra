@@ -670,7 +670,7 @@ test('should pass options to pug: compile() & render()', async t => {
     });
 });
 
-test('Validate options passed to Pug API: convert()', async t => {
+test.serial('Validate options passed to Pug API: convert()', async t => {
     const spy = sinon.spy(pug, 'compile');
 
     const compileOptions = {
@@ -698,33 +698,39 @@ test('Validate options passed to Pug API: convert()', async t => {
     spy.restore();
 });
 
-test('Validate options passed to Pug API: compile() & render()', async t => {
-    const spy = sinon.spy(pug, 'compile');
+test.serial(
+    'Validate options passed to Pug API: compile() & render()',
+    async t => {
+        const spy = sinon.spy(pug, 'compile');
 
-    const compileOptions = {
-        ...convert.defaultOptions,
-        doctype: 'xml',
-        cache: false,
-        another: 10,
-        hoge: 'fuga',
-        x: 42,
-    };
-    const metalsmith = createMetalsmith(t).use(compile(compileOptions));
-    await assertMetalsmithBuild({
-        t,
-        metalsmith,
-    });
+        const compileOptions = {
+            ...convert.defaultOptions,
+            doctype: 'xml',
+            cache: false,
+            another: 10,
+            hoge: 'fuga',
+            x: 42,
+        };
+        const metalsmith = createMetalsmith(t).use(compile(compileOptions));
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
 
-    spy.args.forEach(([, pugOptions]) => {
-        t.deepEqual(
-            objIgnoreKeys(pugOptions, ['filename']),
-            objIgnoreKeys(compileOptions, Object.keys(compile.defaultOptions)),
-            "Pug's options do not include compile.defaultOptions",
-        );
-    });
+        spy.args.forEach(([, pugOptions]) => {
+            t.deepEqual(
+                objIgnoreKeys(pugOptions, ['filename']),
+                objIgnoreKeys(
+                    compileOptions,
+                    Object.keys(compile.defaultOptions),
+                ),
+                "Pug's options do not include compile.defaultOptions",
+            );
+        });
 
-    spy.restore();
-});
+        spy.restore();
+    },
+);
 
 test('should destroys an object reference from source file to destination file: convert()', async t => {
     const sourceFiles: Metalsmith.Files = {};
