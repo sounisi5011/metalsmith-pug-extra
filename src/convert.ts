@@ -4,15 +4,15 @@ import Metalsmith from 'metalsmith';
 import pug from 'pug';
 
 import {
-    CompileOptionsInterface,
     compileDefaultOptions,
+    CompileOptionsInterface,
     getCompileTemplate,
 } from './compile';
 import {
-    RenderOptionsInterface,
-    getRenderOptions,
     getRenderedText,
+    getRenderOptions,
     renderDefaultOptions,
+    RenderOptionsInterface,
 } from './render';
 import { addFile, createEachPlugin, freezeProperty } from './utils';
 
