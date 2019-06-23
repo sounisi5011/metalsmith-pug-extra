@@ -69,7 +69,8 @@
     "is-utf8": "0.2.1",
     "lodash.clonedeep": "4.5.0",
     "multimatch": "4.0.0",
-    "pug": "2.0.4"
+    "pug": "2.0.4",
+    "slug": "^1.1.0"
   },
   "devDependencies": {
     "@types/sinon": "7.0.13",
