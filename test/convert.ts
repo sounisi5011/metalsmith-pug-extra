@@ -1044,36 +1044,35 @@ test.serial(
     },
 );
 
-test.serial('should not change options value: convert()', async t => {
-    for (const useMetadata of [true, false]) {
-        const convertOptions = {
-            locals: { C: 3 },
-            useMetadata,
-        };
-        const beforeOptions = cloneDeep(convertOptions);
+for (const useMetadata of [true, false]) {
+    test.serial(
+        `should not change options value: convert() useMetadata=${useMetadata}`,
+        async t => {
+            const convertOptions = {
+                locals: { C: 3 },
+                useMetadata,
+            };
+            const beforeOptions = cloneDeep(convertOptions);
 
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 1 })
-            .use(setLocalsPlugin({ B: 2 }))
-            .use(convert(convertOptions));
+            const metalsmith = createMetalsmith(t)
+                .metadata({ A: 1 })
+                .use(setLocalsPlugin({ B: 2 }))
+                .use(convert(convertOptions));
 
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
+            await assertMetalsmithBuild({
+                t,
+                metalsmith,
+            });
 
-        t.deepEqual(
-            convertOptions,
-            beforeOptions,
-            `useMetadata: ${useMetadata}`,
-        );
-    }
-});
+            t.deepEqual(convertOptions, beforeOptions);
+        },
+    );
+}
 
-test.serial(
-    'should not change options value: compile() & render()',
-    async t => {
-        for (const useMetadata of [true, false]) {
+for (const useMetadata of [true, false]) {
+    test.serial(
+        `should not change options value: compile() & render() useMetadata=${useMetadata}`,
+        async t => {
             const compileOptions = {};
             const renderOptions = {
                 locals: { C: 3 },
@@ -1093,24 +1092,16 @@ test.serial(
                 metalsmith,
             });
 
-            t.deepEqual(
-                compileOptions,
-                beforeCompileOptions,
-                `useMetadata: ${useMetadata}`,
-            );
-            t.deepEqual(
-                renderOptions,
-                beforeRenderOptions,
-                `useMetadata: ${useMetadata}`,
-            );
-        }
-    },
-);
+            t.deepEqual(compileOptions, beforeCompileOptions);
+            t.deepEqual(renderOptions, beforeRenderOptions);
+        },
+    );
+}
 
-test.serial(
-    'should not change locals value by the template logic: convert()',
-    async t => {
-        for (const useMetadata of [true, false]) {
+for (const useMetadata of [true, false]) {
+    test.serial(
+        `should not change locals value by the template logic: convert() useMetadata=${useMetadata}`,
+        async t => {
             const locals = {
                 count: 1,
                 state: {
@@ -1128,15 +1119,15 @@ test.serial(
                 metalsmith,
             });
 
-            t.deepEqual(locals, beforeLocals, `useMetadata: ${useMetadata}`);
-        }
-    },
-);
+            t.deepEqual(locals, beforeLocals);
+        },
+    );
+}
 
-test.serial(
-    'should not change locals value by the template logic: compile() & render()',
-    async t => {
-        for (const useMetadata of [true, false]) {
+for (const useMetadata of [true, false]) {
+    test.serial(
+        `should not change locals value by the template logic: compile() & render() useMetadata=${useMetadata}`,
+        async t => {
             const locals = {
                 count: 1,
                 state: {
@@ -1155,10 +1146,10 @@ test.serial(
                 metalsmith,
             });
 
-            t.deepEqual(locals, beforeLocals, `useMetadata: ${useMetadata}`);
-        }
-    },
-);
+            t.deepEqual(locals, beforeLocals);
+        },
+    );
+}
 
 test.serial(
     'should render only the file specified by the pattern option',
