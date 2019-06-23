@@ -5,6 +5,7 @@ import Metalsmith from 'metalsmith';
 import path from 'path';
 import pug from 'pug';
 import sinon from 'sinon';
+import util from 'util';
 
 import { compile, convert, render } from '../src';
 import { isObject } from '../src/utils';
@@ -36,6 +37,15 @@ function destPath(metalsmith: Metalsmith, ...paths: string[]): string {
         path.relative(process.cwd(), metalsmith.destination()),
         ...paths,
     );
+}
+
+async function readSourceFile(
+    metalsmith: Metalsmith,
+    filename: string,
+): Promise<string> {
+    const readFile = util.promisify(fs.readFile);
+    const sourceFilepath = metalsmith.path(metalsmith.source(), filename);
+    return (await readFile(sourceFilepath)).toString();
 }
 
 function setLocalsPlugin(locals: {
@@ -266,7 +276,7 @@ test.serial('should not overwrite duplicate files: convert()', async t => {
         t,
         metalsmith,
         destFilename: 'index.html',
-        destFileContents: '<img>\n',
+        destFileContents: await readSourceFile(metalsmith, 'index.html'),
     });
 });
 
@@ -284,7 +294,7 @@ test.serial(
             t,
             metalsmith,
             destFilename: 'index.html',
-            destFileContents: '<img>\n',
+            destFileContents: await readSourceFile(metalsmith, 'index.html'),
         });
     },
 );
