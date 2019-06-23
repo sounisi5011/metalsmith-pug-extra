@@ -6,8 +6,8 @@ import pug from 'pug';
 
 import compileTemplateMap from './compileTemplateMap';
 import {
-    FileInterface,
     createEachPlugin,
+    FileInterface,
     freezeProperty,
     isFile,
 } from './utils';
