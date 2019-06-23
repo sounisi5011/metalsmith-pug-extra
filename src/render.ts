@@ -101,7 +101,7 @@ export const render: RenderFuncInterface = function(opts = {}) {
             data.contents = Buffer.from(convertedText, 'utf8');
             debug(`file contents updated: ${filename}`);
         }
-    });
+    }, options.pattern);
 };
 
 render.defaultOptions = renderDefaultOptions;
