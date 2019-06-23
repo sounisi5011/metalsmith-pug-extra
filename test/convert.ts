@@ -1148,3 +1148,37 @@ test.serial(
         }
     },
 );
+
+test.serial(
+    'should render only the file specified by the pattern option',
+    async t => {
+        const metalsmith = createMetalsmith()
+            .use(compile())
+            .use((files, metalsmith, done) => {
+                t.not(
+                    files['index.html'].contents.toString(),
+                    '<h1>Hello World</h1>',
+                );
+                t.not(files['self-closing.html'].contents.toString(), '<br/>');
+                done(null, files, metalsmith);
+            })
+            .use(
+                render({
+                    pattern: ['index.html'],
+                }),
+            )
+            .use((files, metalsmith, done) => {
+                t.is(
+                    files['index.html'].contents.toString(),
+                    '<h1>Hello World</h1>',
+                );
+                t.not(files['self-closing.html'].contents.toString(), '<br/>');
+                done(null, files, metalsmith);
+            });
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+    },
+);
