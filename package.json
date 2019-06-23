@@ -69,8 +69,7 @@
     "is-utf8": "0.2.1",
     "lodash.clonedeep": "4.5.0",
     "multimatch": "4.0.0",
-    "pug": "2.0.4",
-    "slug": "^1.1.0"
+    "pug": "2.0.4"
   },
   "devDependencies": {
     "@types/sinon": "7.0.13",
@@ -94,6 +93,7 @@
     "prettier": "1.18.2",
     "prettier-package-json": "2.1.0",
     "sinon": "7.3.2",
+    "slug": "^1.1.0",
     "sort-package-json": "1.22.1",
     "ts-node": "8.3.0",
     "typescript": "3.5.2"
