@@ -5,6 +5,7 @@ import Metalsmith from 'metalsmith';
 import path from 'path';
 import pug from 'pug';
 import sinon from 'sinon';
+import slug from 'slug';
 import util from 'util';
 
 import { compile, convert, render } from '../src';
@@ -25,10 +26,20 @@ function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
     return obj;
 }
 
-function createMetalsmith(): Metalsmith {
+const destDirSet = new Set();
+function getDestDir(t: ExecutionContext): string {
+    const dirName = slug(t.title, slug.defaults.modes['rfc3986']);
+    if (destDirSet.has(dirName)) {
+        throw new Error(`Duplicate test dir: ${dirName}`);
+    }
+    destDirSet.add(dirName);
+    return dirName;
+}
+
+function createMetalsmith(t: ExecutionContext): Metalsmith {
     return Metalsmith(path.join(__dirname, 'fixtures'))
         .source('pages')
-        .destination('build')
+        .destination(path.join('build', getDestDir(t)))
         .clean(true);
 }
 
@@ -174,7 +185,7 @@ function assertFilesPlugin(
 }
 
 test.serial('should render html: convert()', async t => {
-    const metalsmith = createMetalsmith().use(convert());
+    const metalsmith = createMetalsmith(t).use(convert());
     await assertFileConverted({
         t,
         metalsmith,
@@ -185,7 +196,7 @@ test.serial('should render html: convert()', async t => {
 });
 
 test.serial('should render html: compile() & render()', async t => {
-    const metalsmith = createMetalsmith()
+    const metalsmith = createMetalsmith(t)
         .use(compile())
         .use(render());
     await assertFileConverted({
@@ -198,7 +209,7 @@ test.serial('should render html: compile() & render()', async t => {
 });
 
 test.serial('should render html with lazy evaluation', async t => {
-    const metalsmith = createMetalsmith()
+    const metalsmith = createMetalsmith(t)
         .use(
             assertFilesPlugin(
                 t,
@@ -248,7 +259,7 @@ test.serial('should render html with lazy evaluation', async t => {
  * @see https://github.com/sounisi5011/metalsmith-pug-extra/issues/19
  */
 test.serial('should render html even if the contents change', async t => {
-    const metalsmith = createMetalsmith()
+    const metalsmith = createMetalsmith(t)
         .use(compile())
         .use((files, metalsmith, done) => {
             Object.values(files).forEach(data => {
@@ -267,7 +278,7 @@ test.serial('should render html even if the contents change', async t => {
 });
 
 test.serial('should not overwrite duplicate files: convert()', async t => {
-    const metalsmith = createMetalsmith().use(
+    const metalsmith = createMetalsmith(t).use(
         convert({
             overwrite: false,
         }),
@@ -283,7 +294,7 @@ test.serial('should not overwrite duplicate files: convert()', async t => {
 test.serial(
     'should not overwrite duplicate files: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(
                 compile({
                     overwrite: false,
@@ -300,7 +311,7 @@ test.serial(
 );
 
 test.serial('should not support .jade files by default: convert()', async t => {
-    const metalsmith = createMetalsmith().use(convert());
+    const metalsmith = createMetalsmith(t).use(convert());
     await assertFileNotConverted({
         t,
         metalsmith,
@@ -312,7 +323,7 @@ test.serial('should not support .jade files by default: convert()', async t => {
 test.serial(
     'should not support .jade files by default: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(compile())
             .use(render());
         await assertFileNotConverted({
@@ -327,7 +338,7 @@ test.serial(
 test.serial(
     'should support .jade files by pattern options: convert()',
     async t => {
-        const metalsmith = createMetalsmith().use(
+        const metalsmith = createMetalsmith(t).use(
             convert({
                 pattern: '**/*.jade',
             }),
@@ -345,7 +356,7 @@ test.serial(
 test.serial(
     'should support .jade files by pattern options: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(
                 compile({
                     pattern: '**/*.jade',
@@ -365,7 +376,7 @@ test.serial(
 test.serial(
     'should render without changing the file name: convert()',
     async t => {
-        const metalsmith = createMetalsmith().use(
+        const metalsmith = createMetalsmith(t).use(
             convert({
                 renamer: filename => filename,
             }),
@@ -383,7 +394,7 @@ test.serial(
 test.serial(
     'should render without changing the file name: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(
                 compile({
                     renamer: filename => filename,
@@ -401,7 +412,7 @@ test.serial(
 );
 
 test.serial('should render html with locals: convert()', async t => {
-    const metalsmith = createMetalsmith().use(
+    const metalsmith = createMetalsmith(t).use(
         convert({
             locals: {
                 A: 1,
@@ -419,7 +430,7 @@ test.serial('should render html with locals: convert()', async t => {
 });
 
 test.serial('should render html with locals: compile() & render()', async t => {
-    const metalsmith = createMetalsmith()
+    const metalsmith = createMetalsmith(t)
         .use(compile())
         .use(
             render({
@@ -439,7 +450,7 @@ test.serial('should render html with locals: compile() & render()', async t => {
 });
 
 test.serial('should render html with locals only: convert()', async t => {
-    const metalsmith = createMetalsmith()
+    const metalsmith = createMetalsmith(t)
         .metadata({ A: 1 })
         .use(setLocalsPlugin({ B: 2 }))
         .use(
@@ -459,7 +470,7 @@ test.serial('should render html with locals only: convert()', async t => {
 test.serial(
     'should render html with locals only: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 1 })
             .use(compile())
             .use(setLocalsPlugin({ B: 2 }))
@@ -481,7 +492,7 @@ test.serial(
 test.serial(
     'should render html with locals and metadata: convert()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 1 })
             .use(setLocalsPlugin({ B: 2 }))
             .use(
@@ -502,7 +513,7 @@ test.serial(
 test.serial(
     'should render html with locals and metadata: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 1 })
             .use(compile())
             .use(setLocalsPlugin({ B: 2 }))
@@ -524,7 +535,7 @@ test.serial(
 test.serial(
     'files[filename] needs to overwrite Metalsmith.metadata(): convert()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 'Metalsmith.metadata()' })
             .use(setLocalsPlugin({ A: 'files[filename]' }))
             .use(convert({ useMetadata: true }));
@@ -540,7 +551,7 @@ test.serial(
 test.serial(
     'files[filename] needs to overwrite Metalsmith.metadata(): compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 'Metalsmith.metadata()' })
             .use(compile())
             .use(setLocalsPlugin({ A: 'files[filename]' }))
@@ -557,7 +568,7 @@ test.serial(
 test.serial(
     'files[filename] needs to overwrite options.locals: convert()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(setLocalsPlugin({ A: 'files[filename]' }))
             .use(
                 convert({ locals: { A: 'options.locals' }, useMetadata: true }),
@@ -574,7 +585,7 @@ test.serial(
 test.serial(
     'files[filename] needs to overwrite options.locals: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(compile())
             .use(setLocalsPlugin({ A: 'files[filename]' }))
             .use(
@@ -592,7 +603,7 @@ test.serial(
 test.serial(
     'Metalsmith.metadata() needs to overwrite options.locals: convert()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 'Metalsmith.metadata()' })
             .use(
                 convert({ locals: { A: 'options.locals' }, useMetadata: true }),
@@ -609,7 +620,7 @@ test.serial(
 test.serial(
     'Metalsmith.metadata() needs to overwrite options.locals: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 'Metalsmith.metadata()' })
             .use(compile())
             .use(
@@ -627,7 +638,7 @@ test.serial(
 test.serial(
     'files[filename] needs to overwrite Metalsmith.metadata() and options.locals: convert()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 'Metalsmith.metadata()' })
             .use(setLocalsPlugin({ A: 'files[filename]' }))
             .use(
@@ -645,7 +656,7 @@ test.serial(
 test.serial(
     'files[filename] needs to overwrite Metalsmith.metadata() and options.locals: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 'Metalsmith.metadata()' })
             .use(compile())
             .use(setLocalsPlugin({ A: 'files[filename]' }))
@@ -662,7 +673,7 @@ test.serial(
 );
 
 test.serial('should render html with includes: convert()', async t => {
-    const metalsmith = createMetalsmith()
+    const metalsmith = createMetalsmith(t)
         .source('includes')
         .use(convert());
 
@@ -678,7 +689,7 @@ test.serial('should render html with includes: convert()', async t => {
 test.serial(
     'should render html with includes: compile() & render()',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .source('includes')
             .use(compile())
             .use(render());
@@ -694,7 +705,7 @@ test.serial(
 );
 
 test.serial('should pass options to pug: convert()', async t => {
-    const metalsmith = createMetalsmith().use(
+    const metalsmith = createMetalsmith(t).use(
         convert({
             doctype: 'xml',
         }),
@@ -709,7 +720,7 @@ test.serial('should pass options to pug: convert()', async t => {
 });
 
 test.serial('should pass options to pug: compile() & render()', async t => {
-    const metalsmith = createMetalsmith()
+    const metalsmith = createMetalsmith(t)
         .use(
             compile({
                 doctype: 'xml',
@@ -736,7 +747,7 @@ test.serial('Validate options passed to Pug API: convert()', async t => {
         hoge: 'fuga',
         x: 42,
     };
-    const metalsmith = createMetalsmith().use(convert(compileOptions));
+    const metalsmith = createMetalsmith(t).use(convert(compileOptions));
     await assertMetalsmithBuild({
         t,
         metalsmith,
@@ -766,7 +777,7 @@ test.serial(
             hoge: 'fuga',
             x: 42,
         };
-        const metalsmith = createMetalsmith().use(compile(compileOptions));
+        const metalsmith = createMetalsmith(t).use(compile(compileOptions));
         await assertMetalsmithBuild({
             t,
             metalsmith,
@@ -793,7 +804,7 @@ test.serial(
         const sourceFiles: Metalsmith.Files = {};
         const destFiles: Metalsmith.Files = {};
 
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use((files, metalsmith, done) => {
                 Object.assign(sourceFiles, files);
                 done(null, files, metalsmith);
@@ -819,7 +830,7 @@ test.serial(
         const sourceFiles: Metalsmith.Files = {};
         const compiledFiles: Metalsmith.Files = {};
 
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use((files, metalsmith, done) => {
                 Object.assign(sourceFiles, files);
                 done(null, files, metalsmith);
@@ -846,7 +857,7 @@ test.serial(
         const compiledFiles: Metalsmith.Files = {};
         const renderedFiles: Metalsmith.Files = {};
 
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(compile())
             .use((files, metalsmith, done) => {
                 Object.assign(compiledFiles, files);
@@ -877,7 +888,7 @@ test.serial(
         const sourceFiles: Metalsmith.Files = {};
         const destFiles: Metalsmith.Files = {};
 
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(
                 setLocalsPlugin({
                     hoge: 'fuga',
@@ -917,7 +928,7 @@ test.serial(
         const sourceFiles: Metalsmith.Files = {};
         const destFiles: Metalsmith.Files = {};
 
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(
                 setLocalsPlugin({
                     hoge: 'fuga',
@@ -957,7 +968,7 @@ test.serial(
         const sourceFiles: Metalsmith.Files = {};
         const compiledFiles: Metalsmith.Files = {};
 
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(
                 setLocalsPlugin({
                     hoge: 'fuga',
@@ -998,7 +1009,7 @@ test.serial(
         const sourceFiles: Metalsmith.Files = {};
         const compiledFiles: Metalsmith.Files = {};
 
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(
                 setLocalsPlugin({
                     hoge: 'fuga',
@@ -1041,7 +1052,7 @@ test.serial('should not change options value: convert()', async t => {
         };
         const beforeOptions = cloneDeep(convertOptions);
 
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .metadata({ A: 1 })
             .use(setLocalsPlugin({ B: 2 }))
             .use(convert(convertOptions));
@@ -1071,7 +1082,7 @@ test.serial(
             const beforeCompileOptions = cloneDeep(compileOptions);
             const beforeRenderOptions = cloneDeep(renderOptions);
 
-            const metalsmith = createMetalsmith()
+            const metalsmith = createMetalsmith(t)
                 .metadata({ A: 1 })
                 .use(compile())
                 .use(setLocalsPlugin({ B: 2 }))
@@ -1108,7 +1119,7 @@ test.serial(
             };
             const beforeLocals = cloneDeep(locals);
 
-            const metalsmith = createMetalsmith()
+            const metalsmith = createMetalsmith(t)
                 .source('change-locals')
                 .use(convert({ locals, useMetadata, self: true }));
 
@@ -1134,7 +1145,7 @@ test.serial(
             };
             const beforeLocals = cloneDeep(locals);
 
-            const metalsmith = createMetalsmith()
+            const metalsmith = createMetalsmith(t)
                 .source('change-locals')
                 .use(compile({ self: true }))
                 .use(render({ locals, useMetadata }));
@@ -1152,7 +1163,7 @@ test.serial(
 test.serial(
     'should render only the file specified by the pattern option',
     async t => {
-        const metalsmith = createMetalsmith()
+        const metalsmith = createMetalsmith(t)
             .use(compile())
             .use((files, metalsmith, done) => {
                 t.not(
