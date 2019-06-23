@@ -184,7 +184,7 @@ function assertFilesPlugin(
     };
 }
 
-test.serial('should render html: convert()', async t => {
+test('should render html: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(convert());
     await assertFileConverted({
         t,
@@ -195,7 +195,7 @@ test.serial('should render html: convert()', async t => {
     });
 });
 
-test.serial('should render html: compile() & render()', async t => {
+test('should render html: compile() & render()', async t => {
     const metalsmith = createMetalsmith(t)
         .use(compile())
         .use(render());
@@ -208,7 +208,7 @@ test.serial('should render html: compile() & render()', async t => {
     });
 });
 
-test.serial('should render html with lazy evaluation', async t => {
+test('should render html with lazy evaluation', async t => {
     const metalsmith = createMetalsmith(t)
         .use(
             assertFilesPlugin(
@@ -258,7 +258,7 @@ test.serial('should render html with lazy evaluation', async t => {
 /**
  * @see https://github.com/sounisi5011/metalsmith-pug-extra/issues/19
  */
-test.serial('should render html even if the contents change', async t => {
+test('should render html even if the contents change', async t => {
     const metalsmith = createMetalsmith(t)
         .use(compile())
         .use((files, metalsmith, done) => {
@@ -277,7 +277,7 @@ test.serial('should render html even if the contents change', async t => {
     });
 });
 
-test.serial('should not overwrite duplicate files: convert()', async t => {
+test('should not overwrite duplicate files: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(
         convert({
             overwrite: false,
@@ -291,26 +291,23 @@ test.serial('should not overwrite duplicate files: convert()', async t => {
     });
 });
 
-test.serial(
-    'should not overwrite duplicate files: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .use(
-                compile({
-                    overwrite: false,
-                }),
-            )
-            .use(render());
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'index.html',
-            destFileContents: await readSourceFile(metalsmith, 'index.html'),
-        });
-    },
-);
+test('should not overwrite duplicate files: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .use(
+            compile({
+                overwrite: false,
+            }),
+        )
+        .use(render());
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'index.html',
+        destFileContents: await readSourceFile(metalsmith, 'index.html'),
+    });
+});
 
-test.serial('should not support .jade files by default: convert()', async t => {
+test('should not support .jade files by default: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(convert());
     await assertFileNotConverted({
         t,
@@ -320,98 +317,83 @@ test.serial('should not support .jade files by default: convert()', async t => {
     });
 });
 
-test.serial(
-    'should not support .jade files by default: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .use(compile())
-            .use(render());
-        await assertFileNotConverted({
-            t,
-            metalsmith,
-            sourceFilename: 'legacy.jade',
-            destFilename: 'legacy.html',
-        });
-    },
-);
+test('should not support .jade files by default: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .use(compile())
+        .use(render());
+    await assertFileNotConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'legacy.jade',
+        destFilename: 'legacy.html',
+    });
+});
 
-test.serial(
-    'should support .jade files by pattern options: convert()',
-    async t => {
-        const metalsmith = createMetalsmith(t).use(
-            convert({
+test('should support .jade files by pattern options: convert()', async t => {
+    const metalsmith = createMetalsmith(t).use(
+        convert({
+            pattern: '**/*.jade',
+        }),
+    );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'legacy.jade',
+        destFilename: 'legacy.html',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
+
+test('should support .jade files by pattern options: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .use(
+            compile({
                 pattern: '**/*.jade',
             }),
-        );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            sourceFilename: 'legacy.jade',
-            destFilename: 'legacy.html',
-            destFileContents: '<h1>Hello World</h1>',
-        });
-    },
-);
+        )
+        .use(render());
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'legacy.jade',
+        destFilename: 'legacy.html',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
 
-test.serial(
-    'should support .jade files by pattern options: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .use(
-                compile({
-                    pattern: '**/*.jade',
-                }),
-            )
-            .use(render());
-        await assertFileConverted({
-            t,
-            metalsmith,
-            sourceFilename: 'legacy.jade',
-            destFilename: 'legacy.html',
-            destFileContents: '<h1>Hello World</h1>',
-        });
-    },
-);
+test('should render without changing the file name: convert()', async t => {
+    const metalsmith = createMetalsmith(t).use(
+        convert({
+            renamer: filename => filename,
+        }),
+    );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.pug',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
 
-test.serial(
-    'should render without changing the file name: convert()',
-    async t => {
-        const metalsmith = createMetalsmith(t).use(
-            convert({
+test('should render without changing the file name: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .use(
+            compile({
                 renamer: filename => filename,
             }),
-        );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            sourceFilename: 'index.pug',
-            destFilename: 'index.pug',
-            destFileContents: '<h1>Hello World</h1>',
-        });
-    },
-);
+        )
+        .use(render());
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.pug',
+        destFileContents: '<h1>Hello World</h1>',
+    });
+});
 
-test.serial(
-    'should render without changing the file name: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .use(
-                compile({
-                    renamer: filename => filename,
-                }),
-            )
-            .use(render());
-        await assertFileConverted({
-            t,
-            metalsmith,
-            sourceFilename: 'index.pug',
-            destFilename: 'index.pug',
-            destFileContents: '<h1>Hello World</h1>',
-        });
-    },
-);
-
-test.serial('should render html with locals: convert()', async t => {
+test('should render html with locals: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(
         convert({
             locals: {
@@ -429,7 +411,7 @@ test.serial('should render html with locals: convert()', async t => {
     });
 });
 
-test.serial('should render html with locals: compile() & render()', async t => {
+test('should render html with locals: compile() & render()', async t => {
     const metalsmith = createMetalsmith(t)
         .use(compile())
         .use(
@@ -449,7 +431,7 @@ test.serial('should render html with locals: compile() & render()', async t => {
     });
 });
 
-test.serial('should render html with locals only: convert()', async t => {
+test('should render html with locals only: convert()', async t => {
     const metalsmith = createMetalsmith(t)
         .metadata({ A: 1 })
         .use(setLocalsPlugin({ B: 2 }))
@@ -467,212 +449,167 @@ test.serial('should render html with locals only: convert()', async t => {
     });
 });
 
-test.serial(
-    'should render html with locals only: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 1 })
-            .use(compile())
-            .use(setLocalsPlugin({ B: 2 }))
-            .use(
-                render({
-                    locals: { C: 3 },
-                    useMetadata: false,
-                }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'C:3 ',
-        });
-    },
-);
+test('should render html with locals only: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 1 })
+        .use(compile())
+        .use(setLocalsPlugin({ B: 2 }))
+        .use(
+            render({
+                locals: { C: 3 },
+                useMetadata: false,
+            }),
+        );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'C:3 ',
+    });
+});
 
-test.serial(
-    'should render html with locals and metadata: convert()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 1 })
-            .use(setLocalsPlugin({ B: 2 }))
-            .use(
-                convert({
-                    locals: { C: 3 },
-                    useMetadata: true,
-                }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:1 B:2 C:3 ',
-        });
-    },
-);
+test('should render html with locals and metadata: convert()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 1 })
+        .use(setLocalsPlugin({ B: 2 }))
+        .use(
+            convert({
+                locals: { C: 3 },
+                useMetadata: true,
+            }),
+        );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:1 B:2 C:3 ',
+    });
+});
 
-test.serial(
-    'should render html with locals and metadata: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 1 })
-            .use(compile())
-            .use(setLocalsPlugin({ B: 2 }))
-            .use(
-                render({
-                    locals: { C: 3 },
-                    useMetadata: true,
-                }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:1 B:2 C:3 ',
-        });
-    },
-);
+test('should render html with locals and metadata: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 1 })
+        .use(compile())
+        .use(setLocalsPlugin({ B: 2 }))
+        .use(
+            render({
+                locals: { C: 3 },
+                useMetadata: true,
+            }),
+        );
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:1 B:2 C:3 ',
+    });
+});
 
-test.serial(
-    'files[filename] needs to overwrite Metalsmith.metadata(): convert()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 'Metalsmith.metadata()' })
-            .use(setLocalsPlugin({ A: 'files[filename]' }))
-            .use(convert({ useMetadata: true }));
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:files[filename] ',
-        });
-    },
-);
+test('files[filename] needs to overwrite Metalsmith.metadata(): convert()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 'Metalsmith.metadata()' })
+        .use(setLocalsPlugin({ A: 'files[filename]' }))
+        .use(convert({ useMetadata: true }));
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:files[filename] ',
+    });
+});
 
-test.serial(
-    'files[filename] needs to overwrite Metalsmith.metadata(): compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 'Metalsmith.metadata()' })
-            .use(compile())
-            .use(setLocalsPlugin({ A: 'files[filename]' }))
-            .use(render({ useMetadata: true }));
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:files[filename] ',
-        });
-    },
-);
+test('files[filename] needs to overwrite Metalsmith.metadata(): compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 'Metalsmith.metadata()' })
+        .use(compile())
+        .use(setLocalsPlugin({ A: 'files[filename]' }))
+        .use(render({ useMetadata: true }));
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:files[filename] ',
+    });
+});
 
-test.serial(
-    'files[filename] needs to overwrite options.locals: convert()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .use(setLocalsPlugin({ A: 'files[filename]' }))
-            .use(
-                convert({ locals: { A: 'options.locals' }, useMetadata: true }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:files[filename] ',
-        });
-    },
-);
+test('files[filename] needs to overwrite options.locals: convert()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .use(setLocalsPlugin({ A: 'files[filename]' }))
+        .use(convert({ locals: { A: 'options.locals' }, useMetadata: true }));
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:files[filename] ',
+    });
+});
 
-test.serial(
-    'files[filename] needs to overwrite options.locals: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .use(compile())
-            .use(setLocalsPlugin({ A: 'files[filename]' }))
-            .use(
-                render({ locals: { A: 'options.locals' }, useMetadata: true }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:files[filename] ',
-        });
-    },
-);
+test('files[filename] needs to overwrite options.locals: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .use(compile())
+        .use(setLocalsPlugin({ A: 'files[filename]' }))
+        .use(render({ locals: { A: 'options.locals' }, useMetadata: true }));
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:files[filename] ',
+    });
+});
 
-test.serial(
-    'Metalsmith.metadata() needs to overwrite options.locals: convert()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 'Metalsmith.metadata()' })
-            .use(
-                convert({ locals: { A: 'options.locals' }, useMetadata: true }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:Metalsmith.metadata() ',
-        });
-    },
-);
+test('Metalsmith.metadata() needs to overwrite options.locals: convert()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 'Metalsmith.metadata()' })
+        .use(convert({ locals: { A: 'options.locals' }, useMetadata: true }));
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:Metalsmith.metadata() ',
+    });
+});
 
-test.serial(
-    'Metalsmith.metadata() needs to overwrite options.locals: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 'Metalsmith.metadata()' })
-            .use(compile())
-            .use(
-                render({ locals: { A: 'options.locals' }, useMetadata: true }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:Metalsmith.metadata() ',
-        });
-    },
-);
+test('Metalsmith.metadata() needs to overwrite options.locals: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 'Metalsmith.metadata()' })
+        .use(compile())
+        .use(render({ locals: { A: 'options.locals' }, useMetadata: true }));
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:Metalsmith.metadata() ',
+    });
+});
 
-test.serial(
-    'files[filename] needs to overwrite Metalsmith.metadata() and options.locals: convert()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 'Metalsmith.metadata()' })
-            .use(setLocalsPlugin({ A: 'files[filename]' }))
-            .use(
-                convert({ locals: { A: 'options.locals' }, useMetadata: true }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:files[filename] ',
-        });
-    },
-);
+test('files[filename] needs to overwrite Metalsmith.metadata() and options.locals: convert()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 'Metalsmith.metadata()' })
+        .use(setLocalsPlugin({ A: 'files[filename]' }))
+        .use(convert({ locals: { A: 'options.locals' }, useMetadata: true }));
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:files[filename] ',
+    });
+});
 
-test.serial(
-    'files[filename] needs to overwrite Metalsmith.metadata() and options.locals: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .metadata({ A: 'Metalsmith.metadata()' })
-            .use(compile())
-            .use(setLocalsPlugin({ A: 'files[filename]' }))
-            .use(
-                render({ locals: { A: 'options.locals' }, useMetadata: true }),
-            );
-        await assertFileConverted({
-            t,
-            metalsmith,
-            destFilename: 'locals.html',
-            destFileContents: 'A:files[filename] ',
-        });
-    },
-);
+test('files[filename] needs to overwrite Metalsmith.metadata() and options.locals: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .metadata({ A: 'Metalsmith.metadata()' })
+        .use(compile())
+        .use(setLocalsPlugin({ A: 'files[filename]' }))
+        .use(render({ locals: { A: 'options.locals' }, useMetadata: true }));
+    await assertFileConverted({
+        t,
+        metalsmith,
+        destFilename: 'locals.html',
+        destFileContents: 'A:files[filename] ',
+    });
+});
 
-test.serial('should render html with includes: convert()', async t => {
+test('should render html with includes: convert()', async t => {
     const metalsmith = createMetalsmith(t)
         .source('includes')
         .use(convert());
@@ -686,25 +623,22 @@ test.serial('should render html with includes: convert()', async t => {
     });
 });
 
-test.serial(
-    'should render html with includes: compile() & render()',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .source('includes')
-            .use(compile())
-            .use(render());
+test('should render html with includes: compile() & render()', async t => {
+    const metalsmith = createMetalsmith(t)
+        .source('includes')
+        .use(compile())
+        .use(render());
 
-        await assertFileConverted({
-            t,
-            metalsmith,
-            sourceFilename: 'index.pug',
-            destFilename: 'index.html',
-            destFileContents: '<h1>Hello World</h1><h2>hoge</h2>',
-        });
-    },
-);
+    await assertFileConverted({
+        t,
+        metalsmith,
+        sourceFilename: 'index.pug',
+        destFilename: 'index.html',
+        destFileContents: '<h1>Hello World</h1><h2>hoge</h2>',
+    });
+});
 
-test.serial('should pass options to pug: convert()', async t => {
+test('should pass options to pug: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(
         convert({
             doctype: 'xml',
@@ -719,7 +653,7 @@ test.serial('should pass options to pug: convert()', async t => {
     });
 });
 
-test.serial('should pass options to pug: compile() & render()', async t => {
+test('should pass options to pug: compile() & render()', async t => {
     const metalsmith = createMetalsmith(t)
         .use(
             compile({
@@ -736,7 +670,7 @@ test.serial('should pass options to pug: compile() & render()', async t => {
     });
 });
 
-test.serial('Validate options passed to Pug API: convert()', async t => {
+test('Validate options passed to Pug API: convert()', async t => {
     const spy = sinon.spy(pug, 'compile');
 
     const compileOptions = {
@@ -764,423 +698,381 @@ test.serial('Validate options passed to Pug API: convert()', async t => {
     spy.restore();
 });
 
-test.serial(
-    'Validate options passed to Pug API: compile() & render()',
-    async t => {
-        const spy = sinon.spy(pug, 'compile');
+test('Validate options passed to Pug API: compile() & render()', async t => {
+    const spy = sinon.spy(pug, 'compile');
 
-        const compileOptions = {
-            ...convert.defaultOptions,
-            doctype: 'xml',
-            cache: false,
-            another: 10,
-            hoge: 'fuga',
-            x: 42,
+    const compileOptions = {
+        ...convert.defaultOptions,
+        doctype: 'xml',
+        cache: false,
+        another: 10,
+        hoge: 'fuga',
+        x: 42,
+    };
+    const metalsmith = createMetalsmith(t).use(compile(compileOptions));
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    spy.args.forEach(([, pugOptions]) => {
+        t.deepEqual(
+            objIgnoreKeys(pugOptions, ['filename']),
+            objIgnoreKeys(compileOptions, Object.keys(compile.defaultOptions)),
+            "Pug's options do not include compile.defaultOptions",
+        );
+    });
+
+    spy.restore();
+});
+
+test('should destroys an object reference from source file to destination file: convert()', async t => {
+    const sourceFiles: Metalsmith.Files = {};
+    const destFiles: Metalsmith.Files = {};
+
+    const metalsmith = createMetalsmith(t)
+        .use((files, metalsmith, done) => {
+            Object.assign(sourceFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(convert())
+        .use((files, metalsmith, done) => {
+            Object.assign(destFiles, files);
+            done(null, files, metalsmith);
+        });
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
+});
+
+test('should destroys an object reference from source file to compiled file: compile()', async t => {
+    const sourceFiles: Metalsmith.Files = {};
+    const compiledFiles: Metalsmith.Files = {};
+
+    const metalsmith = createMetalsmith(t)
+        .use((files, metalsmith, done) => {
+            Object.assign(sourceFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(compile())
+        .use((files, metalsmith, done) => {
+            Object.assign(compiledFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(render());
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
+});
+
+test('should keep an object reference from compiled file to rendered file: render()', async t => {
+    const compiledFiles: Metalsmith.Files = {};
+    const renderedFiles: Metalsmith.Files = {};
+
+    const metalsmith = createMetalsmith(t)
+        .use(compile())
+        .use((files, metalsmith, done) => {
+            Object.assign(compiledFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(render())
+        .use((files, metalsmith, done) => {
+            Object.assign(renderedFiles, files);
+            done(null, files, metalsmith);
+        });
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.true(compiledFiles['index.html'] === renderedFiles['index.html']);
+    t.true(
+        renderedFiles['index.html'].contents.length > 0,
+        'file contents updated',
+    );
+});
+
+test('should copy from source file data to destination file data: convert()', async t => {
+    const sourceFiles: Metalsmith.Files = {};
+    const destFiles: Metalsmith.Files = {};
+
+    const metalsmith = createMetalsmith(t)
+        .use(
+            setLocalsPlugin({
+                hoge: 'fuga',
+                x: 42,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            Object.assign(sourceFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(
+            convert({
+                copyFileData: true,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            Object.assign(destFiles, files);
+            done(null, files, metalsmith);
+        });
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
+    t.deepEqual(
+        Object.keys(destFiles['index.html']).sort(),
+        Object.keys(sourceFiles['index.pug']).sort(),
+    );
+});
+
+test('should not copy from source file data to destination file data: convert()', async t => {
+    const sourceFiles: Metalsmith.Files = {};
+    const destFiles: Metalsmith.Files = {};
+
+    const metalsmith = createMetalsmith(t)
+        .use(
+            setLocalsPlugin({
+                hoge: 'fuga',
+                x: 42,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            Object.assign(sourceFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(
+            convert({
+                copyFileData: false,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            Object.assign(destFiles, files);
+            done(null, files, metalsmith);
+        });
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
+    t.notDeepEqual(
+        Object.keys(destFiles['index.html']).sort(),
+        Object.keys(sourceFiles['index.pug']).sort(),
+    );
+});
+
+test('should copy from source file data to compiled file data: compile()', async t => {
+    const sourceFiles: Metalsmith.Files = {};
+    const compiledFiles: Metalsmith.Files = {};
+
+    const metalsmith = createMetalsmith(t)
+        .use(
+            setLocalsPlugin({
+                hoge: 'fuga',
+                x: 42,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            Object.assign(sourceFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(
+            compile({
+                copyFileData: true,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            Object.assign(compiledFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(render());
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
+    t.deepEqual(
+        Object.keys(compiledFiles['index.html']).sort(),
+        Object.keys(sourceFiles['index.pug']).sort(),
+    );
+});
+
+test('should not copy from source file data to compiled file data: compile()', async t => {
+    const sourceFiles: Metalsmith.Files = {};
+    const compiledFiles: Metalsmith.Files = {};
+
+    const metalsmith = createMetalsmith(t)
+        .use(
+            setLocalsPlugin({
+                hoge: 'fuga',
+                x: 42,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            Object.assign(sourceFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(
+            compile({
+                copyFileData: false,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            Object.assign(compiledFiles, files);
+            done(null, files, metalsmith);
+        })
+        .use(render());
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
+    t.notDeepEqual(
+        Object.keys(compiledFiles['index.html']).sort(),
+        Object.keys(sourceFiles['index.pug']).sort(),
+    );
+});
+
+for (const useMetadata of [true, false]) {
+    test(`should not change options value: convert() useMetadata=${useMetadata}`, async t => {
+        const convertOptions = {
+            locals: { C: 3 },
+            useMetadata,
         };
-        const metalsmith = createMetalsmith(t).use(compile(compileOptions));
+        const beforeOptions = cloneDeep(convertOptions);
+
+        const metalsmith = createMetalsmith(t)
+            .metadata({ A: 1 })
+            .use(setLocalsPlugin({ B: 2 }))
+            .use(convert(convertOptions));
+
         await assertMetalsmithBuild({
             t,
             metalsmith,
         });
 
-        spy.args.forEach(([, pugOptions]) => {
-            t.deepEqual(
-                objIgnoreKeys(pugOptions, ['filename']),
-                objIgnoreKeys(
-                    compileOptions,
-                    Object.keys(compile.defaultOptions),
-                ),
-                "Pug's options do not include compile.defaultOptions",
+        t.deepEqual(convertOptions, beforeOptions);
+    });
+}
+
+for (const useMetadata of [true, false]) {
+    test(`should not change options value: compile() & render() useMetadata=${useMetadata}`, async t => {
+        const compileOptions = {};
+        const renderOptions = {
+            locals: { C: 3 },
+            useMetadata,
+        };
+        const beforeCompileOptions = cloneDeep(compileOptions);
+        const beforeRenderOptions = cloneDeep(renderOptions);
+
+        const metalsmith = createMetalsmith(t)
+            .metadata({ A: 1 })
+            .use(compile())
+            .use(setLocalsPlugin({ B: 2 }))
+            .use(render(renderOptions));
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.deepEqual(compileOptions, beforeCompileOptions);
+        t.deepEqual(renderOptions, beforeRenderOptions);
+    });
+}
+
+for (const useMetadata of [true, false]) {
+    test(`should not change locals value by the template logic: convert() useMetadata=${useMetadata}`, async t => {
+        const locals = {
+            count: 1,
+            state: {
+                count: 1,
+            },
+        };
+        const beforeLocals = cloneDeep(locals);
+
+        const metalsmith = createMetalsmith(t)
+            .source('change-locals')
+            .use(convert({ locals, useMetadata, self: true }));
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.deepEqual(locals, beforeLocals);
+    });
+}
+
+for (const useMetadata of [true, false]) {
+    test(`should not change locals value by the template logic: compile() & render() useMetadata=${useMetadata}`, async t => {
+        const locals = {
+            count: 1,
+            state: {
+                count: 1,
+            },
+        };
+        const beforeLocals = cloneDeep(locals);
+
+        const metalsmith = createMetalsmith(t)
+            .source('change-locals')
+            .use(compile({ self: true }))
+            .use(render({ locals, useMetadata }));
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+
+        t.deepEqual(locals, beforeLocals);
+    });
+}
+
+test('should render only the file specified by the pattern option', async t => {
+    const metalsmith = createMetalsmith(t)
+        .use(compile())
+        .use((files, metalsmith, done) => {
+            t.not(
+                files['index.html'].contents.toString(),
+                '<h1>Hello World</h1>',
             );
+            t.not(files['self-closing.html'].contents.toString(), '<br/>');
+            done(null, files, metalsmith);
+        })
+        .use(
+            render({
+                pattern: ['index.html'],
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            t.is(
+                files['index.html'].contents.toString(),
+                '<h1>Hello World</h1>',
+            );
+            t.not(files['self-closing.html'].contents.toString(), '<br/>');
+            done(null, files, metalsmith);
         });
 
-        spy.restore();
-    },
-);
-
-test.serial(
-    'should destroys an object reference from source file to destination file: convert()',
-    async t => {
-        const sourceFiles: Metalsmith.Files = {};
-        const destFiles: Metalsmith.Files = {};
-
-        const metalsmith = createMetalsmith(t)
-            .use((files, metalsmith, done) => {
-                Object.assign(sourceFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(convert())
-            .use((files, metalsmith, done) => {
-                Object.assign(destFiles, files);
-                done(null, files, metalsmith);
-            });
-
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
-
-        t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
-    },
-);
-
-test.serial(
-    'should destroys an object reference from source file to compiled file: compile()',
-    async t => {
-        const sourceFiles: Metalsmith.Files = {};
-        const compiledFiles: Metalsmith.Files = {};
-
-        const metalsmith = createMetalsmith(t)
-            .use((files, metalsmith, done) => {
-                Object.assign(sourceFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(compile())
-            .use((files, metalsmith, done) => {
-                Object.assign(compiledFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(render());
-
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
-
-        t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
-    },
-);
-
-test.serial(
-    'should keep an object reference from compiled file to rendered file: render()',
-    async t => {
-        const compiledFiles: Metalsmith.Files = {};
-        const renderedFiles: Metalsmith.Files = {};
-
-        const metalsmith = createMetalsmith(t)
-            .use(compile())
-            .use((files, metalsmith, done) => {
-                Object.assign(compiledFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(render())
-            .use((files, metalsmith, done) => {
-                Object.assign(renderedFiles, files);
-                done(null, files, metalsmith);
-            });
-
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
-
-        t.true(compiledFiles['index.html'] === renderedFiles['index.html']);
-        t.true(
-            renderedFiles['index.html'].contents.length > 0,
-            'file contents updated',
-        );
-    },
-);
-
-test.serial(
-    'should copy from source file data to destination file data: convert()',
-    async t => {
-        const sourceFiles: Metalsmith.Files = {};
-        const destFiles: Metalsmith.Files = {};
-
-        const metalsmith = createMetalsmith(t)
-            .use(
-                setLocalsPlugin({
-                    hoge: 'fuga',
-                    x: 42,
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                Object.assign(sourceFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(
-                convert({
-                    copyFileData: true,
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                Object.assign(destFiles, files);
-                done(null, files, metalsmith);
-            });
-
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
-
-        t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
-        t.deepEqual(
-            Object.keys(destFiles['index.html']).sort(),
-            Object.keys(sourceFiles['index.pug']).sort(),
-        );
-    },
-);
-
-test.serial(
-    'should not copy from source file data to destination file data: convert()',
-    async t => {
-        const sourceFiles: Metalsmith.Files = {};
-        const destFiles: Metalsmith.Files = {};
-
-        const metalsmith = createMetalsmith(t)
-            .use(
-                setLocalsPlugin({
-                    hoge: 'fuga',
-                    x: 42,
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                Object.assign(sourceFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(
-                convert({
-                    copyFileData: false,
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                Object.assign(destFiles, files);
-                done(null, files, metalsmith);
-            });
-
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
-
-        t.true(sourceFiles['index.pug'] !== destFiles['index.html']);
-        t.notDeepEqual(
-            Object.keys(destFiles['index.html']).sort(),
-            Object.keys(sourceFiles['index.pug']).sort(),
-        );
-    },
-);
-
-test.serial(
-    'should copy from source file data to compiled file data: compile()',
-    async t => {
-        const sourceFiles: Metalsmith.Files = {};
-        const compiledFiles: Metalsmith.Files = {};
-
-        const metalsmith = createMetalsmith(t)
-            .use(
-                setLocalsPlugin({
-                    hoge: 'fuga',
-                    x: 42,
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                Object.assign(sourceFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(
-                compile({
-                    copyFileData: true,
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                Object.assign(compiledFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(render());
-
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
-
-        t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
-        t.deepEqual(
-            Object.keys(compiledFiles['index.html']).sort(),
-            Object.keys(sourceFiles['index.pug']).sort(),
-        );
-    },
-);
-
-test.serial(
-    'should not copy from source file data to compiled file data: compile()',
-    async t => {
-        const sourceFiles: Metalsmith.Files = {};
-        const compiledFiles: Metalsmith.Files = {};
-
-        const metalsmith = createMetalsmith(t)
-            .use(
-                setLocalsPlugin({
-                    hoge: 'fuga',
-                    x: 42,
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                Object.assign(sourceFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(
-                compile({
-                    copyFileData: false,
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                Object.assign(compiledFiles, files);
-                done(null, files, metalsmith);
-            })
-            .use(render());
-
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
-
-        t.true(sourceFiles['index.pug'] !== compiledFiles['index.html']);
-        t.notDeepEqual(
-            Object.keys(compiledFiles['index.html']).sort(),
-            Object.keys(sourceFiles['index.pug']).sort(),
-        );
-    },
-);
-
-for (const useMetadata of [true, false]) {
-    test.serial(
-        `should not change options value: convert() useMetadata=${useMetadata}`,
-        async t => {
-            const convertOptions = {
-                locals: { C: 3 },
-                useMetadata,
-            };
-            const beforeOptions = cloneDeep(convertOptions);
-
-            const metalsmith = createMetalsmith(t)
-                .metadata({ A: 1 })
-                .use(setLocalsPlugin({ B: 2 }))
-                .use(convert(convertOptions));
-
-            await assertMetalsmithBuild({
-                t,
-                metalsmith,
-            });
-
-            t.deepEqual(convertOptions, beforeOptions);
-        },
-    );
-}
-
-for (const useMetadata of [true, false]) {
-    test.serial(
-        `should not change options value: compile() & render() useMetadata=${useMetadata}`,
-        async t => {
-            const compileOptions = {};
-            const renderOptions = {
-                locals: { C: 3 },
-                useMetadata,
-            };
-            const beforeCompileOptions = cloneDeep(compileOptions);
-            const beforeRenderOptions = cloneDeep(renderOptions);
-
-            const metalsmith = createMetalsmith(t)
-                .metadata({ A: 1 })
-                .use(compile())
-                .use(setLocalsPlugin({ B: 2 }))
-                .use(render(renderOptions));
-
-            await assertMetalsmithBuild({
-                t,
-                metalsmith,
-            });
-
-            t.deepEqual(compileOptions, beforeCompileOptions);
-            t.deepEqual(renderOptions, beforeRenderOptions);
-        },
-    );
-}
-
-for (const useMetadata of [true, false]) {
-    test.serial(
-        `should not change locals value by the template logic: convert() useMetadata=${useMetadata}`,
-        async t => {
-            const locals = {
-                count: 1,
-                state: {
-                    count: 1,
-                },
-            };
-            const beforeLocals = cloneDeep(locals);
-
-            const metalsmith = createMetalsmith(t)
-                .source('change-locals')
-                .use(convert({ locals, useMetadata, self: true }));
-
-            await assertMetalsmithBuild({
-                t,
-                metalsmith,
-            });
-
-            t.deepEqual(locals, beforeLocals);
-        },
-    );
-}
-
-for (const useMetadata of [true, false]) {
-    test.serial(
-        `should not change locals value by the template logic: compile() & render() useMetadata=${useMetadata}`,
-        async t => {
-            const locals = {
-                count: 1,
-                state: {
-                    count: 1,
-                },
-            };
-            const beforeLocals = cloneDeep(locals);
-
-            const metalsmith = createMetalsmith(t)
-                .source('change-locals')
-                .use(compile({ self: true }))
-                .use(render({ locals, useMetadata }));
-
-            await assertMetalsmithBuild({
-                t,
-                metalsmith,
-            });
-
-            t.deepEqual(locals, beforeLocals);
-        },
-    );
-}
-
-test.serial(
-    'should render only the file specified by the pattern option',
-    async t => {
-        const metalsmith = createMetalsmith(t)
-            .use(compile())
-            .use((files, metalsmith, done) => {
-                t.not(
-                    files['index.html'].contents.toString(),
-                    '<h1>Hello World</h1>',
-                );
-                t.not(files['self-closing.html'].contents.toString(), '<br/>');
-                done(null, files, metalsmith);
-            })
-            .use(
-                render({
-                    pattern: ['index.html'],
-                }),
-            )
-            .use((files, metalsmith, done) => {
-                t.is(
-                    files['index.html'].contents.toString(),
-                    '<h1>Hello World</h1>',
-                );
-                t.not(files['self-closing.html'].contents.toString(), '<br/>');
-                done(null, files, metalsmith);
-            });
-
-        await assertMetalsmithBuild({
-            t,
-            metalsmith,
-        });
-    },
-);
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+});
