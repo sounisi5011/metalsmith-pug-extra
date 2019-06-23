@@ -2,10 +2,10 @@ import test, { ExecutionContext } from 'ava';
 import fs from 'fs';
 import cloneDeep from 'lodash.clonedeep';
 import Metalsmith from 'metalsmith';
-import os from 'os';
 import path from 'path';
 import pug from 'pug';
 import sinon from 'sinon';
+import util from 'util';
 
 import { compile, convert, render } from '../src';
 import { isObject } from '../src/utils';
@@ -37,6 +37,15 @@ function destPath(metalsmith: Metalsmith, ...paths: string[]): string {
         path.relative(process.cwd(), metalsmith.destination()),
         ...paths,
     );
+}
+
+async function readSourceFile(
+    metalsmith: Metalsmith,
+    filename: string,
+): Promise<string> {
+    const readFile = util.promisify(fs.readFile);
+    const sourceFilepath = metalsmith.path(metalsmith.source(), filename);
+    return (await readFile(sourceFilepath)).toString();
 }
 
 function setLocalsPlugin(locals: {
@@ -79,25 +88,12 @@ function assertFileContentsEquals(
     filepath: string,
     contents: string,
 ): Promise<void> {
-    const unixTextRegExp = /^(?:[^\r\n]|\n)+$/;
-    const windowsTextRegExp = /^(?:[^\r\n]|\r\n)+$/;
-
     return new Promise(resolve => {
         fs.readFile(filepath, (err, data) => {
             t.falsy(err, 'No readFile error');
 
             if (!err) {
-                const fileText = data.toString();
-
-                if (
-                    os.EOL === '\r\n' &&
-                    windowsTextRegExp.test(fileText) &&
-                    unixTextRegExp.test(contents)
-                ) {
-                    t.is(fileText.replace(/\r\n/g, '\n'), contents, filepath);
-                } else {
-                    t.is(fileText, contents, filepath);
-                }
+                t.is(data.toString(), contents, filepath);
             }
 
             resolve();
@@ -280,7 +276,7 @@ test.serial('should not overwrite duplicate files: convert()', async t => {
         t,
         metalsmith,
         destFilename: 'index.html',
-        destFileContents: '<img>\n',
+        destFileContents: await readSourceFile(metalsmith, 'index.html'),
     });
 });
 
@@ -298,7 +294,7 @@ test.serial(
             t,
             metalsmith,
             destFilename: 'index.html',
-            destFileContents: '<img>\n',
+            destFileContents: await readSourceFile(metalsmith, 'index.html'),
         });
     },
 );
