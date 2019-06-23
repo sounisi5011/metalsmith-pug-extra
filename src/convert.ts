@@ -31,7 +31,7 @@ interface ConvertFuncInterface {
 
 interface ConvertOptionsInterface
     extends CompileOptionsInterface,
-        RenderOptionsInterface {}
+        Omit<RenderOptionsInterface, 'pattern'> {}
 
 /*
  * Default options
@@ -39,7 +39,8 @@ interface ConvertOptionsInterface
 
 const convertDefaultOptions: ConvertOptionsInterface = deepFreeze({
     ...compileDefaultOptions,
-    ...renderDefaultOptions,
+    locals: renderDefaultOptions.locals,
+    useMetadata: renderDefaultOptions.useMetadata,
 });
 
 /*
@@ -54,7 +55,8 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
     };
 
     return createEachPlugin((filename, files, metalsmith) => {
-        const { otherOptions: compileOptions } = getRenderOptions(options);
+        const { pattern, otherOptions } = getRenderOptions(options);
+        const compileOptions = { ...otherOptions, pattern };
         const { compileTemplate, newFilename, data } = getCompileTemplate(
             filename,
             files,
