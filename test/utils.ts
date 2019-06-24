@@ -4,16 +4,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { compile, getCompileOptions } from '../src/compile';
 import { convert } from '../src/convert';
 import { getRenderOptions, render } from '../src/render';
-
-function ignoreTypeError(callback: () => void): void {
-    try {
-        callback();
-    } catch (error) {
-        if (!(error instanceof TypeError)) {
-            throw error;
-        }
-    }
-}
+import { ignoreTypeError } from './helpers';
 
 test('compile.defaultOptions cannot be changed', t => {
     const originalValue = cloneDeep(compile.defaultOptions);
