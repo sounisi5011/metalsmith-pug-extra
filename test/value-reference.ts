@@ -5,9 +5,11 @@ import Metalsmith from 'metalsmith';
 import { compile, convert, render } from '../src';
 import {
     assertMetalsmithBuild,
-    createMetalsmith,
+    generateMetalsmithCreator,
     setLocalsPlugin,
 } from './helpers';
+
+const createMetalsmith = generateMetalsmithCreator(__filename);
 
 for (const useMetadata of [true, false]) {
     test(`should not change options value: convert() useMetadata=${useMetadata}`, async t => {

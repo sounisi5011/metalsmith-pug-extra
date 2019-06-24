@@ -4,8 +4,10 @@ import { compile, convert, render } from '../src';
 import {
     assertFileConverted,
     assertFileNotConverted,
-    createMetalsmith,
+    generateMetalsmithCreator,
 } from './helpers';
+
+const createMetalsmith = generateMetalsmithCreator(__filename);
 
 test('should not support .jade files by default: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(convert());

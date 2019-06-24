@@ -5,9 +5,11 @@ import { compile, convert, render } from '../src';
 import {
     assertFileConverted,
     assertMetalsmithBuild,
-    createMetalsmith,
+    generateMetalsmithCreator,
     setLocalsPlugin,
 } from './helpers';
+
+const createMetalsmith = generateMetalsmithCreator(__filename);
 
 test('should render html with locals: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(

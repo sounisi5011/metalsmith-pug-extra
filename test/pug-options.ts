@@ -6,9 +6,11 @@ import { compile, convert, render } from '../src';
 import {
     assertFileConverted,
     assertMetalsmithBuild,
-    createMetalsmith,
+    generateMetalsmithCreator,
     objIgnoreKeys,
 } from './helpers';
+
+const createMetalsmith = generateMetalsmithCreator(__filename);
 
 test('should pass options to pug: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(

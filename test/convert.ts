@@ -5,9 +5,11 @@ import {
     assertFileConverted,
     assertFilesPlugin,
     assertMetalsmithBuild,
-    createMetalsmith,
+    generateMetalsmithCreator,
     readSourceFile,
 } from './helpers';
+
+const createMetalsmith = generateMetalsmithCreator(__filename);
 
 test('should render html: convert()', async t => {
     const metalsmith = createMetalsmith(t).use(convert());

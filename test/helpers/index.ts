@@ -7,6 +7,8 @@ import util from 'util';
 
 import { isObject } from '../../src/utils';
 
+const TEST_DIR_PATH = path.resolve(__dirname, '..');
+
 export function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
     if (isObject(obj)) {
         // @ts-ignore: TS2322
@@ -32,11 +34,31 @@ export function getDestDir(t: ExecutionContext): string {
     return dirName;
 }
 
-export function createMetalsmith(t: ExecutionContext): Metalsmith {
-    return Metalsmith(path.join(__dirname, '..', 'fixtures'))
+export function createMetalsmith(
+    t: ExecutionContext,
+    destNamespace?: string,
+): Metalsmith {
+    return Metalsmith(path.join(TEST_DIR_PATH, 'fixtures'))
         .source('pages')
-        .destination(path.join('build', getDestDir(t)))
+        .destination(
+            path.join(
+                'build',
+                ...(destNamespace ? [destNamespace] : []),
+                getDestDir(t),
+            ),
+        )
         .clean(true);
+}
+
+export function generateMetalsmithCreator(
+    testFilepath: string,
+): (t: ExecutionContext) => Metalsmith {
+    const namespace = path
+        .relative(TEST_DIR_PATH, path.resolve(testFilepath))
+        .replace(/\.(?:js|ts)$/, '');
+    return (t: ExecutionContext) => {
+        return createMetalsmith(t, namespace);
+    };
 }
 
 export function destPath(metalsmith: Metalsmith, ...paths: string[]): string {
