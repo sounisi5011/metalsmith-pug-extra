@@ -9,6 +9,16 @@ import { isObject } from '../../src/utils';
 
 const TEST_DIR_PATH = path.resolve(__dirname, '..');
 
+export function ignoreTypeError(callback: () => void): void {
+    try {
+        callback();
+    } catch (error) {
+        if (!(error instanceof TypeError)) {
+            throw error;
+        }
+    }
+}
+
 export function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
     if (isObject(obj)) {
         // @ts-ignore: TS2322
