@@ -108,6 +108,9 @@
     "files": [
       "./test/**/*.ts"
     ],
+    "helpers": [
+      "**/helpers/**/*"
+    ],
     "snapshotDir": "./test/.snapshots/ava/",
     "compileEnhancements": false,
     "require": [
