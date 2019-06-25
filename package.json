@@ -30,6 +30,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "postinstall": "ts-node ./scripts/update-engines-node.ts",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .ts ./",
     "lint:tsc-src": "tsc --noEmit",
