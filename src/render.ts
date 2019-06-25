@@ -27,6 +27,7 @@ export interface RenderOptionsInterface {
     locals: pug.LocalsObject;
     useMetadata: boolean;
     pattern: string | string[];
+    reuse: boolean;
 }
 
 /*
@@ -38,8 +39,8 @@ export function getRenderOptions<T extends RenderOptionsInterface>(
 ): RenderOptionsInterface & {
     otherOptions: Omit<T, keyof RenderOptionsInterface>;
 } {
-    const { locals, useMetadata, pattern, ...otherOptions } = options;
-    return { locals, useMetadata, pattern, otherOptions };
+    const { locals, useMetadata, pattern, reuse, ...otherOptions } = options;
+    return { locals, useMetadata, pattern, reuse, otherOptions };
 }
 
 export function getRenderedText(
@@ -69,6 +70,7 @@ export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
     locals: {},
     useMetadata: false,
     pattern: ['**/*'],
+    reuse: false,
 });
 
 /*

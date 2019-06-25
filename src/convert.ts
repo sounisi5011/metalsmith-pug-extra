@@ -6,6 +6,7 @@ import pug from 'pug';
 import {
     compileDefaultOptions,
     CompileOptionsInterface,
+    getCompileOptions,
     getCompileTemplate,
 } from './compile';
 import {
@@ -31,7 +32,7 @@ interface ConvertFuncInterface {
 
 interface ConvertOptionsInterface
     extends CompileOptionsInterface,
-        Omit<RenderOptionsInterface, 'pattern'> {}
+        Omit<RenderOptionsInterface, 'pattern' | 'reuse'> {}
 
 /*
  * Default options
@@ -53,15 +54,19 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
         ...convertDefaultOptions,
         ...opts,
     };
+    const { otherOptions, ...compileOptions } = getCompileOptions(options);
+    const { otherOptions: pugOptions, ...renderOptions } = getRenderOptions({
+        ...renderDefaultOptions,
+        ...otherOptions,
+    });
+    const compileAndPugOptions = { ...compileOptions, ...pugOptions };
 
     return createEachPlugin((filename, files, metalsmith) => {
-        const { pattern, otherOptions } = getRenderOptions(options);
-        const compileOptions = { ...otherOptions, pattern };
         const { compileTemplate, newFilename, data } = getCompileTemplate(
             filename,
             files,
             metalsmith,
-            compileOptions,
+            compileAndPugOptions,
         );
 
         if (compileTemplate && newFilename && data) {
@@ -72,14 +77,14 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
                 filename,
                 data,
                 metalsmith,
-                options,
+                renderOptions,
             );
 
             addFile(
                 files,
                 newFilename,
                 convertedText,
-                options.copyFileData ? data : undefined,
+                compileOptions.copyFileData ? data : undefined,
             );
 
             if (filename !== newFilename) {
@@ -90,7 +95,7 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
                 debug(`done convert ${filename}`);
             }
         }
-    }, options.pattern);
+    }, compileOptions.pattern);
 };
 
 convert.defaultOptions = convertDefaultOptions;
