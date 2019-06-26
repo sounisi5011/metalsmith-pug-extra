@@ -5,7 +5,7 @@ import path from 'path';
 import slug from 'slug';
 import util from 'util';
 
-import { isObject } from '../../src/utils';
+import { isFile, isObject } from '../../src/utils';
 
 const TEST_DIR_PATH = path.resolve(__dirname, '..');
 
@@ -85,6 +85,27 @@ export async function readSourceFile(
     const readFile = util.promisify(fs.readFile);
     const sourceFilepath = metalsmith.path(metalsmith.source(), filename);
     return (await readFile(sourceFilepath)).toString();
+}
+
+export function getFileContentsPlugin(
+    filename: string,
+    callback: (contents: string | undefined) => void,
+): Metalsmith.Plugin {
+    return (files, metalsmith, done) => {
+        const targetFileData = files[filename];
+
+        if (targetFileData === undefined) {
+            throw ReferenceError(`not found in metalsmith/files: ${filename}`);
+        }
+
+        if (isFile(targetFileData)) {
+            callback(targetFileData.contents.toString());
+        } else {
+            callback(undefined);
+        }
+
+        done(null, files, metalsmith);
+    };
 }
 
 export function setLocalsPlugin(locals: {

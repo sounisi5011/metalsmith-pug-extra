@@ -7,6 +7,7 @@ import {
     assertFilesPlugin,
     assertMetalsmithBuild,
     generateMetalsmithCreator,
+    getFileContentsPlugin,
     readSourceFile,
 } from './helpers';
 
@@ -194,6 +195,44 @@ test('should render html with includes: compile() & render()', async t => {
         destFilename: 'index.html',
         destFileContents: '<h1>Hello World</h1><h2>hoge</h2>',
     });
+});
+
+test('should overwrite it when call render() again', async t => {
+    let firstRenderedContents: string | null | undefined = null;
+    let secondRenderedContents: string | null | undefined = null;
+
+    const metalsmith = createMetalsmith(t)
+        .source('always-different')
+        .use(compile())
+        .use(render())
+        .use(
+            getFileContentsPlugin('now.html', contents => {
+                firstRenderedContents = contents;
+            }),
+        )
+        .use(render())
+        .use(
+            getFileContentsPlugin('now.html', contents => {
+                secondRenderedContents = contents;
+            }),
+        );
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+
+    t.not(firstRenderedContents, null, 'variable must be overwritten');
+    t.not(secondRenderedContents, null, 'variable must be overwritten');
+
+    t.truthy(firstRenderedContents, 'must be rendered');
+    t.truthy(secondRenderedContents, 'must be rendered');
+
+    t.not(
+        secondRenderedContents,
+        firstRenderedContents,
+        'contents must be changed',
+    );
 });
 
 test('should render only the file specified by the pattern option', async t => {

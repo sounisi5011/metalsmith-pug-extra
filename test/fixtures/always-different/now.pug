@@ -1,0 +1,20 @@
+-
+  function padNum(num, length=2) {
+    return String(num).padStart(length, '0');
+  }
+
+  const now = new Date();
+
+  // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-month-string
+  const monthString = `${padNum(now.getFullYear(), 4)}-${padNum(now.getMonth() + 1)}`;
+
+  // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-date-string
+  const dateString = `${monthString}-${padNum(now.getDate())}`;
+
+  // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-time-string
+  const timeString = `${padNum(now.getHours())}:${padNum(now.getMinutes())}:${padNum(now.getSeconds())}:${padNum(now.getMilliseconds(), 3)}`;
+
+  // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-local-date-and-time-string
+  const localDateAndTimeString = `${dateString}T${timeString}`;
+
+time= localDateAndTimeString
