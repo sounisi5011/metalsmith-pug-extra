@@ -9,6 +9,7 @@ import {
     generateMetalsmithCreator,
     getFileContentsPlugin,
     readSourceFile,
+    sleep,
 } from './helpers';
 
 const createMetalsmith = generateMetalsmithCreator(__filename);
@@ -466,4 +467,53 @@ test('should merge reuse option and other options', async t => {
         t,
         metalsmith,
     });
+});
+
+test('should reuse render() options per Metalsmith instances', async t => {
+    const destFilename = 'locals.html';
+    const metalsmithList = await Promise.all(
+        [...Array(6)].map(async (_, index) => {
+            const metalsmith = createMetalsmith(t, `index-${index}`).use(
+                compile(),
+            );
+
+            metalsmith.use([
+                render({ locals: { A: `${index}` } }),
+                getFileContentsPlugin(destFilename, async contents => {
+                    t.is(
+                        contents,
+                        `A:${index} `,
+                        `1st render / index=${index}`,
+                    );
+
+                    // Wait 0.5 seconds if index is odd
+                    // Delay execution of render plugin
+                    await sleep((index % 2) * 0.5);
+                }),
+            ]);
+
+            // Wait 0.5 seconds if index is even
+            // Delay execution of render() function
+            await sleep((1 - (index % 2)) * 0.5);
+
+            metalsmith.use([
+                render({ reuse: true }),
+                getFileContentsPlugin(destFilename, contents => {
+                    t.is(
+                        contents,
+                        `A:${index} `,
+                        `2nd render / index=${index}`,
+                    );
+                }),
+            ]);
+
+            return metalsmith;
+        }),
+    );
+
+    await Promise.all(
+        metalsmithList
+            .reverse()
+            .map(metalsmith => assertMetalsmithBuild({ t, metalsmith })),
+    );
 });

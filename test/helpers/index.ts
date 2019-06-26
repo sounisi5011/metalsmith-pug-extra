@@ -9,6 +9,10 @@ import { isFile, isObject } from '../../src/utils';
 
 const TEST_DIR_PATH = path.resolve(__dirname, '..');
 
+export function sleep(sec: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, sec * 1000));
+}
+
 export function ignoreTypeError(callback: () => void): void {
     try {
         callback();
@@ -35,18 +39,20 @@ export function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
 }
 
 const destDirSet = new Set();
-export function getDestDir(t: ExecutionContext): string {
+export function getDestDir(t: ExecutionContext, namespace?: string): string {
     const dirName = slug(t.title, slug.defaults.modes['rfc3986']);
-    if (destDirSet.has(dirName)) {
-        throw new Error(`Duplicate test dir: ${dirName}`);
+    const dirpath = namespace ? path.join(dirName, namespace) : dirName;
+    if (destDirSet.has(dirpath)) {
+        throw new Error(`Duplicate test dir: ${dirpath}`);
     }
-    destDirSet.add(dirName);
-    return dirName;
+    destDirSet.add(dirpath);
+    return dirpath;
 }
 
 export function createMetalsmith(
     t: ExecutionContext,
     destNamespace?: string,
+    subNamespace?: string,
 ): Metalsmith {
     return Metalsmith(path.join(TEST_DIR_PATH, 'fixtures'))
         .source('pages')
@@ -54,7 +60,7 @@ export function createMetalsmith(
             path.join(
                 'build',
                 ...(destNamespace ? [destNamespace] : []),
-                getDestDir(t),
+                getDestDir(t, subNamespace),
             ),
         )
         .clean(true);
@@ -62,12 +68,12 @@ export function createMetalsmith(
 
 export function generateMetalsmithCreator(
     testFilepath: string,
-): (t: ExecutionContext) => Metalsmith {
+): (t: ExecutionContext, subNamespace?: string) => Metalsmith {
     const namespace = path
         .relative(TEST_DIR_PATH, path.resolve(testFilepath))
         .replace(/\.(?:js|ts)$/, '');
-    return (t: ExecutionContext) => {
-        return createMetalsmith(t, namespace);
+    return (t, subNamespace) => {
+        return createMetalsmith(t, namespace, subNamespace);
     };
 }
 
@@ -89,22 +95,26 @@ export async function readSourceFile(
 
 export function getFileContentsPlugin(
     filename: string,
-    callback: (contents: string | undefined) => void,
+    callback: (contents: string | undefined) => void | Promise<void>,
 ): Metalsmith.Plugin {
     return (files, metalsmith, done) => {
-        const targetFileData = files[filename];
+        (async () => {
+            const targetFileData = files[filename];
 
-        if (targetFileData === undefined) {
-            throw ReferenceError(`not found in metalsmith/files: ${filename}`);
-        }
+            if (targetFileData === undefined) {
+                throw ReferenceError(
+                    `not found in metalsmith/files: ${filename}`,
+                );
+            }
 
-        if (isFile(targetFileData)) {
-            callback(targetFileData.contents.toString());
-        } else {
-            callback(undefined);
-        }
+            if (isFile(targetFileData)) {
+                await callback(targetFileData.contents.toString());
+            } else {
+                await callback(undefined);
+            }
 
-        done(null, files, metalsmith);
+            done(null, files, metalsmith);
+        })();
     };
 }
 
