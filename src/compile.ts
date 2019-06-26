@@ -24,7 +24,7 @@ export interface CompileFuncInterface {
     (
         options?: Partial<CompileOptionsInterface> & pug.Options,
     ): Metalsmith.Plugin;
-    defaultOptions: CompileOptionsInterface;
+    readonly defaultOptions: CompileOptionsInterface;
 }
 
 export interface CompileOptionsInterface {

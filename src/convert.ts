@@ -26,7 +26,7 @@ interface ConvertFuncInterface {
     (
         options?: Partial<ConvertOptionsInterface> & pug.Options,
     ): Metalsmith.Plugin;
-    defaultOptions: ConvertOptionsInterface;
+    readonly defaultOptions: ConvertOptionsInterface;
 }
 
 interface ConvertOptionsInterface

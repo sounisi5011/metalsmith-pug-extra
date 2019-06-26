@@ -20,7 +20,7 @@ const debug = createDebug('metalsmith-pug-extra:render');
 
 export interface RenderFuncInterface {
     (options?: Partial<RenderOptionsInterface>): Metalsmith.Plugin;
-    defaultOptions: RenderOptionsInterface;
+    readonly defaultOptions: RenderOptionsInterface;
 }
 
 export interface RenderOptionsInterface {
