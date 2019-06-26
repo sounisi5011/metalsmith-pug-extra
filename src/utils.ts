@@ -17,6 +17,15 @@ export function freezeProperty(obj: object, prop: string): void {
     Object.defineProperty(obj, prop, { configurable: false, writable: false });
 }
 
+export function defDefaultOptions<
+    T extends (options: any) => any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    U extends Parameters<T>[0]
+>(func: T, defaultOptions: U): T & { readonly defaultOptions: U } {
+    const newFunc = Object.assign(func, { defaultOptions });
+    freezeProperty(newFunc, 'defaultOptions');
+    return newFunc;
+}
+
 export function isFile(value: unknown): value is FileInterface {
     if (isObject(value)) {
         return (
