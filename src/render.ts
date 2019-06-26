@@ -34,6 +34,25 @@ export interface RenderOptionsInterface {
  * Utility functions
  */
 
+let previousRenderOptions: Partial<RenderOptionsInterface> | undefined;
+
+export function normalizeRenderOptions(
+    options: Partial<RenderOptionsInterface>,
+    defaultOptions: RenderOptionsInterface,
+): RenderOptionsInterface {
+    const mergedOptions = { ...defaultOptions, ...options };
+    const partialOptions = mergedOptions.reuse
+        ? { ...previousRenderOptions, ...options }
+        : options;
+
+    previousRenderOptions = partialOptions;
+
+    return {
+        ...defaultOptions,
+        ...partialOptions,
+    };
+}
+
 export function getRenderOptions<T extends RenderOptionsInterface>(
     options: T,
 ): RenderOptionsInterface & {
@@ -79,10 +98,7 @@ export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const render: RenderFuncInterface = function(opts = {}) {
-    const options = {
-        ...renderDefaultOptions,
-        ...opts,
-    };
+    const options = normalizeRenderOptions(opts, renderDefaultOptions);
 
     return createEachPlugin((filename, files, metalsmith) => {
         const data: unknown = files[filename];
