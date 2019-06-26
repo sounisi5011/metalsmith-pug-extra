@@ -1,4 +1,5 @@
 import test from 'ava';
+import Metalsmith from 'metalsmith';
 
 import { compile, convert, render } from '../src';
 import {
@@ -225,3 +226,102 @@ test('should render only the file specified by the pattern option', async t => {
         metalsmith,
     });
 });
+
+/*
+ * options.reuse testing
+ */
+
+{
+    const renderOptions = {
+        locals: {
+            A: 1,
+            B: 2,
+            E: 42,
+        },
+    };
+    const optionsUsedFileContents = {
+        'locals.html': 'A:1 B:2 E:42 ',
+    };
+    function testFiles(
+        files: Metalsmith.Files,
+        callback: (
+            fileContents: string,
+            expectedContents: string,
+            filename: string,
+        ) => void,
+    ): void {
+        Object.entries(optionsUsedFileContents).forEach(
+            ([filename, contentStr]) => {
+                callback(
+                    files[filename].contents.toString(),
+                    contentStr,
+                    filename,
+                );
+            },
+        );
+    }
+
+    test('should reuse options of render() function', async t => {
+        const metalsmith = createMetalsmith(t)
+            .use(compile())
+            .use(render(renderOptions))
+            .use((files, metalsmith, done) => {
+                testFiles(files, (fileContents, expectedContents, filename) => {
+                    t.is(
+                        fileContents,
+                        expectedContents,
+                        `1st rendered: ${filename}`,
+                    );
+                });
+                done(null, files, metalsmith);
+            })
+            .use(render({ reuse: true }))
+            .use((files, metalsmith, done) => {
+                testFiles(files, (fileContents, expectedContents, filename) => {
+                    t.is(
+                        fileContents,
+                        expectedContents,
+                        `2nd rendered: ${filename}`,
+                    );
+                });
+                done(null, files, metalsmith);
+            });
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+    });
+
+    test('should not reuse options of render() function', async t => {
+        const metalsmith = createMetalsmith(t)
+            .use(compile())
+            .use(render(renderOptions))
+            .use((files, metalsmith, done) => {
+                testFiles(files, (fileContents, expectedContents, filename) => {
+                    t.is(
+                        fileContents,
+                        expectedContents,
+                        `1st rendered: ${filename}`,
+                    );
+                });
+                done(null, files, metalsmith);
+            })
+            .use(render({ reuse: false }))
+            .use((files, metalsmith, done) => {
+                testFiles(files, (fileContents, expectedContents, filename) => {
+                    t.not(
+                        fileContents,
+                        expectedContents,
+                        `2nd rendered: ${filename}`,
+                    );
+                });
+                done(null, files, metalsmith);
+            });
+
+        await assertMetalsmithBuild({
+            t,
+            metalsmith,
+        });
+    });
+}
