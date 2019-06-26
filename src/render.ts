@@ -7,8 +7,8 @@ import pug from 'pug';
 import compileTemplateMap from './compileTemplateMap';
 import {
     createEachPlugin,
+    defDefaultOptions,
     FileInterface,
-    freezeProperty,
     isFile,
 } from './utils';
 
@@ -75,34 +75,33 @@ export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
  * Main function
  */
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const render: RenderFuncInterface = function(opts = {}) {
-    const options = {
-        ...renderDefaultOptions,
-        ...opts,
-    };
+export const render = defDefaultOptions(
+    <RenderFuncInterface>((opts = {}) => {
+        const options = {
+            ...renderDefaultOptions,
+            ...opts,
+        };
 
-    return createEachPlugin((filename, files, metalsmith) => {
-        const data: unknown = files[filename];
-        if (!isFile(data)) {
-            return;
-        }
+        return createEachPlugin((filename, files, metalsmith) => {
+            const data: unknown = files[filename];
+            if (!isFile(data)) {
+                return;
+            }
 
-        const compileTemplate = compileTemplateMap.get(data);
-        if (compileTemplate) {
-            const convertedText = getRenderedText(
-                compileTemplate,
-                filename,
-                data,
-                metalsmith,
-                options,
-            );
+            const compileTemplate = compileTemplateMap.get(data);
+            if (compileTemplate) {
+                const convertedText = getRenderedText(
+                    compileTemplate,
+                    filename,
+                    data,
+                    metalsmith,
+                    options,
+                );
 
-            data.contents = Buffer.from(convertedText, 'utf8');
-            debug(`file contents updated: ${filename}`);
-        }
-    }, options.pattern);
-};
-
-render.defaultOptions = renderDefaultOptions;
-freezeProperty(render, 'defaultOptions');
+                data.contents = Buffer.from(convertedText, 'utf8');
+                debug(`file contents updated: ${filename}`);
+            }
+        }, options.pattern);
+    }),
+    renderDefaultOptions,
+);

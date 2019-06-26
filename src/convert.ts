@@ -14,7 +14,7 @@ import {
     renderDefaultOptions,
     RenderOptionsInterface,
 } from './render';
-import { addFile, createEachPlugin, freezeProperty } from './utils';
+import { addFile, createEachPlugin, defDefaultOptions } from './utils';
 
 const debug = createDebug('metalsmith-pug-extra:convert');
 
@@ -47,51 +47,52 @@ const convertDefaultOptions: ConvertOptionsInterface = deepFreeze({
  * Main function
  */
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const convert: ConvertFuncInterface = function(opts = {}) {
-    const options = {
-        ...convertDefaultOptions,
-        ...opts,
-    };
+export const convert = defDefaultOptions(
+    <ConvertFuncInterface>((opts = {}) => {
+        const options = {
+            ...convertDefaultOptions,
+            ...opts,
+        };
 
-    return createEachPlugin((filename, files, metalsmith) => {
-        const { pattern, otherOptions } = getRenderOptions(options);
-        const compileOptions = { ...otherOptions, pattern };
-        const { compileTemplate, newFilename, data } = getCompileTemplate(
-            filename,
-            files,
-            metalsmith,
-            compileOptions,
-        );
-
-        if (compileTemplate && newFilename && data) {
-            debug(`converting ${filename}`);
-
-            const convertedText = getRenderedText(
-                compileTemplate,
+        return createEachPlugin((filename, files, metalsmith) => {
+            const { pattern, otherOptions } = getRenderOptions(options);
+            const compileOptions = { ...otherOptions, pattern };
+            const { compileTemplate, newFilename, data } = getCompileTemplate(
                 filename,
-                data,
-                metalsmith,
-                options,
-            );
-
-            addFile(
                 files,
-                newFilename,
-                convertedText,
-                options.copyFileData ? data : undefined,
+                metalsmith,
+                compileOptions,
             );
 
-            if (filename !== newFilename) {
-                debug(`done convert ${filename}, renamed to ${newFilename}`);
-                delete files[filename];
-                debug(`file deleted: ${filename}`);
-            } else {
-                debug(`done convert ${filename}`);
-            }
-        }
-    }, options.pattern);
-};
+            if (compileTemplate && newFilename && data) {
+                debug(`converting ${filename}`);
 
-convert.defaultOptions = convertDefaultOptions;
-freezeProperty(convert, 'defaultOptions');
+                const convertedText = getRenderedText(
+                    compileTemplate,
+                    filename,
+                    data,
+                    metalsmith,
+                    options,
+                );
+
+                addFile(
+                    files,
+                    newFilename,
+                    convertedText,
+                    options.copyFileData ? data : undefined,
+                );
+
+                if (filename !== newFilename) {
+                    debug(
+                        `done convert ${filename}, renamed to ${newFilename}`,
+                    );
+                    delete files[filename];
+                    debug(`file deleted: ${filename}`);
+                } else {
+                    debug(`done convert ${filename}`);
+                }
+            }
+        }, options.pattern);
+    }),
+    convertDefaultOptions,
+);
