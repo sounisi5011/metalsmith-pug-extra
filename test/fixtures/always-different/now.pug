@@ -3,18 +3,32 @@
     return String(num).padStart(length, '0');
   }
 
-  const now = new Date();
+  function dateEquals(date1, date2) {
+    return date1.getTime() === date2.getTime();
+  }
 
-  // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-month-string
-  const monthString = `${padNum(now.getFullYear(), 4)}-${padNum(now.getMonth() + 1)}`;
+  function date2localDateTimeString(date) {
+    // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-month-string
+    const monthString = `${padNum(date.getFullYear(), 4)}-${padNum(date.getMonth() + 1)}`;
 
-  // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-date-string
-  const dateString = `${monthString}-${padNum(now.getDate())}`;
+    // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-date-string
+    const dateString = `${monthString}-${padNum(date.getDate())}`;
 
-  // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-time-string
-  const timeString = `${padNum(now.getHours())}:${padNum(now.getMinutes())}:${padNum(now.getSeconds())}:${padNum(now.getMilliseconds(), 3)}`;
+    // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-time-string
+    const timeString = `${padNum(date.getHours())}:${padNum(date.getMinutes())}:${padNum(date.getSeconds())}:${padNum(date.getMilliseconds(), 3)}`;
 
-  // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-local-date-and-time-string
-  const localDateAndTimeString = `${dateString}T${timeString}`;
+    // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-local-date-and-time-string
+    const localDateAndTimeString = `${dateString}T${timeString}`;
 
-time= localDateAndTimeString
+    return localDateAndTimeString;
+  }
+
+- const date1 = new Date();
+time= date2localDateTimeString(date1)
+
+-
+  let date2;
+  do {
+    date2 = new Date();
+  } while (dateEquals(date1, date2));
+time= date2localDateTimeString(date2)
