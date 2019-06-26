@@ -364,3 +364,106 @@ test('should render only the file specified by the pattern option', async t => {
         });
     });
 }
+
+test('should merge reuse option and other options', async t => {
+    const destFilename = 'locals.html';
+    const globalMetadata = { A: 1, B: 2 };
+    const renderOptionsList: {
+        options: Parameters<typeof render>[0];
+        test: Parameters<typeof getFileContentsPlugin>[1];
+    }[] = [
+        {
+            options: { useMetadata: true },
+            test(contents) {
+                t.is(
+                    contents,
+                    'A:1 B:2 ',
+                    '1st render; enable useMetadata option',
+                );
+            },
+        },
+        {
+            options: { reuse: true },
+            test(contents) {
+                t.is(
+                    contents,
+                    'A:1 B:2 ',
+                    '2nd render; reuse 1st render options',
+                );
+            },
+        },
+        {
+            options: { reuse: true, locals: { C: 3, D: 4 } },
+            test(contents) {
+                t.is(
+                    contents,
+                    'A:1 B:2 C:3 D:4 ',
+                    '3rd render; reuse 2nd render options and add locals option',
+                );
+            },
+        },
+        {
+            options: { reuse: true },
+            test(contents) {
+                t.is(
+                    contents,
+                    'A:1 B:2 C:3 D:4 ',
+                    '4th render; reuse 3rd render options',
+                );
+            },
+        },
+        {
+            options: { reuse: true, locals: { E: 42 } },
+            test(contents) {
+                t.is(
+                    contents,
+                    'A:1 B:2 E:42 ',
+                    '5th render; reuse 4th render options and overwrite locals option',
+                );
+            },
+        },
+        {
+            options: { reuse: true },
+            test(contents) {
+                t.is(
+                    contents,
+                    'A:1 B:2 E:42 ',
+                    '6th render; reuse 5th render options',
+                );
+            },
+        },
+        {
+            options: { reuse: true, useMetadata: false },
+            test(contents) {
+                t.is(
+                    contents,
+                    'E:42 ',
+                    '7th render; reuse 6th render options and disable useMetadata option',
+                );
+            },
+        },
+        {
+            options: { reuse: true },
+            test(contents) {
+                t.is(contents, 'E:42 ', '8th render; reuse 7th render options');
+            },
+        },
+    ];
+
+    const metalsmith = createMetalsmith(t)
+        .metadata(globalMetadata)
+        .use(compile())
+        .use(
+            renderOptionsList
+                .map(({ options, test }) => [
+                    render(options),
+                    getFileContentsPlugin(destFilename, test),
+                ])
+                .reduce((a, b) => [...a, ...b], []),
+        );
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+});
