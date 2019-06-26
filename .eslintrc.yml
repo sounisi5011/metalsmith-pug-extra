@@ -23,5 +23,6 @@ rules:
   "@typescript-eslint/explicit-function-return-type":
     - warn
     - allowExpressions: true
+  "@typescript-eslint/no-angle-bracket-type-assertion": off
   simple-import-sort/sort: error
   prettier/prettier: error
