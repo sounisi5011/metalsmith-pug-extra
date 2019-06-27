@@ -8,7 +8,7 @@ import compileTemplateMap from './compileTemplateMap';
 import {
     addFile,
     createEachPlugin,
-    defDefaultOptions,
+    createPluginGeneratorWithPugOptions,
     FileInterface,
     findEqualsPath,
     isFile,
@@ -19,13 +19,6 @@ const debug = createDebug('metalsmith-pug-extra:compile');
 /*
  * Interfaces
  */
-
-export interface CompileFuncInterface {
-    (
-        options?: Partial<CompileOptionsInterface> & pug.Options,
-    ): Metalsmith.Plugin;
-    readonly defaultOptions: CompileOptionsInterface;
-}
 
 export interface CompileOptionsInterface {
     pattern: string | string[];
@@ -117,36 +110,33 @@ export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
  * Main function
  */
 
-export const compile = defDefaultOptions(
-    <CompileFuncInterface>((opts = {}) => {
-        const options = {
-            ...compileDefaultOptions,
-            ...opts,
-        };
+export const compile = createPluginGeneratorWithPugOptions((opts = {}) => {
+    const options = {
+        ...compileDefaultOptions,
+        ...opts,
+    };
 
-        return createEachPlugin((filename, files, metalsmith) => {
-            const { compileTemplate, newFilename, data } = getCompileTemplate(
-                filename,
+    return createEachPlugin((filename, files, metalsmith) => {
+        const { compileTemplate, newFilename, data } = getCompileTemplate(
+            filename,
+            files,
+            metalsmith,
+            options,
+        );
+        if (compileTemplate && newFilename) {
+            const newFile = addFile(
                 files,
-                metalsmith,
-                options,
+                newFilename,
+                '',
+                options.copyFileData ? data : undefined,
             );
-            if (compileTemplate && newFilename) {
-                const newFile = addFile(
-                    files,
-                    newFilename,
-                    '',
-                    options.copyFileData ? data : undefined,
-                );
-                debug(`file created: ${newFilename}`);
-                compileTemplateMap.set(newFile, compileTemplate);
+            debug(`file created: ${newFilename}`);
+            compileTemplateMap.set(newFile, compileTemplate);
 
-                if (filename !== newFilename) {
-                    delete files[filename];
-                    debug(`file deleted: ${filename}`);
-                }
+            if (filename !== newFilename) {
+                delete files[filename];
+                debug(`file deleted: ${filename}`);
             }
-        }, options.pattern);
-    }),
-    compileDefaultOptions,
-);
+        }
+    }, options.pattern);
+}, compileDefaultOptions);

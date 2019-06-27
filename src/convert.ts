@@ -1,7 +1,5 @@
 import createDebug from 'debug';
 import deepFreeze from 'deep-freeze-strict';
-import Metalsmith from 'metalsmith';
-import pug from 'pug';
 
 import {
     compileDefaultOptions,
@@ -14,20 +12,17 @@ import {
     renderDefaultOptions,
     RenderOptionsInterface,
 } from './render';
-import { addFile, createEachPlugin, defDefaultOptions } from './utils';
+import {
+    addFile,
+    createEachPlugin,
+    createPluginGeneratorWithPugOptions,
+} from './utils';
 
 const debug = createDebug('metalsmith-pug-extra:convert');
 
 /*
  * Interfaces
  */
-
-interface ConvertFuncInterface {
-    (
-        options?: Partial<ConvertOptionsInterface> & pug.Options,
-    ): Metalsmith.Plugin;
-    readonly defaultOptions: ConvertOptionsInterface;
-}
 
 interface ConvertOptionsInterface
     extends CompileOptionsInterface,
@@ -47,52 +42,47 @@ const convertDefaultOptions: ConvertOptionsInterface = deepFreeze({
  * Main function
  */
 
-export const convert = defDefaultOptions(
-    <ConvertFuncInterface>((opts = {}) => {
-        const options = {
-            ...convertDefaultOptions,
-            ...opts,
-        };
+export const convert = createPluginGeneratorWithPugOptions((opts = {}) => {
+    const options = {
+        ...convertDefaultOptions,
+        ...opts,
+    };
 
-        return createEachPlugin((filename, files, metalsmith) => {
-            const { pattern, otherOptions } = getRenderOptions(options);
-            const compileOptions = { ...otherOptions, pattern };
-            const { compileTemplate, newFilename, data } = getCompileTemplate(
+    return createEachPlugin((filename, files, metalsmith) => {
+        const { pattern, otherOptions } = getRenderOptions(options);
+        const compileOptions = { ...otherOptions, pattern };
+        const { compileTemplate, newFilename, data } = getCompileTemplate(
+            filename,
+            files,
+            metalsmith,
+            compileOptions,
+        );
+
+        if (compileTemplate && newFilename && data) {
+            debug(`converting ${filename}`);
+
+            const convertedText = getRenderedText(
+                compileTemplate,
                 filename,
-                files,
+                data,
                 metalsmith,
-                compileOptions,
+                options,
             );
 
-            if (compileTemplate && newFilename && data) {
-                debug(`converting ${filename}`);
+            addFile(
+                files,
+                newFilename,
+                convertedText,
+                options.copyFileData ? data : undefined,
+            );
 
-                const convertedText = getRenderedText(
-                    compileTemplate,
-                    filename,
-                    data,
-                    metalsmith,
-                    options,
-                );
-
-                addFile(
-                    files,
-                    newFilename,
-                    convertedText,
-                    options.copyFileData ? data : undefined,
-                );
-
-                if (filename !== newFilename) {
-                    debug(
-                        `done convert ${filename}, renamed to ${newFilename}`,
-                    );
-                    delete files[filename];
-                    debug(`file deleted: ${filename}`);
-                } else {
-                    debug(`done convert ${filename}`);
-                }
+            if (filename !== newFilename) {
+                debug(`done convert ${filename}, renamed to ${newFilename}`);
+                delete files[filename];
+                debug(`file deleted: ${filename}`);
+            } else {
+                debug(`done convert ${filename}`);
             }
-        }, options.pattern);
-    }),
-    convertDefaultOptions,
-);
+        }
+    }, options.pattern);
+}, convertDefaultOptions);

@@ -1,6 +1,7 @@
 import Metalsmith from 'metalsmith';
 import match from 'multimatch';
 import path from 'path';
+import pug from 'pug';
 
 export interface FileInterface {
     contents: Buffer;
@@ -17,14 +18,25 @@ export function freezeProperty(obj: object, prop: string): void {
     Object.defineProperty(obj, prop, { configurable: false, writable: false });
 }
 
-export function defDefaultOptions<
-    T extends (options: any) => any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    U extends Parameters<T>[0]
->(func: T, defaultOptions: U): T & { readonly defaultOptions: U } {
+export function createPluginGenerator<T>(
+    func: (options?: Partial<T>) => Metalsmith.Plugin,
+    defaultOptions: T,
+): {
+    (options?: Partial<T>): Metalsmith.Plugin;
+    readonly defaultOptions: T;
+} {
     const newFunc = Object.assign(func, { defaultOptions });
     freezeProperty(newFunc, 'defaultOptions');
     return newFunc;
 }
+
+export const createPluginGeneratorWithPugOptions: <T>(
+    func: (options?: Partial<T> & pug.Options) => Metalsmith.Plugin,
+    defaultOptions: T,
+) => {
+    (options?: Partial<T> & pug.Options): Metalsmith.Plugin;
+    readonly defaultOptions: T;
+} = createPluginGenerator;
 
 export function isFile(value: unknown): value is FileInterface {
     if (isObject(value)) {

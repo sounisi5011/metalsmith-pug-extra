@@ -7,7 +7,7 @@ import pug from 'pug';
 import compileTemplateMap from './compileTemplateMap';
 import {
     createEachPlugin,
-    defDefaultOptions,
+    createPluginGenerator,
     FileInterface,
     isFile,
 } from './utils';
@@ -17,11 +17,6 @@ const debug = createDebug('metalsmith-pug-extra:render');
 /*
  * Interfaces
  */
-
-export interface RenderFuncInterface {
-    (options?: Partial<RenderOptionsInterface>): Metalsmith.Plugin;
-    readonly defaultOptions: RenderOptionsInterface;
-}
 
 export interface RenderOptionsInterface {
     locals: pug.LocalsObject;
@@ -75,33 +70,30 @@ export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
  * Main function
  */
 
-export const render = defDefaultOptions(
-    <RenderFuncInterface>((opts = {}) => {
-        const options = {
-            ...renderDefaultOptions,
-            ...opts,
-        };
+export const render = createPluginGenerator((opts = {}) => {
+    const options = {
+        ...renderDefaultOptions,
+        ...opts,
+    };
 
-        return createEachPlugin((filename, files, metalsmith) => {
-            const data: unknown = files[filename];
-            if (!isFile(data)) {
-                return;
-            }
+    return createEachPlugin((filename, files, metalsmith) => {
+        const data: unknown = files[filename];
+        if (!isFile(data)) {
+            return;
+        }
 
-            const compileTemplate = compileTemplateMap.get(data);
-            if (compileTemplate) {
-                const convertedText = getRenderedText(
-                    compileTemplate,
-                    filename,
-                    data,
-                    metalsmith,
-                    options,
-                );
+        const compileTemplate = compileTemplateMap.get(data);
+        if (compileTemplate) {
+            const convertedText = getRenderedText(
+                compileTemplate,
+                filename,
+                data,
+                metalsmith,
+                options,
+            );
 
-                data.contents = Buffer.from(convertedText, 'utf8');
-                debug(`file contents updated: ${filename}`);
-            }
-        }, options.pattern);
-    }),
-    renderDefaultOptions,
-);
+            data.contents = Buffer.from(convertedText, 'utf8');
+            debug(`file contents updated: ${filename}`);
+        }
+    }, options.pattern);
+}, renderDefaultOptions);
