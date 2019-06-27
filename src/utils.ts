@@ -3,16 +3,12 @@ import match from 'multimatch';
 import path from 'path';
 import pug from 'pug';
 
-import { DeepReadonly } from './utils/types';
+import { DeepReadonly, isAnyArray } from './utils/types';
 
 export interface FileInterface {
     contents: Buffer;
     [index: string]: unknown;
 }
-
-export type isAnyArray = (
-    value: unknown,
-) => value is unknown[] | readonly unknown[];
 
 export function isObject(
     value: unknown,
