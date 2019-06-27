@@ -3,14 +3,14 @@ import deepFreeze from 'deep-freeze-strict';
 
 import {
     compileDefaultOptions,
-    CompileOptionsInterface,
     getCompileTemplate,
+    WritableCompileOptionsInterface,
 } from './compile';
 import {
     getRenderedText,
     getRenderOptions,
     renderDefaultOptions,
-    RenderOptionsInterface,
+    WritableRenderOptionsInterface,
 } from './render';
 import {
     addFile,
@@ -25,25 +25,23 @@ const debug = createDebug('metalsmith-pug-extra:convert');
  * Interfaces
  */
 
-interface ConvertOptionsInterface
-    extends CompileOptionsInterface,
-        Omit<RenderOptionsInterface, 'pattern'> {}
-
-export type ReadonlyConvertOptionsInterface = DeepReadonly<
-    ConvertOptionsInterface
+export type ConvertOptionsInterface = DeepReadonly<
+    WritableConvertOptionsInterface
 >;
+
+interface WritableConvertOptionsInterface
+    extends WritableCompileOptionsInterface,
+        Omit<WritableRenderOptionsInterface, 'pattern'> {}
 
 /*
  * Default options
  */
 
-const convertDefaultOptions: DeepReadonly<ConvertOptionsInterface> = deepFreeze(
-    {
-        ...compileDefaultOptions,
-        locals: renderDefaultOptions.locals,
-        useMetadata: renderDefaultOptions.useMetadata,
-    },
-);
+const convertDefaultOptions: ConvertOptionsInterface = deepFreeze({
+    ...compileDefaultOptions,
+    locals: renderDefaultOptions.locals,
+    useMetadata: renderDefaultOptions.useMetadata,
+});
 
 /*
  * Main function

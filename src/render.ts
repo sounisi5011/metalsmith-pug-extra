@@ -19,23 +19,23 @@ const debug = createDebug('metalsmith-pug-extra:render');
  * Interfaces
  */
 
-export interface RenderOptionsInterface {
+export type RenderOptionsInterface = DeepReadonly<
+    WritableRenderOptionsInterface
+>;
+
+export interface WritableRenderOptionsInterface {
     locals: pug.LocalsObject;
     useMetadata: boolean;
     pattern: string | string[];
 }
 
-export type ReadonlyRenderOptionsInterface = DeepReadonly<
-    RenderOptionsInterface
->;
-
 /*
  * Utility functions
  */
 
-export function getRenderOptions<T extends ReadonlyRenderOptionsInterface>(
+export function getRenderOptions<T extends RenderOptionsInterface>(
     options: T,
-): ReadonlyRenderOptionsInterface & {
+): RenderOptionsInterface & {
     otherOptions: Omit<T, keyof RenderOptionsInterface>;
 } {
     const { locals, useMetadata, pattern, ...otherOptions } = options;
@@ -47,7 +47,7 @@ export function getRenderedText(
     filename: string,
     data: FileInterface,
     metalsmith: Metalsmith,
-    options: ReadonlyRenderOptionsInterface,
+    options: RenderOptionsInterface,
 ): string {
     const { locals, useMetadata } = getRenderOptions(options);
     const pugLocals = cloneDeep(
@@ -65,9 +65,7 @@ export function getRenderedText(
  * Default options
  */
 
-export const renderDefaultOptions: DeepReadonly<
-    RenderOptionsInterface
-> = deepFreeze({
+export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
     locals: {},
     useMetadata: false,
     pattern: ['**/*'],

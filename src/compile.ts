@@ -21,24 +21,24 @@ const debug = createDebug('metalsmith-pug-extra:compile');
  * Interfaces
  */
 
-export interface CompileOptionsInterface {
+export type CompileOptionsInterface = DeepReadonly<
+    WritableCompileOptionsInterface
+>;
+
+export interface WritableCompileOptionsInterface {
     pattern: string | string[];
     renamer: (filename: string) => string;
     overwrite: boolean;
     copyFileData: boolean;
 }
 
-export type ReadonlyCompileOptionsInterface = DeepReadonly<
-    CompileOptionsInterface
->;
-
 /*
  * Utility functions
  */
 
-export function getCompileOptions<T extends ReadonlyCompileOptionsInterface>(
+export function getCompileOptions<T extends CompileOptionsInterface>(
     options: T,
-): ReadonlyCompileOptionsInterface & {
+): CompileOptionsInterface & {
     otherOptions: Omit<T, keyof CompileOptionsInterface>;
 } {
     const {
@@ -55,7 +55,7 @@ export function getCompileTemplate(
     filename: string,
     files: Metalsmith.Files,
     metalsmith: Metalsmith,
-    options: ReadonlyCompileOptionsInterface & pug.Options,
+    options: CompileOptionsInterface & pug.Options,
 ): {
     compileTemplate?: pug.compileTemplate;
     newFilename?: string;
@@ -104,9 +104,7 @@ export function getCompileTemplate(
  * Default options
  */
 
-export const compileDefaultOptions: DeepReadonly<
-    CompileOptionsInterface
-> = deepFreeze({
+export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
     pattern: ['**/*.pug'],
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
     overwrite: true,
