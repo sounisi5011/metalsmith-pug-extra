@@ -1,6 +1,5 @@
 import createDebug from 'debug';
 import deepFreeze from 'deep-freeze-strict';
-import { DeepReadonly } from 'ts-essentials';
 
 import {
     compileDefaultOptions,
@@ -18,6 +17,7 @@ import {
     createEachPlugin,
     createPluginGeneratorWithPugOptions,
 } from './utils';
+import { DeepReadonly } from './utils/deep-readonly';
 
 const debug = createDebug('metalsmith-pug-extra:convert');
 

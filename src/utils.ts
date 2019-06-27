@@ -2,7 +2,8 @@ import Metalsmith from 'metalsmith';
 import match from 'multimatch';
 import path from 'path';
 import pug from 'pug';
-import { DeepReadonly } from 'ts-essentials';
+
+import { DeepReadonly } from './utils/deep-readonly';
 
 export interface FileInterface {
     contents: Buffer;

@@ -3,7 +3,6 @@ import deepFreeze from 'deep-freeze-strict';
 import cloneDeep from 'lodash.clonedeep';
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
-import { DeepReadonly } from 'ts-essentials';
 
 import compileTemplateMap from './compileTemplateMap';
 import {
@@ -12,6 +11,7 @@ import {
     FileInterface,
     isFile,
 } from './utils';
+import { DeepReadonly } from './utils/deep-readonly';
 
 const debug = createDebug('metalsmith-pug-extra:render');
 
