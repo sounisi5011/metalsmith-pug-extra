@@ -1,4 +1,4 @@
-export type isAnyArray = (
+export type isReadonlyOrWritableArray = (
     value: unknown,
 ) => value is unknown[] | readonly unknown[];
 

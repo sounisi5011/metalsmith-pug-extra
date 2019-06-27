@@ -3,7 +3,7 @@ import match from 'multimatch';
 import path from 'path';
 import pug from 'pug';
 
-import { DeepReadonly, isAnyArray } from './utils/types';
+import { DeepReadonly, isReadonlyOrWritableArray } from './utils/types';
 
 export interface FileInterface {
     contents: Buffer;
@@ -84,7 +84,7 @@ export function createEachPlugin(
     ) => void | Promise<void>,
     pattern?: DeepReadonly<string | string[]>,
 ): Metalsmith.Plugin {
-    const matchPatterns = (Array.isArray as isAnyArray)(pattern)
+    const matchPatterns = (Array.isArray as isReadonlyOrWritableArray)(pattern)
         ? [...pattern]
         : pattern;
     return (files, metalsmith, done) => {
