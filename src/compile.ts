@@ -3,6 +3,7 @@ import deepFreeze from 'deep-freeze-strict';
 import isUtf8 from 'is-utf8';
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
+import { DeepReadonly } from 'ts-essentials';
 
 import compileTemplateMap from './compileTemplateMap';
 import {
@@ -99,7 +100,7 @@ export function getCompileTemplate(
  * Default options
  */
 
-export const compileDefaultOptions: Readonly<
+export const compileDefaultOptions: DeepReadonly<
     CompileOptionsInterface
 > = deepFreeze({
     pattern: ['**/*.pug'],

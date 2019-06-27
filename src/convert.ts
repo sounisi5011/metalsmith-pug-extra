@@ -1,5 +1,6 @@
 import createDebug from 'debug';
 import deepFreeze from 'deep-freeze-strict';
+import { DeepReadonly } from 'ts-essentials';
 
 import {
     compileDefaultOptions,
@@ -32,11 +33,13 @@ interface ConvertOptionsInterface
  * Default options
  */
 
-const convertDefaultOptions: Readonly<ConvertOptionsInterface> = deepFreeze({
-    ...compileDefaultOptions,
-    locals: renderDefaultOptions.locals,
-    useMetadata: renderDefaultOptions.useMetadata,
-});
+const convertDefaultOptions: DeepReadonly<ConvertOptionsInterface> = deepFreeze(
+    {
+        ...compileDefaultOptions,
+        locals: renderDefaultOptions.locals,
+        useMetadata: renderDefaultOptions.useMetadata,
+    },
+);
 
 /*
  * Main function

@@ -3,6 +3,7 @@ import deepFreeze from 'deep-freeze-strict';
 import cloneDeep from 'lodash.clonedeep';
 import Metalsmith from 'metalsmith';
 import pug from 'pug';
+import { DeepReadonly } from 'ts-essentials';
 
 import compileTemplateMap from './compileTemplateMap';
 import {
@@ -60,7 +61,7 @@ export function getRenderedText(
  * Default options
  */
 
-export const renderDefaultOptions: Readonly<
+export const renderDefaultOptions: DeepReadonly<
     RenderOptionsInterface
 > = deepFreeze({
     locals: {},
