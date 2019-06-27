@@ -8,11 +8,12 @@ import compileTemplateMap from './compileTemplateMap';
 import {
     addFile,
     createEachPlugin,
+    createPluginGeneratorWithPugOptions,
     FileInterface,
     findEqualsPath,
-    freezeProperty,
     isFile,
 } from './utils';
+import { DeepReadonly } from './utils/types';
 
 const debug = createDebug('metalsmith-pug-extra:compile');
 
@@ -20,14 +21,11 @@ const debug = createDebug('metalsmith-pug-extra:compile');
  * Interfaces
  */
 
-export interface CompileFuncInterface {
-    (
-        options?: Partial<CompileOptionsInterface> & pug.Options,
-    ): Metalsmith.Plugin;
-    defaultOptions: CompileOptionsInterface;
-}
+export type CompileOptionsInterface = DeepReadonly<
+    WritableCompileOptionsInterface
+>;
 
-export interface CompileOptionsInterface {
+export interface WritableCompileOptionsInterface {
     pattern: string | string[];
     renamer: (filename: string) => string;
     overwrite: boolean;
@@ -117,8 +115,7 @@ export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
  * Main function
  */
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const compile: CompileFuncInterface = function(opts = {}) {
+export const compile = createPluginGeneratorWithPugOptions((opts = {}) => {
     const options = {
         ...compileDefaultOptions,
         ...opts,
@@ -147,7 +144,4 @@ export const compile: CompileFuncInterface = function(opts = {}) {
             }
         }
     }, options.pattern);
-};
-
-compile.defaultOptions = compileDefaultOptions;
-freezeProperty(compile, 'defaultOptions');
+}, compileDefaultOptions);

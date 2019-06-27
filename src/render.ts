@@ -7,10 +7,11 @@ import pug from 'pug';
 import compileTemplateMap from './compileTemplateMap';
 import {
     createEachPlugin,
+    createPluginGenerator,
     FileInterface,
-    freezeProperty,
     isFile,
 } from './utils';
+import { DeepReadonly } from './utils/types';
 
 const debug = createDebug('metalsmith-pug-extra:render');
 
@@ -18,12 +19,11 @@ const debug = createDebug('metalsmith-pug-extra:render');
  * Interfaces
  */
 
-export interface RenderFuncInterface {
-    (options?: Partial<RenderOptionsInterface>): Metalsmith.Plugin;
-    defaultOptions: RenderOptionsInterface;
-}
+export type RenderOptionsInterface = DeepReadonly<
+    WritableRenderOptionsInterface
+>;
 
-export interface RenderOptionsInterface {
+export interface WritableRenderOptionsInterface {
     locals: pug.LocalsObject;
     useMetadata: boolean;
     pattern: string | string[];
@@ -75,8 +75,7 @@ export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
  * Main function
  */
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const render: RenderFuncInterface = function(opts = {}) {
+export const render = createPluginGenerator((opts = {}) => {
     const options = {
         ...renderDefaultOptions,
         ...opts,
@@ -102,7 +101,4 @@ export const render: RenderFuncInterface = function(opts = {}) {
             debug(`file contents updated: ${filename}`);
         }
     }, options.pattern);
-};
-
-render.defaultOptions = renderDefaultOptions;
-freezeProperty(render, 'defaultOptions');
+}, renderDefaultOptions);

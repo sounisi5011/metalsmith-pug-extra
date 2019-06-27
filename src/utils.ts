@@ -1,6 +1,9 @@
 import Metalsmith from 'metalsmith';
 import match from 'multimatch';
 import path from 'path';
+import pug from 'pug';
+
+import { DeepReadonly, isReadonlyOrWritableArray } from './utils/types';
 
 export interface FileInterface {
     contents: Buffer;
@@ -16,6 +19,26 @@ export function isObject(
 export function freezeProperty(obj: object, prop: string): void {
     Object.defineProperty(obj, prop, { configurable: false, writable: false });
 }
+
+export function createPluginGenerator<T>(
+    func: (options?: Partial<T>) => Metalsmith.Plugin,
+    defaultOptions: T,
+): {
+    (options?: Partial<T>): Metalsmith.Plugin;
+    readonly defaultOptions: T;
+} {
+    const newFunc = Object.assign(func, { defaultOptions });
+    freezeProperty(newFunc, 'defaultOptions');
+    return newFunc;
+}
+
+export const createPluginGeneratorWithPugOptions: <T>(
+    func: (options?: Partial<T> & pug.Options) => Metalsmith.Plugin,
+    defaultOptions: T,
+) => {
+    (options?: Partial<T> & pug.Options): Metalsmith.Plugin;
+    readonly defaultOptions: T;
+} = createPluginGenerator;
 
 export function isFile(value: unknown): value is FileInterface {
     if (isObject(value)) {
@@ -59,12 +82,15 @@ export function createEachPlugin(
         files: Metalsmith.Files,
         metalsmith: Metalsmith,
     ) => void | Promise<void>,
-    pattern?: string | string[],
+    pattern?: DeepReadonly<string | string[]>,
 ): Metalsmith.Plugin {
+    const matchPatterns = (Array.isArray as isReadonlyOrWritableArray)(pattern)
+        ? [...pattern]
+        : pattern;
     return (files, metalsmith, done) => {
         const matchedFiles: string[] =
-            pattern !== undefined
-                ? match(Object.keys(files), pattern)
+            matchPatterns !== undefined
+                ? match(Object.keys(files), matchPatterns)
                 : Object.keys(files);
 
         Promise.all(

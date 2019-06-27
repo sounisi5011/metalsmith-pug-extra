@@ -1,20 +1,23 @@
 import createDebug from 'debug';
 import deepFreeze from 'deep-freeze-strict';
-import Metalsmith from 'metalsmith';
-import pug from 'pug';
 
 import {
     compileDefaultOptions,
-    CompileOptionsInterface,
     getCompileTemplate,
+    WritableCompileOptionsInterface,
 } from './compile';
 import {
     getRenderedText,
     getRenderOptions,
     renderDefaultOptions,
-    RenderOptionsInterface,
+    WritableRenderOptionsInterface,
 } from './render';
-import { addFile, createEachPlugin, freezeProperty } from './utils';
+import {
+    addFile,
+    createEachPlugin,
+    createPluginGeneratorWithPugOptions,
+} from './utils';
+import { DeepReadonly } from './utils/types';
 
 const debug = createDebug('metalsmith-pug-extra:convert');
 
@@ -22,16 +25,13 @@ const debug = createDebug('metalsmith-pug-extra:convert');
  * Interfaces
  */
 
-interface ConvertFuncInterface {
-    (
-        options?: Partial<ConvertOptionsInterface> & pug.Options,
-    ): Metalsmith.Plugin;
-    defaultOptions: ConvertOptionsInterface;
-}
+export type ConvertOptionsInterface = DeepReadonly<
+    WritableConvertOptionsInterface
+>;
 
-interface ConvertOptionsInterface
-    extends CompileOptionsInterface,
-        Omit<RenderOptionsInterface, 'pattern'> {}
+interface WritableConvertOptionsInterface
+    extends WritableCompileOptionsInterface,
+        Omit<WritableRenderOptionsInterface, 'pattern'> {}
 
 /*
  * Default options
@@ -47,8 +47,7 @@ const convertDefaultOptions: ConvertOptionsInterface = deepFreeze({
  * Main function
  */
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const convert: ConvertFuncInterface = function(opts = {}) {
+export const convert = createPluginGeneratorWithPugOptions((opts = {}) => {
     const options = {
         ...convertDefaultOptions,
         ...opts,
@@ -91,7 +90,4 @@ export const convert: ConvertFuncInterface = function(opts = {}) {
             }
         }
     }, options.pattern);
-};
-
-convert.defaultOptions = convertDefaultOptions;
-freezeProperty(convert, 'defaultOptions');
+}, convertDefaultOptions);
