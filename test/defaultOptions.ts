@@ -2,13 +2,12 @@ import test from 'ava';
 
 import { compile, convert, render } from '../src';
 
-const methodMap = new Map<string, convert | compile | render>([
-    ['convert()', convert],
-    ['compile()', compile],
-    ['render()', render],
-]);
+const methodMap = new Map<
+    string,
+    typeof convert | typeof compile | typeof render
+>([['convert()', convert], ['compile()', compile], ['render()', render]]);
 
-const compileMethodMap = new Map<string, convert | compile>([
+const compileMethodMap = new Map<string, typeof convert | typeof compile>([
     ['convert()', convert],
     ['compile()', compile],
 ]);
