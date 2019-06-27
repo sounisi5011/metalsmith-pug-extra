@@ -6,9 +6,9 @@ import pug from 'pug';
 
 import compileTemplateMap from './compileTemplateMap';
 import {
-    createEachPlugin,
     createPluginGenerator,
     FileInterface,
+    getMatchedFiles,
     isFile,
 } from './utils';
 import { DeepReadonly } from './utils/types';
@@ -34,18 +34,22 @@ export interface WritableRenderOptionsInterface {
  * Utility functions
  */
 
-let previousRenderOptions: Partial<RenderOptionsInterface> | undefined;
+const previousRenderOptionsMap: WeakMap<
+    Metalsmith,
+    Partial<RenderOptionsInterface>
+> = new WeakMap();
 
 export function normalizeRenderOptions(
+    metalsmith: Metalsmith,
     options: Partial<RenderOptionsInterface>,
     defaultOptions: RenderOptionsInterface,
 ): RenderOptionsInterface {
     const mergedOptions = { ...defaultOptions, ...options };
     const partialOptions = mergedOptions.reuse
-        ? { ...previousRenderOptions, ...options }
+        ? { ...previousRenderOptionsMap.get(metalsmith), ...options }
         : options;
 
-    previousRenderOptions = partialOptions;
+    previousRenderOptionsMap.set(metalsmith, partialOptions);
 
     return {
         ...defaultOptions,
@@ -97,26 +101,34 @@ export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
  */
 
 export const render = createPluginGenerator((opts = {}) => {
-    const options = normalizeRenderOptions(opts, renderDefaultOptions);
+    return (files, metalsmith, done) => {
+        const options = normalizeRenderOptions(
+            metalsmith,
+            opts,
+            renderDefaultOptions,
+        );
 
-    return createEachPlugin((filename, files, metalsmith) => {
-        const data: unknown = files[filename];
-        if (!isFile(data)) {
-            return;
-        }
+        getMatchedFiles(files, options.pattern).forEach(filename => {
+            const data: unknown = files[filename];
+            if (!isFile(data)) {
+                return;
+            }
 
-        const compileTemplate = compileTemplateMap.get(data);
-        if (compileTemplate) {
-            const convertedText = getRenderedText(
-                compileTemplate,
-                filename,
-                data,
-                metalsmith,
-                options,
-            );
+            const compileTemplate = compileTemplateMap.get(data);
+            if (compileTemplate) {
+                const convertedText = getRenderedText(
+                    compileTemplate,
+                    filename,
+                    data,
+                    metalsmith,
+                    options,
+                );
 
-            data.contents = Buffer.from(convertedText, 'utf8');
-            debug(`file contents updated: ${filename}`);
-        }
-    }, options.pattern);
+                data.contents = Buffer.from(convertedText, 'utf8');
+                debug(`file contents updated: ${filename}`);
+            }
+        });
+
+        done(null, files, metalsmith);
+    };
 }, renderDefaultOptions);
