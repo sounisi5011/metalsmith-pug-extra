@@ -19,7 +19,10 @@ test('compile.defaultOptions cannot be changed', t => {
         'Properties cannot be added',
     );
 
-    ignoreTypeError(() => (compile.defaultOptions.renamer = s => s));
+    ignoreTypeError(() => {
+        // @ts-ignore: TS2540
+        compile.defaultOptions.renamer = (s: string) => s;
+    });
     ignoreTypeError(() => {
         if (Array.isArray(compile.defaultOptions.pattern)) {
             compile.defaultOptions.pattern.push('**/*.jade');
@@ -32,7 +35,7 @@ test('compile.defaultOptions cannot be changed', t => {
     );
 
     ignoreTypeError(() => {
-        // @ts-ignore: TS2322
+        // @ts-ignore: TS2540
         compile.defaultOptions = 42;
     });
     t.deepEqual(
@@ -55,8 +58,14 @@ test('render.defaultOptions cannot be changed', t => {
         'Properties cannot be added',
     );
 
-    ignoreTypeError(() => (render.defaultOptions.locals.π = Math.PI));
-    ignoreTypeError(() => (render.defaultOptions.useMetadata = true));
+    ignoreTypeError(() => {
+        // @ts-ignore: TS2542
+        render.defaultOptions.locals.π = Math.PI;
+    });
+    ignoreTypeError(() => {
+        // @ts-ignore: TS2540
+        render.defaultOptions.useMetadata = true;
+    });
     t.deepEqual(
         render.defaultOptions,
         originalValue,
@@ -64,7 +73,7 @@ test('render.defaultOptions cannot be changed', t => {
     );
 
     ignoreTypeError(() => {
-        // @ts-ignore: TS2322
+        // @ts-ignore: TS2540
         render.defaultOptions = 42;
     });
     t.deepEqual(
@@ -87,8 +96,14 @@ test('convert.defaultOptions cannot be changed', t => {
         'Properties cannot be added',
     );
 
-    ignoreTypeError(() => (convert.defaultOptions.locals.cwd = process.cwd()));
-    ignoreTypeError(() => (convert.defaultOptions.useMetadata = true));
+    ignoreTypeError(() => {
+        // @ts-ignore: TS2542
+        convert.defaultOptions.locals.cwd = process.cwd();
+    });
+    ignoreTypeError(() => {
+        // @ts-ignore: TS2540
+        convert.defaultOptions.useMetadata = true;
+    });
     ignoreTypeError(() => {
         if (Array.isArray(convert.defaultOptions.pattern)) {
             convert.defaultOptions.pattern.push('**/*.jade');
@@ -101,7 +116,7 @@ test('convert.defaultOptions cannot be changed', t => {
     );
 
     ignoreTypeError(() => {
-        // @ts-ignore: TS2322
+        // @ts-ignore: TS2540
         convert.defaultOptions = 42;
     });
     t.deepEqual(
