@@ -29,6 +29,10 @@ interface ConvertOptionsInterface
     extends CompileOptionsInterface,
         Omit<RenderOptionsInterface, 'pattern'> {}
 
+export type ReadonlyConvertOptionsInterface = DeepReadonly<
+    ConvertOptionsInterface
+>;
+
 /*
  * Default options
  */

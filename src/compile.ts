@@ -28,6 +28,10 @@ export interface CompileOptionsInterface {
     copyFileData: boolean;
 }
 
+export type ReadonlyCompileOptionsInterface = DeepReadonly<
+    CompileOptionsInterface
+>;
+
 /*
  * Utility functions
  */

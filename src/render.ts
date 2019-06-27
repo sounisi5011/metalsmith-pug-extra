@@ -25,6 +25,10 @@ export interface RenderOptionsInterface {
     pattern: string | string[];
 }
 
+export type ReadonlyRenderOptionsInterface = DeepReadonly<
+    RenderOptionsInterface
+>;
+
 /*
  * Utility functions
  */
