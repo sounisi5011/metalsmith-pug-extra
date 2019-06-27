@@ -17,7 +17,7 @@ import {
     createEachPlugin,
     createPluginGeneratorWithPugOptions,
 } from './utils';
-import { DeepReadonly } from './utils/deep-readonly';
+import { DeepReadonly } from './utils/types';
 
 const debug = createDebug('metalsmith-pug-extra:convert');
 

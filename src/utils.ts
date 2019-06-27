@@ -3,7 +3,7 @@ import match from 'multimatch';
 import path from 'path';
 import pug from 'pug';
 
-import { DeepReadonly } from './utils/deep-readonly';
+import { DeepReadonly } from './utils/types';
 
 export interface FileInterface {
     contents: Buffer;
