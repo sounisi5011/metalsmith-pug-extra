@@ -33,9 +33,9 @@ export type ReadonlyRenderOptionsInterface = DeepReadonly<
  * Utility functions
  */
 
-export function getRenderOptions<T extends RenderOptionsInterface>(
+export function getRenderOptions<T extends ReadonlyRenderOptionsInterface>(
     options: T,
-): RenderOptionsInterface & {
+): ReadonlyRenderOptionsInterface & {
     otherOptions: Omit<T, keyof RenderOptionsInterface>;
 } {
     const { locals, useMetadata, pattern, ...otherOptions } = options;
@@ -47,7 +47,7 @@ export function getRenderedText(
     filename: string,
     data: FileInterface,
     metalsmith: Metalsmith,
-    options: RenderOptionsInterface,
+    options: ReadonlyRenderOptionsInterface,
 ): string {
     const { locals, useMetadata } = getRenderOptions(options);
     const pugLocals = cloneDeep(

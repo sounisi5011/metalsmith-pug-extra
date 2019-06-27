@@ -2,11 +2,16 @@ import Metalsmith from 'metalsmith';
 import match from 'multimatch';
 import path from 'path';
 import pug from 'pug';
+import { DeepReadonly } from 'ts-essentials';
 
 export interface FileInterface {
     contents: Buffer;
     [index: string]: unknown;
 }
+
+export type isAnyArray = (
+    value: unknown,
+) => value is unknown[] | readonly unknown[];
 
 export function isObject(
     value: unknown,
@@ -80,12 +85,15 @@ export function createEachPlugin(
         files: Metalsmith.Files,
         metalsmith: Metalsmith,
     ) => void | Promise<void>,
-    pattern?: string | string[],
+    pattern?: DeepReadonly<string | string[]>,
 ): Metalsmith.Plugin {
+    const matchPatterns = (Array.isArray as isAnyArray)(pattern)
+        ? [...pattern]
+        : pattern;
     return (files, metalsmith, done) => {
         const matchedFiles: string[] =
-            pattern !== undefined
-                ? match(Object.keys(files), pattern)
+            matchPatterns !== undefined
+                ? match(Object.keys(files), matchPatterns)
                 : Object.keys(files);
 
         Promise.all(

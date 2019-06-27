@@ -36,9 +36,9 @@ export type ReadonlyCompileOptionsInterface = DeepReadonly<
  * Utility functions
  */
 
-export function getCompileOptions<T extends CompileOptionsInterface>(
+export function getCompileOptions<T extends ReadonlyCompileOptionsInterface>(
     options: T,
-): CompileOptionsInterface & {
+): ReadonlyCompileOptionsInterface & {
     otherOptions: Omit<T, keyof CompileOptionsInterface>;
 } {
     const {
@@ -55,7 +55,7 @@ export function getCompileTemplate(
     filename: string,
     files: Metalsmith.Files,
     metalsmith: Metalsmith,
-    options: CompileOptionsInterface & pug.Options,
+    options: ReadonlyCompileOptionsInterface & pug.Options,
 ): {
     compileTemplate?: pug.compileTemplate;
     newFilename?: string;
