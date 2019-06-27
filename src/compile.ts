@@ -99,7 +99,9 @@ export function getCompileTemplate(
  * Default options
  */
 
-export const compileDefaultOptions: CompileOptionsInterface = deepFreeze({
+export const compileDefaultOptions: Readonly<
+    CompileOptionsInterface
+> = deepFreeze({
     pattern: ['**/*.pug'],
     renamer: filename => filename.replace(/\.(?:pug|jade)$/, '.html'),
     overwrite: true,

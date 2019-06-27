@@ -32,7 +32,7 @@ interface ConvertOptionsInterface
  * Default options
  */
 
-const convertDefaultOptions: ConvertOptionsInterface = deepFreeze({
+const convertDefaultOptions: Readonly<ConvertOptionsInterface> = deepFreeze({
     ...compileDefaultOptions,
     locals: renderDefaultOptions.locals,
     useMetadata: renderDefaultOptions.useMetadata,

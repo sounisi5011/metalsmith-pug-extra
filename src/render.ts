@@ -60,7 +60,9 @@ export function getRenderedText(
  * Default options
  */
 
-export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
+export const renderDefaultOptions: Readonly<
+    RenderOptionsInterface
+> = deepFreeze({
     locals: {},
     useMetadata: false,
     pattern: ['**/*'],
