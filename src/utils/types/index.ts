@@ -1,1 +1,1 @@
-export * from '../deep-readonly';
+export * from './deep-readonly';
