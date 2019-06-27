@@ -70,7 +70,8 @@
     "is-utf8": "0.2.1",
     "lodash.clonedeep": "4.5.0",
     "multimatch": "4.0.0",
-    "pug": "2.0.4"
+    "pug": "2.0.4",
+    "ts-essentials": "2.0.11"
   },
   "devDependencies": {
     "@types/recursive-readdir": "2.2.0",
