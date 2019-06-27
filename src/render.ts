@@ -100,8 +100,8 @@ export const renderDefaultOptions: RenderOptionsInterface = deepFreeze({
  * Main function
  */
 
-export const render = createPluginGenerator((opts = {}) => {
-    return (files, metalsmith, done) => {
+export const render = createPluginGenerator(
+    (opts = {}) => (files, metalsmith, done) => {
         const options = normalizeRenderOptions(
             metalsmith,
             opts,
@@ -130,5 +130,6 @@ export const render = createPluginGenerator((opts = {}) => {
         });
 
         done(null, files, metalsmith);
-    };
-}, renderDefaultOptions);
+    },
+    renderDefaultOptions,
+);
