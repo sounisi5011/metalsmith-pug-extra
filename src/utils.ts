@@ -76,6 +76,20 @@ export function addFile(
     return newFile;
 }
 
+export function getMatchedFiles(
+    files: Metalsmith.Files,
+    pattern: DeepReadonly<string | string[] | undefined>,
+): string[] {
+    const matchPatterns = (Array.isArray as isReadonlyOrWritableArray)(pattern)
+        ? [...pattern]
+        : pattern;
+    const matchedFiles =
+        matchPatterns !== undefined
+            ? match(Object.keys(files), matchPatterns)
+            : Object.keys(files);
+    return matchedFiles;
+}
+
 export function createEachPlugin(
     callback: (
         filename: string,
@@ -84,14 +98,8 @@ export function createEachPlugin(
     ) => void | Promise<void>,
     pattern?: DeepReadonly<string | string[]>,
 ): Metalsmith.Plugin {
-    const matchPatterns = (Array.isArray as isReadonlyOrWritableArray)(pattern)
-        ? [...pattern]
-        : pattern;
     return (files, metalsmith, done) => {
-        const matchedFiles: string[] =
-            matchPatterns !== undefined
-                ? match(Object.keys(files), matchPatterns)
-                : Object.keys(files);
+        const matchedFiles = getMatchedFiles(files, pattern);
 
         Promise.all(
             matchedFiles.map(filename => callback(filename, files, metalsmith)),

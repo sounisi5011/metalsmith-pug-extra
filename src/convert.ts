@@ -3,6 +3,7 @@ import deepFreeze from 'deep-freeze-strict';
 
 import {
     compileDefaultOptions,
+    getCompileOptions,
     getCompileTemplate,
     WritableCompileOptionsInterface,
 } from './compile';
@@ -31,7 +32,7 @@ export type ConvertOptionsInterface = DeepReadonly<
 
 interface WritableConvertOptionsInterface
     extends WritableCompileOptionsInterface,
-        Omit<WritableRenderOptionsInterface, 'pattern'> {}
+        Omit<WritableRenderOptionsInterface, 'pattern' | 'reuse'> {}
 
 /*
  * Default options
@@ -52,15 +53,19 @@ export const convert = createPluginGeneratorWithPugOptions((opts = {}) => {
         ...convertDefaultOptions,
         ...opts,
     };
+    const { otherOptions, ...compileOptions } = getCompileOptions(options);
+    const { otherOptions: pugOptions, ...renderOptions } = getRenderOptions({
+        ...renderDefaultOptions,
+        ...otherOptions,
+    });
+    const compileAndPugOptions = { ...compileOptions, ...pugOptions };
 
     return createEachPlugin((filename, files, metalsmith) => {
-        const { pattern, otherOptions } = getRenderOptions(options);
-        const compileOptions = { ...otherOptions, pattern };
         const { compileTemplate, newFilename, data } = getCompileTemplate(
             filename,
             files,
             metalsmith,
-            compileOptions,
+            compileAndPugOptions,
         );
 
         if (compileTemplate && newFilename && data) {
@@ -71,14 +76,14 @@ export const convert = createPluginGeneratorWithPugOptions((opts = {}) => {
                 filename,
                 data,
                 metalsmith,
-                options,
+                renderOptions,
             );
 
             addFile(
                 files,
                 newFilename,
                 convertedText,
-                options.copyFileData ? data : undefined,
+                compileOptions.copyFileData ? data : undefined,
             );
 
             if (filename !== newFilename) {
@@ -89,5 +94,5 @@ export const convert = createPluginGeneratorWithPugOptions((opts = {}) => {
                 debug(`done convert ${filename}`);
             }
         }
-    }, options.pattern);
+    }, compileOptions.pattern);
 }, convertDefaultOptions);
