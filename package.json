@@ -37,6 +37,7 @@
     "fmt-ts": "run-s 'lint:eslint --fix'",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .ts ./",
+    "lint:tsc-scripts": "tsc -p ./scripts/ --noEmit",
     "lint:tsc-src": "tsc --noEmit",
     "lint:tsc-test": "tsc -p ./test/ --noEmit",
     "release": "run-s release:validation release:build release:publish",
