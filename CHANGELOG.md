@@ -33,7 +33,7 @@
 
 #### devDependencies
 
-* `@typescript-eslint/eslint-plugin`  
+* `@typescript-eslint/eslint-plugin`
     * [#32] - `1.10.2` -> `1.11.0`
 * `@typescript-eslint/parser`
     * [#32] - `1.10.2` -> `1.11.0`
