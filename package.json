@@ -31,6 +31,10 @@
   "scripts": {
     "build": "tsc",
     "clean": "del ./dist/*",
+    "fix:package.json": "run-s fix:package.json:prettier fix:package.json:sort",
+    "fix:package.json:prettier": "prettier-package-json --write ./package.json",
+    "fix:package.json:sort": "sort-package-json ./package.json",
+    "fix:ts": "eslint --fix --ext .ts ./",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .ts ./",
     "lint:tsc-src": "tsc --noEmit",
