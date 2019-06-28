@@ -51,6 +51,8 @@ or
 
 ### [`convert()`](#convertoptions)
 
+Convert template files to HTML.
+
 ```js
 const Metalsmith = require('metalsmith');
 const { convert } = require('metalsmith-pug-extra');
@@ -70,6 +72,8 @@ Metalsmith(__dirname)
 ```
 
 ### [`compile()`](#compileoptions) & [`render()`](#renderoptions)
+
+After compiling the template file, it is processed by plug-ins such as renaming (`metalsmith-collections` and `metalsmith-permalinks` in this example) and finally the HTML content is generated.
 
 ```js
 const Metalsmith = require('metalsmith');
