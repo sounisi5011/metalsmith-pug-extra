@@ -469,6 +469,51 @@ test('should merge reuse option and other options', async t => {
     });
 });
 
+test('should reuse render() options even for files that were not rendered before', async t => {
+    const targetFile = 'locals.html';
+    const targetFileContents = 'A:1 B:2 E:42 ';
+
+    const metalsmith = createMetalsmith(t)
+        .use(compile())
+        .use(
+            render({
+                pattern: `!${targetFile}`,
+                locals: {
+                    A: 1,
+                    B: 2,
+                    E: 42,
+                },
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            t.not(
+                files[targetFile].contents.toString(),
+                targetFileContents,
+                `1st render; ${targetFile} should not be rendered`,
+            );
+            done(null, files, metalsmith);
+        })
+        .use(
+            render({
+                reuse: true,
+                pattern: render.defaultOptions.pattern,
+            }),
+        )
+        .use((files, metalsmith, done) => {
+            t.is(
+                files[targetFile].contents.toString(),
+                targetFileContents,
+                `2nd render; ${targetFile} should be rendered`,
+            );
+            done(null, files, metalsmith);
+        });
+
+    await assertMetalsmithBuild({
+        t,
+        metalsmith,
+    });
+});
+
 test('should reuse render() options per Metalsmith instances', async t => {
     const destFilename = 'locals.html';
     const metalsmithList = await Promise.all(
