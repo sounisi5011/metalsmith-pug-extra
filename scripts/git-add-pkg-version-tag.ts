@@ -84,8 +84,6 @@ async function setTag(tagName: string): Promise<void> {
         const versionTagName = await getTagVersionName();
         const exists = await tagExists(versionTagName);
 
-        console.log({ versionTagName, exists });
-
         if (exists) {
             if (!(await isHeadTag(versionTagName))) {
                 throw new Error(`Git tag already exists: ${versionTagName}`);
