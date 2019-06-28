@@ -34,9 +34,9 @@
     "lint:eslint": "eslint --ext .ts ./",
     "lint:tsc-src": "tsc --noEmit",
     "lint:tsc-test": "tsc -p ./test/ --noEmit",
-    "prepublish:push-git-tag": "git push origin --tags",
-    "prepublish": "run-s build prepublish:push-git-tag",
+    "prepublish": "run-s build",
     "publish": "npm publish --access=public",
+    "postpublish": "git push origin --tags",
     "test": "run-s lint test:ava",
     "test:ava": "ava"
   },
