@@ -14,6 +14,7 @@ import {
 import { DeepReadonly } from './utils/types';
 
 const debug = createDebug('metalsmith-pug-extra:render');
+const debugOptions = debug.extend('options');
 
 /*
  * Interfaces
@@ -44,17 +45,29 @@ export function normalizeRenderOptions(
     options: Partial<RenderOptionsInterface>,
     defaultOptions: RenderOptionsInterface,
 ): RenderOptionsInterface {
-    const mergedOptions = { ...defaultOptions, ...options };
-    const partialOptions = mergedOptions.reuse
-        ? { ...previousRenderOptionsMap.get(metalsmith), ...options }
-        : options;
+    debugOptions('normalizing options: %o', options);
 
+    const partialOptions = {};
+    const mergedOptions = { ...defaultOptions, ...options };
+
+    if (mergedOptions.reuse && previousRenderOptionsMap.has(metalsmith)) {
+        const previousRenderOptions = previousRenderOptionsMap.get(metalsmith);
+        debugOptions('reuse previous options: %o', previousRenderOptions);
+        Object.assign(partialOptions, previousRenderOptions);
+    }
+
+    Object.assign(partialOptions, options);
+
+    debugOptions('save current options: %o', partialOptions);
     previousRenderOptionsMap.set(metalsmith, partialOptions);
 
-    return {
+    const normalizedOptions = {
         ...defaultOptions,
         ...partialOptions,
     };
+    debugOptions('normalized options: %o', normalizedOptions);
+
+    return normalizedOptions;
 }
 
 export function getRenderOptions<T extends RenderOptionsInterface>(
