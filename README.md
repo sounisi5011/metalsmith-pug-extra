@@ -169,3 +169,12 @@ Converts a file processed by the `compile()` plugin from template to HTML.
 
 Initial value of the option argument of the `render()` function.
 It can be used to specify an option based on the default value.
+
+## CLI Usage
+
+For now, this plugin does not support [Metalsmith CLI].
+I am planning to add [Metalsmith CLI] support in version 2.x.
+See [#28] for details.
+
+[Metalsmith CLI]: https://github.com/segmentio/metalsmith/blob/v2.3.0/Readme.md#cli
+[#28]: https://github.com/sounisi5011/metalsmith-pug-extra/issues/28
