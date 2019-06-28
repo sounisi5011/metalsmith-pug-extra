@@ -12,6 +12,43 @@
 [#31]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/31
 [9469c55]: https://github.com/sounisi5011/metalsmith-pug-extra/commit/9469c5525c002015a3f17a8aa3d09cb828599616
 
+### Updated Dependencies
+
+#### dependencies
+
+* `pug`
+    * [#26] - `2.0.3` -> `2.0.4`
+
+[#26]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/26
+
+#### devDependencies
+
+* `@typescript-eslint/eslint-plugin`  
+    * [#32] - `1.10.2` -> `1.11.0`
+* `@typescript-eslint/parser`
+    * [#32] - `1.10.2` -> `1.11.0`
+* `eslint-config-prettier`
+    * [#37] - `5.0.0` -> `5.1.0`
+    * [#40] - `5.1.0` -> `6.0.0`
+* `eslint-plugin-import`
+    * [#36] - `2.17.3` -> `2.18.0`
+* `eslint-plugin-promise`
+    * [#39] - `4.1.1` -> `4.2.1`
+* `eslint-plugin-simple-import-sort`
+    * [#27] - `3.1.1` -> `4.0.0`
+* `husky`
+    * [#34] - `2.4.1` -> `2.5.0`
+    * [#42] - `2.5.0` -> `2.7.0`
+
+[#27]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/27
+[#32]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/32
+[#34]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/34
+[#36]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/36
+[#37]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/37
+[#39]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/39
+[#40]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/40
+[#42]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/42
+
 ## [1.0.1] (2019-06-16)
 
 [1.0.1]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.0.0...v1.0.1
