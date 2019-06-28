@@ -113,15 +113,123 @@ Except for differences in options, this is equivalent to such as [metalsmith-pug
 
 #### Options
 
-| Name               | Type                           | Required | Default        | Details                                              |
-| ------------------ | ------------------------------ | -------- | -------------- | ---------------------------------------------------- |
-| **`pattern`**      | `string \| string[]`            | `✖`      | `['**/*.pug']` | Only files that match this pattern will be processed |
-| **`renamer`**      | `(filename: string) => string` | `✖`      | `filename => filename.replace(/\.(?:pug\|jade)$/, '.html')` | Change the file name |
-| **`overwrite`**    | `boolean`                      | `✖`      | `true`         | Overwrite duplicate files |
-| **`copyFileData`** | `boolean`                      | `✖`      | `false`        | Copy the data of the file before conversion to the file after conversion |
-| **`locals`**       | `Object`                       | `✖`      | `{}`           | Pass additional locals to the template                  |
-| **`useMetadata`**  | `boolean`                      | `✖`      | `false`        | Expose [Metalsmith's global metadata](https://metalsmith.io/#-metadata-json-) and file data to the [Pug] template |
-| **`*`**            |                                |          |                | Parameters to pass in the [`options`](https://pugjs.org/api/reference.html#options) argument of [`pug.compile()`](https://pugjs.org/api/reference.html#pugcompilesource-options) |
+##### pattern
+
+Only files that match this pattern will be processed.  
+Specify a glob expression string or an array of strings as the pattern.  
+Patterns are verified using [multimatch v4.0.0].
+
+[multimatch v4.0.0]: https://www.npmjs.com/package/multimatch/v/4.0.0
+
+Default value:
+
+```js
+['**/*.pug']
+```
+
+Type definition:
+
+```ts
+string | string[]
+```
+
+#### renamer
+
+Convert template filenames to HTML filenames.  
+Specifies a function to convert strings.
+
+Default value:
+
+```js
+filename => filename.replace(/\.(?:pug|jade)$/, '.html')
+```
+
+Type definition:
+
+```ts
+(filename: string) => string
+```
+
+#### overwrite
+
+If set to `true`, the file with the same name as the converted HTML will be overwritten.  
+If set to `false`, the file with the same name as the converted HTML is prioritized and HTML is not generated.
+
+Default value:
+
+```js
+true
+```
+
+Type definition:
+
+```ts
+boolean
+```
+
+#### copyFileData
+
+If set to `true`, the template file metadata is copied to the converted HTML file.
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+
+#### locals
+
+Pass additional local values to the template.  
+If `useMetadata` is `true`, this value will be overwritten with [Metalsmith]'s metadata.
+
+Default value:
+
+```js
+{}
+```
+
+Type definition:
+
+```ts
+// see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/54642d812e28de52325a689d0b380f7a4d3c113e/types/pug/index.d.ts#L133-L138
+{
+    [propName: string]: any;
+}
+```
+
+#### useMetadata
+
+If set to `true`, passes [Metalsmith's global metadata] and file metadata to the template.
+
+[Metalsmith's global metadata]: https://metalsmith.io/#-metadata-json-
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+
+#### pug options
+
+Other properties are used as options for [Pug v2.0.4].  
+In internal processing, it is passed as an argument of [`pug.compile()`] function.  
+Please check [Pug Options] for details.
+
+[Pug v2.0.4]: https://pugjs.org/
+[Pug Options]: https://pugjs.org/api/reference.html#options
+[`pug.compile()`]: https://pugjs.org/api/reference.html#pugcompilesource-options
 
 ### `convert.defaultOptions`
 
@@ -131,7 +239,7 @@ It can be used to specify an option based on the default value.
 ```js
 Metalsmith(__dirname)
   .use(convert({
-    pattern: [ ...convert.defaultOptions.pattern, '!_*/**', '!**/_*', '!**/_*/**' ]
+    pattern: [].concat(convert.defaultOptions.pattern, '!_*/**', '!**/_*', '!**/_*/**')
     // equals to: [ '**/*.pug', '!_*/**', '!**/_*', '!**/_*/**' ]
   }))
 ```
