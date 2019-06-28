@@ -1537,6 +1537,14 @@ define-property@^2.0.2:
     is-descriptor "^1.0.2"
     isobject "^3.0.1"
 
+del-cli@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/del-cli/-/del-cli-2.0.0.tgz#e9a778398863c26796d85409b9891f98b0122cd1"
+  integrity sha512-IREsO6mjSTxxvWLKMMUi1G0izhqEBx7qeDkOJ6H3+TJl8gQl6x5C5hK4Sm1GJ51KodUMR6O7HuIhnF24Edua3g==
+  dependencies:
+    del "^4.1.1"
+    meow "^5.0.0"
+
 del@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/del/-/del-3.0.0.tgz#53ecf699ffcbcb39637691ab13baf160819766e5"
