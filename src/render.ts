@@ -42,8 +42,8 @@ const previousRenderOptionsMap: WeakMap<
 
 export function normalizeRenderOptions(
     metalsmith: Metalsmith,
-    options: Partial<RenderOptionsInterface>,
     defaultOptions: RenderOptionsInterface,
+    options: Partial<RenderOptionsInterface>,
 ): RenderOptionsInterface {
     debugOptions('normalizing options: %o', options);
 
@@ -117,8 +117,8 @@ export const render = createPluginGenerator((opts = {}) => {
     return (files, metalsmith, done) => {
         const options = normalizeRenderOptions(
             metalsmith,
-            opts,
             renderDefaultOptions,
+            opts,
         );
 
         getMatchedFiles(files, options.pattern).forEach(filename => {
