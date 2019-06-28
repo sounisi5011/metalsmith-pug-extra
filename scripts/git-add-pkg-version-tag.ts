@@ -1,6 +1,7 @@
 /* eslint no-console: off */
 // inspired by https://github.com/okunishinishi/node-taggit
 
+/// <reference types="node" />
 import { execFile } from 'child_process';
 import fs from 'fs';
 import path from 'path';
