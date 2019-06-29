@@ -1,13 +1,14 @@
 # metalsmith-pug-extra
 
-[![npm version](https://img.shields.io/npm/v/metalsmith-pug-extra.svg)][npm]
-[![GitHub License](https://img.shields.io/github/license/sounisi5011/metalsmith-pug-extra.svg)][github]
-[![Build Status](https://travis-ci.com/sounisi5011/metalsmith-pug-extra.svg?branch=master)](https://travis-ci.com/sounisi5011/metalsmith-pug-extra)
-[![Build status](https://ci.appveyor.com/api/projects/status/uolim1xgodpw3ft1/branch/master?svg=true)](https://ci.appveyor.com/project/sounisi5011/metalsmith-pug-extra/branch/master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/f8efa3c8c8bc40f9da37/maintainability)](https://codeclimate.com/github/sounisi5011/metalsmith-pug-extra/maintainability)
+[![npm package](https://img.shields.io/npm/v/metalsmith-pug-extra.svg)][npm]
+[![GitHub License](https://img.shields.io/github/license/sounisi5011/metalsmith-pug-extra.svg)][github-license]
+![](https://img.shields.io/node/v/metalsmith-pug-extra.svg)
+[![Linux Build Status](https://img.shields.io/travis/com/sounisi5011/metalsmith-pug-extra/master.svg?label=Linux%20build)](https://travis-ci.com/sounisi5011/metalsmith-pug-extra)
+[![Windows Build Status](https://img.shields.io/appveyor/ci/sounisi5011/metalsmith-pug-extra/master.svg?label=Windows%20build&logo=appveyor)](https://ci.appveyor.com/project/sounisi5011/metalsmith-pug-extra/branch/master)
+[![Maintainability Status](https://api.codeclimate.com/v1/badges/f8efa3c8c8bc40f9da37/maintainability)](https://codeclimate.com/github/sounisi5011/metalsmith-pug-extra/maintainability)
 
 [npm]: https://www.npmjs.com/package/metalsmith-pug-extra
-[github]: https://github.com/sounisi5011/metalsmith-pug-extra
+[github-license]: https://github.com/sounisi5011/metalsmith-pug-extra/blob/master/LICENSE
 
 [Metalsmith] plugin to convert or compile and render [Pug] files.
 
@@ -19,11 +20,17 @@
 [metalsmith-pug]: https://github.com/ahmadnassri/metalsmith-pug
 [metalsmith-collections]: https://github.com/segmentio/metalsmith-collections
 [metalsmith-permalinks]: https://github.com/segmentio/metalsmith-permalinks
+[metalsmith-excerpts]: https://github.com/segmentio/metalsmith-excerpts
 
 * API to execute render after compile
 
   You can insert [metalsmith-collections], [metalsmith-permalinks], etc. between compile and render.
   This is the biggest reason for this package to exist.
+
+* Modify metadata after conversion and reconvert
+
+  You can convert the converted HTML as many times as you like.
+  For example, you can use [metalsmith-excerpts] for converted HTML and convert the HTML again using the retrieved excerpt values.
 
 * Customizable rename logic
 
@@ -37,19 +44,19 @@
 
 * Available in [TypeScript](https://www.typescriptlang.org/)
 
-  Type definitions is included.
+  Type definition is included.
 
 ## Install
 
-    yarn add metalsmith-pug-extra
-
-or
-
-    npm install --save metalsmith-pug-extra
+```sh
+npm install --save metalsmith-pug-extra
+```
 
 ## Usage
 
 ### [`convert()`](#convertoptions)
+
+Convert template files to HTML.
 
 ```js
 const Metalsmith = require('metalsmith');
@@ -70,6 +77,8 @@ Metalsmith(__dirname)
 ```
 
 ### [`compile()`](#compileoptions) & [`render()`](#renderoptions)
+
+After compiling the template file, it is processed by plugins such as renaming ([metalsmith-collections] and [metalsmith-permalinks] in this example) and finally the HTML content is generated.
 
 ```js
 const Metalsmith = require('metalsmith');
@@ -102,32 +111,154 @@ Metalsmith(__dirname)
 
 ### `convert(options?)`
 
-Returns a plugin that converts [Pug] templates to HTML.
+Returns a plugin that converts [Pug] template files to HTML files.  
 Except for differences in options, this is equivalent to such as [metalsmith-pug] and [metalsmith-in-place].
 
 [metalsmith-in-place]: https://github.com/metalsmith/metalsmith-in-place
 
 #### Options
 
-| Name               | Type                           | Required | Default        | Details                                              |
-| ------------------ | ------------------------------ | -------- | -------------- | ---------------------------------------------------- |
-| **`pattern`**      | `string \| string[]`            | `✖`      | `['**/*.pug']` | Only files that match this pattern will be processed |
-| **`renamer`**      | `(filename: string) => string` | `✖`      | `filename => filename.replace(/\.(?:pug\|jade)$/, '.html')` | Change the file name |
-| **`overwrite`**    | `boolean`                      | `✖`      | `true`         | Overwrite duplicate files |
-| **`copyFileData`** | `boolean`                      | `✖`      | `false`        | Copy the data of the file before conversion to the file after conversion |
-| **`locals`**       | `Object`                       | `✖`      | `{}`           | Pass additional locals to the template                  |
-| **`useMetadata`**  | `boolean`                      | `✖`      | `false`        | Expose [Metalsmith's global metadata](https://metalsmith.io/#-metadata-json-) and file data to the [Pug] template |
-| **`*`**            |                                |          |                | Parameters to pass in the [`options`](https://pugjs.org/api/reference.html#options) argument of [`pug.compile()`](https://pugjs.org/api/reference.html#pugcompilesource-options) |
+<details>
+<summary>pattern</summary>
+
+Only files that match this pattern will be processed.  
+Specify a glob expression string or an array of strings as the pattern.  
+Pattern are verified using [multimatch v4.0.0].
+
+[multimatch v4.0.0]: https://www.npmjs.com/package/multimatch/v/4.0.0
+
+Default value:
+
+```js
+['**/*.pug']
+```
+
+Type definition:
+
+```ts
+string | string[]
+```
+</details>
+
+<details>
+<summary>renamer</summary>
+
+Convert template filename to HTML filename.  
+Specifies a function to convert strings.
+
+Default value:
+
+```js
+filename => filename.replace(/\.(?:pug|jade)$/, '.html')
+```
+
+Type definition:
+
+```ts
+(filename: string) => string
+```
+</details>
+
+<details>
+<summary>overwrite</summary>
+
+If set to `true`, the file with the same name as the converted HTML will be overwritten.  
+If set to `false`, the file with the same name as the converted HTML is prioritized and HTML is not generated.
+
+Default value:
+
+```js
+true
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>copyFileData</summary>
+
+If set to `true`, the template file metadata is copied to the converted HTML file.
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>locals</summary>
+
+Pass additional local values to the template.  
+If `useMetadata` option is `true`, this value will be overwritten with [Metalsmith]'s metadata.
+
+Default value:
+
+```js
+{}
+```
+
+Type definition:
+
+```ts
+// see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/54642d812e28de52325a689d0b380f7a4d3c113e/types/pug/index.d.ts#L133-L138
+{
+    [propName: string]: any;
+}
+```
+</details>
+
+<details>
+<summary>useMetadata</summary>
+
+If set to `true`, passes [Metalsmith's global metadata] and file metadata to the template.
+
+[Metalsmith's global metadata]: https://metalsmith.io/#-metadata-json-
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>pug options</summary>
+
+Other properties are used as options for [Pug v2.0.4].  
+In internal processing, it is passed as an argument of [`pug.compile()`] function.  
+Please check [Pug Options] for more details.
+
+[Pug v2.0.4]: https://www.npmjs.com/package/pug/v/2.0.4
+[Pug Options]: https://pugjs.org/api/reference.html#options
+[`pug.compile()`]: https://pugjs.org/api/reference.html#pugcompilesource-options
+</details>
 
 ### `convert.defaultOptions`
 
-Initial value of the option argument of the `convert()` function.
-It can be used to specify an option based on the default value.
+Default value of the `convert()` function options argument.  
+It can be used to specify an options based on the default value.
 
 ```js
 Metalsmith(__dirname)
   .use(convert({
-    pattern: [ ...convert.defaultOptions.pattern, '!_*/**', '!**/_*', '!**/_*/**' ]
+    pattern: [].concat(convert.defaultOptions.pattern, '!_*/**', '!**/_*', '!**/_*/**')
     // equals to: [ '**/*.pug', '!_*/**', '!**/_*', '!**/_*/**' ]
   }))
 ```
@@ -136,36 +267,263 @@ Metalsmith(__dirname)
 
 Returns a plugin that compiles [Pug] templates.
 
-The file name is changed to `*.html` but the template is not converted.
+The file name is changed to `*.html` but the template is not converted.  
 You can use other plugins to generate locals before converting the template with the `render()` plugin.
 
 #### Options
 
-| Name               | Type                           | Required | Default        | Details                                              |
-| ------------------ | ------------------------------ | -------- | -------------- | ---------------------------------------------------- |
-| **`pattern`**      | `string \| string[]`            | `✖`      | `['**/*.pug']` | Only files that match this pattern will be processed |
-| **`renamer`**      | `(filename: string) => string` | `✖`      | `filename => filename.replace(/\.(?:pug\|jade)$/, '.html')` | Change the file name |
-| **`overwrite`**    | `boolean`                      | `✖`      | `true`         | Overwrite duplicate files |
-| **`copyFileData`** | `boolean`                      | `✖`      | `false`        | Copy the data of the file before conversion to the file after conversion |
-| **`*`**            |                                |          |                | Parameters to pass in the [`options`](https://pugjs.org/api/reference.html#options) argument of [`pug.compile()`](https://pugjs.org/api/reference.html#pugcompilesource-options) |
+<details>
+<summary>pattern</summary>
+
+Only files that match this pattern will be processed.  
+Specify a glob expression string or an array of strings as the pattern.  
+Pattern are verified using [multimatch v4.0.0].
+
+Default value:
+
+```js
+['**/*.pug']
+```
+
+Type definition:
+
+```ts
+string | string[]
+```
+</details>
+
+<details>
+<summary>renamer</summary>
+
+Convert template filename to HTML filename.  
+Specifies a function to convert strings.
+
+Default value:
+
+```js
+filename => filename.replace(/\.(?:pug|jade)$/, '.html')
+```
+
+Type definition:
+
+```ts
+(filename: string) => string
+```
+</details>
+
+<details>
+<summary>overwrite</summary>
+
+If set to `true`, the file with the same name as the converted HTML will be overwritten.  
+If set to `false`, the file with the same name as the converted HTML is prioritized and HTML is not generated.
+
+Default value:
+
+```js
+true
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>copyFileData</summary>
+
+If set to `true`, the template file metadata is copied to the converted HTML file.
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>pug options</summary>
+
+Other properties are used as options for [Pug v2.0.4].  
+In internal processing, it is passed as an argument of [`pug.compile()`] function.  
+Please check [Pug Options] for more details.
+</details>
 
 ### `compile.defaultOptions`
 
-Initial value of the option argument of the `compile()` function.
-It can be used to specify an option based on the default value.
+Default value of the `compile()` function options argument.  
+It can be used to specify an options based on the default value.
 
 ### `render(options?)`
 
+Returns a plugin that generates HTML content from a compiled template.  
+Files compiled with the `compile()` function are processed.
+
+This plugin can also reconvert generated HTML.  
+Therefore, you can use [metalsmith-excerpts] etc. effectively.
+
 #### Options
 
-Converts a file processed by the `compile()` plugin from template to HTML.
+<details>
+<summary>locals</summary>
 
-| Name               | Type                           | Required | Default        | Details                                              |
-| ------------------ | ------------------------------ | -------- | -------------- | ---------------------------------------------------- |
-| **`locals`**       | `Object`                       | `✖`      | `{}`           | Pass additional locals to the template                  |
-| **`useMetadata`**  | `boolean`                      | `✖`      | `false`        | Expose [Metalsmith's global metadata](https://metalsmith.io/#-metadata-json-) and file data to the [Pug] template |
+Pass additional local values to the template.  
+If `useMetadata` option is `true`, this value will be overwritten with [Metalsmith]'s metadata.
+
+Default value:
+
+```js
+{}
+```
+
+Type definition:
+
+```ts
+// see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/54642d812e28de52325a689d0b380f7a4d3c113e/types/pug/index.d.ts#L133-L138
+{
+    [propName: string]: any;
+}
+```
+</details>
+
+<details>
+<summary>useMetadata</summary>
+
+If set to `true`, passes [Metalsmith's global metadata] and file metadata to the template.
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>pattern</summary>
+
+Only files that match this pattern will be processed.  
+Specify a glob expression string or an array of strings as the pattern.  
+Pattern are verified using [multimatch v4.0.0].
+
+Default value:
+
+```js
+['**/*']
+```
+
+Type definition:
+
+```ts
+string | string[]
+```
+</details>
+
+<details>
+<summary>reuse</summary>
+
+If set to `true`, it will reuse the options value set in the `render()` function just before.  
+This option is intended to improve the convenience of regenerating generated HTML.
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+
+Example:
+
+```js
+const Metalsmith = require('metalsmith');
+const excerpts = require('metalsmith-excerpts');
+const { compile, render } = require('metalsmith-pug-extra');
+
+Metalsmith(__dirname)
+  .use(compile({ copyFileData: true }))
+  .use(render({
+    locals: {
+      a: 1,
+      b: 2,
+    },
+    useMetadata: true,
+    pattern: ['articles/*'],
+  }))
+  .use(excerpts())
+  .use(render({
+    reuse: true,
+    pattern: render.defaultOptions.pattern,
+    /*
+    equals to:
+    {
+      locals: {
+        a: 1,
+        b: 2,
+      },
+      useMetadata: true,
+      pattern: render.defaultOptions.pattern,
+    }
+    */
+  }))
+```
+</details>
 
 ### `render.defaultOptions`
 
-Initial value of the option argument of the `render()` function.
-It can be used to specify an option based on the default value.
+Default value of the `render()` function options argument.  
+It can be used to specify an options based on the default value.
+
+## Debug mode
+
+This plugin supports debugging output.  
+To enable, use the following command when running your build script:
+
+```sh
+DEBUG=metalsmith-pug-extra:* node my-website-build.js
+```
+
+For more details, please check the description of [debug v4.1.1].
+
+[debug v4.1.1]: https://www.npmjs.com/package/debug/v/4.1.1
+
+## Tests
+
+To run the test suite, first install the dependencies by [yarn], then run `yarn test`:
+
+[yarn]: https://yarnpkg.com/
+
+```sh
+yarn install
+yarn test
+```
+
+The tests are not dependent on [yarn], so you can probably use the [`npm` cli] as well.  
+However, since this repository does not include `package-lock.json`, it is strongly recommended to use [yarn] for dependencies installation.
+
+[`npm` cli]: https://docs.npmjs.com/cli/npm
+
+## CLI Usage
+
+For now, this plugin does not support [Metalsmith CLI].  
+I am planning to add [Metalsmith CLI] support in version 2.x.  
+See [#28] for details.
+
+[Metalsmith CLI]: https://github.com/segmentio/metalsmith/blob/v2.3.0/Readme.md#cli
+[#28]: https://github.com/sounisi5011/metalsmith-pug-extra/issues/28
