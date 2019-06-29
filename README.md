@@ -113,7 +113,8 @@ Except for differences in options, this is equivalent to such as [metalsmith-pug
 
 #### Options
 
-##### pattern
+<details>
+<summary>pattern</summary>
 
 Only files that match this pattern will be processed.  
 Specify a glob expression string or an array of strings as the pattern.  
@@ -132,8 +133,10 @@ Type definition:
 ```ts
 string | string[]
 ```
+</details>
 
-##### renamer
+<details>
+<summary>renamer</summary>
 
 Convert template filenames to HTML filenames.  
 Specifies a function to convert strings.
@@ -149,8 +152,10 @@ Type definition:
 ```ts
 (filename: string) => string
 ```
+</details>
 
-##### overwrite
+<details>
+<summary>overwrite</summary>
 
 If set to `true`, the file with the same name as the converted HTML will be overwritten.  
 If set to `false`, the file with the same name as the converted HTML is prioritized and HTML is not generated.
@@ -166,8 +171,10 @@ Type definition:
 ```ts
 boolean
 ```
+</details>
 
-##### copyFileData
+<details>
+<summary>copyFileData</summary>
 
 If set to `true`, the template file metadata is copied to the converted HTML file.
 
@@ -182,8 +189,10 @@ Type definition:
 ```ts
 boolean
 ```
+</details>
 
-##### locals
+<details>
+<summary>locals</summary>
 
 Pass additional local values to the template.  
 If `useMetadata` is `true`, this value will be overwritten with [Metalsmith]'s metadata.
@@ -202,8 +211,10 @@ Type definition:
     [propName: string]: any;
 }
 ```
+</details>
 
-##### useMetadata
+<details>
+<summary>useMetadata</summary>
 
 If set to `true`, passes [Metalsmith's global metadata] and file metadata to the template.
 
@@ -220,8 +231,10 @@ Type definition:
 ```ts
 boolean
 ```
+</details>
 
-##### pug options
+<details>
+<summary>pug options</summary>
 
 Other properties are used as options for [Pug v2.0.4].  
 In internal processing, it is passed as an argument of [`pug.compile()`] function.  
@@ -230,6 +243,7 @@ Please check [Pug Options] for details.
 [Pug v2.0.4]: https://pugjs.org/
 [Pug Options]: https://pugjs.org/api/reference.html#options
 [`pug.compile()`]: https://pugjs.org/api/reference.html#pugcompilesource-options
+</details>
 
 ### `convert.defaultOptions`
 
