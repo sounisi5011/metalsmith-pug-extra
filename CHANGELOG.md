@@ -2,17 +2,11 @@
 
 ## [1.1.0] (2019-06-29 UTC / 2019-06-30 JST)
 
-[1.1.0]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.0.1...v1.1.0
-
 ### Features
 
 * [#31] - `pattern` option of `render()` function
 * [#41] - `reuse` option of `render()` function
 * [#44] - Type definition of `defaultOptions` property is readonly
-
-[#31]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/31
-[#41]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/41
-[#44]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/44
 
 ### Supported Node version
 
@@ -20,16 +14,12 @@
 
 * [#38] - Downgrade supported Node version
 
-[#38]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/38
-
 ### Updated Dependencies
 
 #### dependencies
 
 * `pug`
     * [#26] - `2.0.3` -> `2.0.4`
-
-[#26]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/26
 
 #### devDependencies
 
@@ -49,15 +39,6 @@
 * `husky`
     * [#34] - `2.4.1` -> `2.5.0`
     * [#42] - `2.5.0` -> `2.7.0`
-
-[#27]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/27
-[#32]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/32
-[#34]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/34
-[#36]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/36
-[#37]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/37
-[#39]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/39
-[#40]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/40
-[#42]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/42
 
 ### Added Dependencies
 
@@ -80,16 +61,29 @@
 * [#30] - Remove CRLF correspondence from test code
 * [#33] - Migration to parallel test
 
-[#30]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/30
-[#33]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/33
-
 ### Others
 
 * [#22] - Fix CHANGELOG's URL
 * [#45] - Add publish npm-scripts
 * [#46] - Add format npm-scripts
 
+[1.1.0]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.0.1...v1.1.0
 [#22]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/22
+[#26]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/26
+[#27]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/27
+[#30]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/30
+[#31]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/31
+[#32]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/32
+[#33]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/33
+[#34]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/34
+[#36]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/36
+[#37]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/37
+[#38]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/38
+[#39]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/39
+[#40]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/40
+[#41]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/41
+[#42]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/42
+[#44]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/44
 [#45]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/45
 [#46]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/46
 
