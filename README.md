@@ -37,7 +37,7 @@
 
 * Available in [TypeScript](https://www.typescriptlang.org/)
 
-  Type definitions is included.
+  Type definition is included.
 
 ## Install
 
@@ -106,7 +106,7 @@ Metalsmith(__dirname)
 
 ### `convert(options?)`
 
-Returns a plugin that converts [Pug] templates to HTML.
+Returns a plugin that converts [Pug] template files to HTML files.  
 Except for differences in options, this is equivalent to such as [metalsmith-pug] and [metalsmith-in-place].
 
 [metalsmith-in-place]: https://github.com/metalsmith/metalsmith-in-place
@@ -118,7 +118,7 @@ Except for differences in options, this is equivalent to such as [metalsmith-pug
 
 Only files that match this pattern will be processed.  
 Specify a glob expression string or an array of strings as the pattern.  
-Patterns are verified using [multimatch v4.0.0].
+Pattern are verified using [multimatch v4.0.0].
 
 [multimatch v4.0.0]: https://www.npmjs.com/package/multimatch/v/4.0.0
 
@@ -138,7 +138,7 @@ string | string[]
 <details>
 <summary>renamer</summary>
 
-Convert template filenames to HTML filenames.  
+Convert template filename to HTML filename.  
 Specifies a function to convert strings.
 
 Default value:
@@ -195,7 +195,7 @@ boolean
 <summary>locals</summary>
 
 Pass additional local values to the template.  
-If `useMetadata` is `true`, this value will be overwritten with [Metalsmith]'s metadata.
+If `useMetadata` option is `true`, this value will be overwritten with [Metalsmith]'s metadata.
 
 Default value:
 
@@ -238,7 +238,7 @@ boolean
 
 Other properties are used as options for [Pug v2.0.4].  
 In internal processing, it is passed as an argument of [`pug.compile()`] function.  
-Please check [Pug Options] for details.
+Please check [Pug Options] for more details.
 
 [Pug v2.0.4]: https://www.npmjs.com/package/pug/v/2.0.4
 [Pug Options]: https://pugjs.org/api/reference.html#options
@@ -247,8 +247,8 @@ Please check [Pug Options] for details.
 
 ### `convert.defaultOptions`
 
-Initial value of the option argument of the `convert()` function.
-It can be used to specify an option based on the default value.
+Default value of the `convert()` function options argument.  
+It can be used to specify an options based on the default value.
 
 ```js
 Metalsmith(__dirname)
@@ -262,7 +262,7 @@ Metalsmith(__dirname)
 
 Returns a plugin that compiles [Pug] templates.
 
-The file name is changed to `*.html` but the template is not converted.
+The file name is changed to `*.html` but the template is not converted.  
 You can use other plugins to generate locals before converting the template with the `render()` plugin.
 
 #### Options
@@ -272,7 +272,7 @@ You can use other plugins to generate locals before converting the template with
 
 Only files that match this pattern will be processed.  
 Specify a glob expression string or an array of strings as the pattern.  
-Patterns are verified using [multimatch v4.0.0].
+Pattern are verified using [multimatch v4.0.0].
 
 Default value:
 
@@ -290,7 +290,7 @@ string | string[]
 <details>
 <summary>renamer</summary>
 
-Convert template filenames to HTML filenames.  
+Convert template filename to HTML filename.  
 Specifies a function to convert strings.
 
 Default value:
@@ -348,17 +348,23 @@ boolean
 
 Other properties are used as options for [Pug v2.0.4].  
 In internal processing, it is passed as an argument of [`pug.compile()`] function.  
-Please check [Pug Options] for details.
+Please check [Pug Options] for more details.
 </details>
 
 ### `compile.defaultOptions`
 
-Initial value of the option argument of the `compile()` function.
-It can be used to specify an option based on the default value.
+Default value of the `compile()` function options argument.  
+It can be used to specify an options based on the default value.
 
 ### `render(options?)`
 
-Converts a file processed by the `compile()` plugin from template to HTML.
+Returns a plugin that generates HTML content from a compiled template.  
+Files compiled with the `compile()` function are processed.
+
+This plugin can also reconvert generated HTML.  
+Therefore, you can use [metalsmith-excerpts] etc. effectively.
+
+[metalsmith-excerpts]: https://github.com/segmentio/metalsmith-excerpts
 
 #### Options
 
@@ -366,7 +372,7 @@ Converts a file processed by the `compile()` plugin from template to HTML.
 <summary>locals</summary>
 
 Pass additional local values to the template.  
-If `useMetadata` is `true`, this value will be overwritten with [Metalsmith]'s metadata.
+If `useMetadata` option is `true`, this value will be overwritten with [Metalsmith]'s metadata.
 
 Default value:
 
@@ -407,7 +413,7 @@ boolean
 
 Only files that match this pattern will be processed.  
 Specify a glob expression string or an array of strings as the pattern.  
-Patterns are verified using [multimatch v4.0.0].
+Pattern are verified using [multimatch v4.0.0].
 
 Default value:
 
@@ -425,7 +431,8 @@ string | string[]
 <details>
 <summary>reuse</summary>
 
-If set to true, it will reuse the options value set in the `render ()` function just before.
+If set to `true`, it will reuse the options value set in the `render()` function just before.  
+This option is intended to improve the convenience of regenerating generated HTML.
 
 Default value:
 
@@ -477,13 +484,13 @@ Metalsmith(__dirname)
 
 ### `render.defaultOptions`
 
-Initial value of the option argument of the `render()` function.
-It can be used to specify an option based on the default value.
+Default value of the `render()` function options argument.  
+It can be used to specify an options based on the default value.
 
 ## CLI Usage
 
-For now, this plugin does not support [Metalsmith CLI].
-I am planning to add [Metalsmith CLI] support in version 2.x.
+For now, this plugin does not support [Metalsmith CLI].  
+I am planning to add [Metalsmith CLI] support in version 2.x.  
 See [#28] for details.
 
 [Metalsmith CLI]: https://github.com/segmentio/metalsmith/blob/v2.3.0/Readme.md#cli
