@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.1.0] (2019-06-30)
+## [1.1.0] (2019-06-29 UTC / 2019-06-30 JST)
 
 [1.1.0]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.0.1...v1.1.0
 
