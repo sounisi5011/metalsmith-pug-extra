@@ -358,9 +358,9 @@ It can be used to specify an option based on the default value.
 
 ### `render(options?)`
 
-#### Options
-
 Converts a file processed by the `compile()` plugin from template to HTML.
+
+#### Options
 
 <details>
 <summary>locals</summary>
