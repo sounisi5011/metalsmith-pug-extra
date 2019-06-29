@@ -502,6 +502,22 @@ For more details, please check the description of [debug v4.1.1].
 
 [debug v4.1.1]: https://www.npmjs.com/package/debug/v/4.1.1
 
+## Tests
+
+To run the test suite, first install the dependencies by [yarn], then run `yarn test`:
+
+[yarn]: https://yarnpkg.com/
+
+```sh
+yarn install
+yarn test
+```
+
+The tests are not dependent on [yarn], so you can probably use the [`npm` cli] as well.  
+However, since this repository does not include `package-lock.json`, it is strongly recommended to use [yarn] for dependency installation.
+
+[`npm` cli]: https://docs.npmjs.com/cli/npm
+
 ## CLI Usage
 
 For now, this plugin does not support [Metalsmith CLI].  
