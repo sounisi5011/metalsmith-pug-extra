@@ -47,8 +47,8 @@
 
 ## Install
 
-```console
-$ npm install --save metalsmith-pug-extra
+```sh
+npm install --save metalsmith-pug-extra
 ```
 
 ## Usage
@@ -494,8 +494,8 @@ It can be used to specify an options based on the default value.
 This plugin supports debugging output.  
 To enable, use the following command when running your build script:
 
-```console
-$ DEBUG=metalsmith-pug-extra:* node my-website-build.js
+```sh
+DEBUG=metalsmith-pug-extra:* node my-website-build.js
 ```
 
 For more details, please check the description of [debug v4.1.1].
