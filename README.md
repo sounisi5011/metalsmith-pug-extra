@@ -47,11 +47,9 @@
 
 ## Install
 
-    yarn add metalsmith-pug-extra
-
-or
-
-    npm install --save metalsmith-pug-extra
+```console
+npm install --save metalsmith-pug-extra
+```
 
 ## Usage
 
