@@ -267,13 +267,89 @@ You can use other plugins to generate locals before converting the template with
 
 #### Options
 
-| Name               | Type                           | Required | Default        | Details                                              |
-| ------------------ | ------------------------------ | -------- | -------------- | ---------------------------------------------------- |
-| **`pattern`**      | `string \| string[]`            | `✖`      | `['**/*.pug']` | Only files that match this pattern will be processed |
-| **`renamer`**      | `(filename: string) => string` | `✖`      | `filename => filename.replace(/\.(?:pug\|jade)$/, '.html')` | Change the file name |
-| **`overwrite`**    | `boolean`                      | `✖`      | `true`         | Overwrite duplicate files |
-| **`copyFileData`** | `boolean`                      | `✖`      | `false`        | Copy the data of the file before conversion to the file after conversion |
-| **`*`**            |                                |          |                | Parameters to pass in the [`options`](https://pugjs.org/api/reference.html#options) argument of [`pug.compile()`](https://pugjs.org/api/reference.html#pugcompilesource-options) |
+<details>
+<summary>pattern</summary>
+
+Only files that match this pattern will be processed.  
+Specify a glob expression string or an array of strings as the pattern.  
+Patterns are verified using [multimatch v4.0.0].
+
+Default value:
+
+```js
+['**/*.pug']
+```
+
+Type definition:
+
+```ts
+string | string[]
+```
+</details>
+
+<details>
+<summary>renamer</summary>
+
+Convert template filenames to HTML filenames.  
+Specifies a function to convert strings.
+
+Default value:
+
+```js
+filename => filename.replace(/\.(?:pug|jade)$/, '.html')
+```
+
+Type definition:
+
+```ts
+(filename: string) => string
+```
+</details>
+
+<details>
+<summary>overwrite</summary>
+
+If set to `true`, the file with the same name as the converted HTML will be overwritten.  
+If set to `false`, the file with the same name as the converted HTML is prioritized and HTML is not generated.
+
+Default value:
+
+```js
+true
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>copyFileData</summary>
+
+If set to `true`, the template file metadata is copied to the converted HTML file.
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>pug options</summary>
+
+Other properties are used as options for [Pug v2.0.4].  
+In internal processing, it is passed as an argument of [`pug.compile()`] function.  
+Please check [Pug Options] for details.
+</details>
 
 ### `compile.defaultOptions`
 
@@ -286,10 +362,118 @@ It can be used to specify an option based on the default value.
 
 Converts a file processed by the `compile()` plugin from template to HTML.
 
-| Name               | Type                           | Required | Default        | Details                                              |
-| ------------------ | ------------------------------ | -------- | -------------- | ---------------------------------------------------- |
-| **`locals`**       | `Object`                       | `✖`      | `{}`           | Pass additional locals to the template                  |
-| **`useMetadata`**  | `boolean`                      | `✖`      | `false`        | Expose [Metalsmith's global metadata](https://metalsmith.io/#-metadata-json-) and file data to the [Pug] template |
+<details>
+<summary>locals</summary>
+
+Pass additional local values to the template.  
+If `useMetadata` is `true`, this value will be overwritten with [Metalsmith]'s metadata.
+
+Default value:
+
+```js
+{}
+```
+
+Type definition:
+
+```ts
+// see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/54642d812e28de52325a689d0b380f7a4d3c113e/types/pug/index.d.ts#L133-L138
+{
+    [propName: string]: any;
+}
+```
+</details>
+
+<details>
+<summary>useMetadata</summary>
+
+If set to `true`, passes [Metalsmith's global metadata] and file metadata to the template.
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+</details>
+
+<details>
+<summary>pattern</summary>
+
+Only files that match this pattern will be processed.  
+Specify a glob expression string or an array of strings as the pattern.  
+Patterns are verified using [multimatch v4.0.0].
+
+Default value:
+
+```js
+['**/*']
+```
+
+Type definition:
+
+```ts
+string | string[]
+```
+</details>
+
+<details>
+<summary>reuse</summary>
+
+If set to true, it will reuse the options value set in the `render ()` function just before.
+
+Default value:
+
+```js
+false
+```
+
+Type definition:
+
+```ts
+boolean
+```
+
+Example:
+
+```js
+const Metalsmith = require('metalsmith');
+const excerpts = require('metalsmith-excerpts');
+const { compile, render } = require('metalsmith-pug-extra');
+
+Metalsmith(__dirname)
+  .use(compile({ copyFileData: true }))
+  .use(render({
+    locals: {
+      a: 1,
+      b: 2,
+    },
+    useMetadata: true,
+    pattern: ['articles/*'],
+  }))
+  .use(excerpts())
+  .use(render({
+    reuse: true,
+    pattern: render.defaultOptions.pattern,
+    /*
+    equals to:
+    {
+      locals: {
+        a: 1,
+        b: 2,
+      },
+      useMetadata: true,
+      pattern: render.defaultOptions.pattern,
+    }
+    */
+  }))
+```
+</details>
 
 ### `render.defaultOptions`
 
