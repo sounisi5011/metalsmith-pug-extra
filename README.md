@@ -514,7 +514,7 @@ yarn test
 ```
 
 The tests are not dependent on [yarn], so you can probably use the [`npm` cli] as well.  
-However, since this repository does not include `package-lock.json`, it is strongly recommended to use [yarn] for dependency installation.
+However, since this repository does not include `package-lock.json`, it is strongly recommended to use [yarn] for dependencies installation.
 
 [`npm` cli]: https://docs.npmjs.com/cli/npm
 
