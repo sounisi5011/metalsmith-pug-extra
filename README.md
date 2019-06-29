@@ -489,6 +489,19 @@ Metalsmith(__dirname)
 Default value of the `render()` function options argument.  
 It can be used to specify an options based on the default value.
 
+## Debug mode
+
+This plugin supports debugging output.  
+To enable, use the following command when running your build script:
+
+```console
+DEBUG=metalsmith-pug-extra:* node my-website-build.js
+```
+
+For more details, please check the description of [debug v4.1.1].
+
+[debug v4.1.1]: https://www.npmjs.com/package/debug/v/4.1.1
+
 ## CLI Usage
 
 For now, this plugin does not support [Metalsmith CLI].  
