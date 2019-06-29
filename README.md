@@ -19,11 +19,17 @@
 [metalsmith-pug]: https://github.com/ahmadnassri/metalsmith-pug
 [metalsmith-collections]: https://github.com/segmentio/metalsmith-collections
 [metalsmith-permalinks]: https://github.com/segmentio/metalsmith-permalinks
+[metalsmith-excerpts]: https://github.com/segmentio/metalsmith-excerpts
 
 * API to execute render after compile
 
   You can insert [metalsmith-collections], [metalsmith-permalinks], etc. between compile and render.
   This is the biggest reason for this package to exist.
+
+* Modify metadata after conversion and reconvert
+
+  You can convert the converted HTML as many times as you like.
+  For example, you can use [metalsmith-excerpts] for converted HTML and convert the HTML again using the retrieved excerpt values.
 
 * Customizable rename logic
 
@@ -363,8 +369,6 @@ Files compiled with the `compile()` function are processed.
 
 This plugin can also reconvert generated HTML.  
 Therefore, you can use [metalsmith-excerpts] etc. effectively.
-
-[metalsmith-excerpts]: https://github.com/segmentio/metalsmith-excerpts
 
 #### Options
 
