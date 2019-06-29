@@ -59,6 +59,22 @@
 [#40]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/40
 [#42]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/42
 
+### Added Dependencies
+
+#### devDependencies
+
+* [#45] - `@types/node@*`
+* [#38] - `@types/recursive-readdir@2.2.0`
+* [#38] - `@types/semver@6.0.1`
+* [#33] - `@types/slug@0.9.1`
+* [#45] - `can-npm-publish@1.3.1`
+* [#45] - `del-cli@2.0.0`
+* [#45] - `git-branch-is@2.1.0`
+* [#45] - `is-git-status-clean@1.0.0`
+* [#38] - `recursive-readdir@2.2.2`
+* [#38] - `semver@6.1.2`
+* [#33] - `slug@1.1.0`
+
 ### Tests
 
 * [#30] - Remove CRLF correspondence from test code
