@@ -77,7 +77,7 @@ Metalsmith(__dirname)
 
 ### [`compile()`](#compileoptions) & [`render()`](#renderoptions)
 
-After compiling the template file, it is processed by plug-ins such as renaming ([metalsmith-collections] and [metalsmith-permalinks] in this example) and finally the HTML content is generated.
+After compiling the template file, it is processed by plugins such as renaming ([metalsmith-collections] and [metalsmith-permalinks] in this example) and finally the HTML content is generated.
 
 ```js
 const Metalsmith = require('metalsmith');
