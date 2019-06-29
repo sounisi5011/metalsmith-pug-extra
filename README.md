@@ -73,7 +73,7 @@ Metalsmith(__dirname)
 
 ### [`compile()`](#compileoptions) & [`render()`](#renderoptions)
 
-After compiling the template file, it is processed by plug-ins such as renaming (`metalsmith-collections` and `metalsmith-permalinks` in this example) and finally the HTML content is generated.
+After compiling the template file, it is processed by plug-ins such as renaming ([metalsmith-collections] and [metalsmith-permalinks] in this example) and finally the HTML content is generated.
 
 ```js
 const Metalsmith = require('metalsmith');
@@ -240,7 +240,7 @@ Other properties are used as options for [Pug v2.0.4].
 In internal processing, it is passed as an argument of [`pug.compile()`] function.  
 Please check [Pug Options] for details.
 
-[Pug v2.0.4]: https://pugjs.org/
+[Pug v2.0.4]: https://www.npmjs.com/package/pug/v/2.0.4
 [Pug Options]: https://pugjs.org/api/reference.html#options
 [`pug.compile()`]: https://pugjs.org/api/reference.html#pugcompilesource-options
 </details>
