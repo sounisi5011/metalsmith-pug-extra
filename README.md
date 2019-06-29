@@ -2,6 +2,7 @@
 
 [![npm package](https://img.shields.io/npm/v/metalsmith-pug-extra.svg)][npm]
 [![GitHub License](https://img.shields.io/github/license/sounisi5011/metalsmith-pug-extra.svg)][github-license]
+![](https://img.shields.io/node/v/metalsmith-pug-extra.svg)
 [![Travis CI Build Status](https://travis-ci.com/sounisi5011/metalsmith-pug-extra.svg?branch=master)](https://travis-ci.com/sounisi5011/metalsmith-pug-extra)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/uolim1xgodpw3ft1/branch/master?svg=true)](https://ci.appveyor.com/project/sounisi5011/metalsmith-pug-extra/branch/master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/f8efa3c8c8bc40f9da37/maintainability)](https://codeclimate.com/github/sounisi5011/metalsmith-pug-extra/maintainability)
