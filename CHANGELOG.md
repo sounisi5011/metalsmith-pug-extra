@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.x]
+
+### Updated Dependencies
+
+#### devDependencies
+
+* `semver`
+    * [#51] - `6.1.2` -> `6.2.0`
+
+[1.x]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.0...HEAD
+[#51]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/51
+
 ## [1.1.0] (2019-06-29 UTC / 2019-06-30 JST)
 
 ### Features
