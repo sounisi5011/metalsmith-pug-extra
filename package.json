@@ -77,7 +77,6 @@
     ]
   },
   "dependencies": {
-    "@sounisi5011/check-peer-deps": "sounisi5011/check-peer-deps",
     "@types/debug": "4.1.4",
     "@types/deep-freeze-strict": "1.1.0",
     "@types/lodash.clonedeep": "4.5.6",
@@ -92,6 +91,7 @@
     "pug": "2.0.4"
   },
   "devDependencies": {
+    "@sounisi5011/check-peer-deps": "sounisi5011/check-peer-deps",
     "@types/node": "*",
     "@types/recursive-readdir": "2.2.0",
     "@types/semver": "6.0.1",
