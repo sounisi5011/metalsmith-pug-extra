@@ -2,15 +2,24 @@
 
 ## [1.x]
 
+### Supported Node version
+
+`8.10.0 - 8.x || 10.0.0 - x.x` -> `8.10.0 - 8.x || 10.x || 12.0.0 - x.x`
+
+* [#54] - Update dependency ava to v2.2.0
+
 ### Updated Dependencies
 
 #### devDependencies
 
+* `ava`
+    * [#54] - `2.1.0` -> `2.2.0`
 * `semver`
     * [#51] - `6.1.2` -> `6.2.0`
 
 [1.x]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.0...HEAD
 [#51]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/51
+[#54]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/54
 
 ## [1.1.0] (2019-06-29 UTC / 2019-06-30 JST)
 
