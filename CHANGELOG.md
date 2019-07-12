@@ -22,15 +22,21 @@
 #### devDependencies
 
 * [#59] - `sounisi5011/check-peer-deps`
+* [#60] - `package-version-git-tag@1.0.0`
 
 ### Tests
 
 * [#59] - Check peerDependencies
 
+### Others
+
+ * [#60] - Replace build script `script/git-add-pkg-version-tag.ts` with package-version-git-tag package.
+
 [1.x]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.0...HEAD
 [#51]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/51
 [#54]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/54
 [#59]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/59
+[#60]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/60
 
 ## [1.1.0] (2019-06-29 UTC / 2019-06-30 JST)
 
