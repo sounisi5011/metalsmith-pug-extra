@@ -3901,6 +3901,11 @@ package-json@^6.3.0:
     registry-url "^5.0.0"
     semver "^6.1.1"
 
+package-version-git-tag@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/package-version-git-tag/-/package-version-git-tag-1.0.0.tgz#a1fabc4bc879f6d63ecffd5b9eb3b6c18affa588"
+  integrity sha512-WhTrmPd7fxz1mt6eGj4MyCrU/jJaHQ7IaE/NIdK3WK/ytXSC9g/1HdQ1m09fEiCRifdO9EI4I6E0qmnoKNuvDA==
+
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
