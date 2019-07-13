@@ -4,9 +4,10 @@
 
 ### Supported Node version
 
-`8.10.0 - 8.x || 10.0.0 - x.x` -> `8.10.0 - 8.x || 10.x || 12.0.0 - x.x`
+`8.10.0 - 8.x || 10.0.0 - x.x` -> `8.12.0 - 8.x || 10.x || 12.0.0 - x.x`
 
 * [#54] - Update dependency ava to v2.2.0
+* [#52] - Update dependency lint-staged to v9
 
 ### Updated Dependencies
 
@@ -18,6 +19,8 @@
     * [#61] - `1.11.0` -> `1.12.0`
 * `ava`
     * [#54] - `2.1.0` -> `2.2.0`
+* `lint-staged`
+    * [#52] - `8.2.1` -> `9.2.0`
 * `semver`
     * [#51] - `6.1.2` -> `6.2.0`
 
@@ -38,6 +41,7 @@
 
 [1.x]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.0...HEAD
 [#51]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/51
+[#52]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/52
 [#54]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/54
 [#59]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/59
 [#60]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/60
