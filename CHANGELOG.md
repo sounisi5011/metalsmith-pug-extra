@@ -12,6 +12,10 @@
 
 #### devDependencies
 
+* `@typescript-eslint/eslint-plugin`
+    * [#61] - `1.11.0` -> `1.12.0`
+* `@typescript-eslint/parser`
+    * [#61] - `1.11.0` -> `1.12.0`
 * `ava`
     * [#54] - `2.1.0` -> `2.2.0`
 * `semver`
@@ -37,6 +41,7 @@
 [#54]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/54
 [#59]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/59
 [#60]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/60
+[#61]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/61
 
 ## [1.1.0] (2019-06-29 UTC / 2019-06-30 JST)
 
