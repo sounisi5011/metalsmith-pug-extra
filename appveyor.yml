@@ -28,7 +28,8 @@ test_script:
   - npm test
 
 cache:
-  - .npm
+  # see http://doc.codingdict.com/npm-ref/all.html#cache
+  - %AppData%/npm-cache
   - node_modules
 
 build: off
