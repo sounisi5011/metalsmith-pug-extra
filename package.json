@@ -68,7 +68,6 @@
       "git add"
     ],
     "package.json": [
-      "ts-node ./script/update-engines-node.ts",
       "prettier-package-json --write",
       "sort-package-json",
       "git add"
