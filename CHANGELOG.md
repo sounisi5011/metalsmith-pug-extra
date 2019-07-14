@@ -4,10 +4,11 @@
 
 ### Supported Node version
 
-`8.10.0 - 8.x || 10.0.0 - x.x` -> `8.12.0 - 8.x || 10.x || 12.0.0 - x.x`
+`8.10.0 - 8.x || 10.0.0 - x.x` -> `8.3.0 - x.x`
 
 * [#54] - Update dependency ava to v2.2.0
 * [#52] - Update dependency lint-staged to v9
+* [#64] - Downgrade supported Node version
 
 ### Updated Dependencies
 
@@ -46,6 +47,7 @@
 [#59]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/59
 [#60]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/60
 [#61]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/61
+[#64]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/64
 
 ## [1.1.0] (2019-06-29 UTC / 2019-06-30 JST)
 
