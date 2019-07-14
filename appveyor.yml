@@ -20,7 +20,7 @@ init:
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
-  - npm install
+  - npm ci || npm install
 
 test_script:
   - node --version
@@ -28,6 +28,7 @@ test_script:
   - npm test
 
 cache:
+  - .npm
   - node_modules
 
 build: off
