@@ -29,7 +29,7 @@ test_script:
 
 cache:
   # see http://doc.codingdict.com/npm-ref/all.html#cache
-  - %AppData%/npm-cache
+  - "%AppData%/npm-cache"
   - node_modules
 
 build: off
