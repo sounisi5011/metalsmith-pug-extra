@@ -3,6 +3,7 @@
 [![npm package](https://img.shields.io/npm/v/metalsmith-pug-extra.svg)][npm]
 [![GitHub License](https://img.shields.io/github/license/sounisi5011/metalsmith-pug-extra.svg)][github-license]
 ![](https://img.shields.io/node/v/metalsmith-pug-extra.svg)
+[![Dependencies Status](https://david-dm.org/sounisi5011/metalsmith-pug-extra/status.svg)](https://david-dm.org/sounisi5011/metalsmith-pug-extra)
 [![Linux Build Status](https://img.shields.io/travis/com/sounisi5011/metalsmith-pug-extra/master.svg?label=Linux%20build)](https://travis-ci.com/sounisi5011/metalsmith-pug-extra)
 [![Windows Build Status](https://img.shields.io/appveyor/ci/sounisi5011/metalsmith-pug-extra/master.svg?label=Windows%20build&logo=appveyor)](https://ci.appveyor.com/project/sounisi5011/metalsmith-pug-extra/branch/master)
 [![Maintainability Status](https://api.codeclimate.com/v1/badges/f8efa3c8c8bc40f9da37/maintainability)](https://codeclimate.com/github/sounisi5011/metalsmith-pug-extra/maintainability)

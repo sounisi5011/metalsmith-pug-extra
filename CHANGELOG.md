@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Documentation
+
+* [#69] - Add David-DM Badge
+
 ### Updated Dependencies
 
 #### devDependencies
@@ -16,6 +20,7 @@
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.1...HEAD
 [#66]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/66
 [#68]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/68
+[#69]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/69
 
 ## [1.1.1] (2019-07-15)
 
