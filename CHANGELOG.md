@@ -10,11 +10,16 @@
 
 #### devDependencies
 
+* `@typescript-eslint/eslint-plugin`
+    * [#68] - `1.12.0` -> `1.13.0`
+* `@typescript-eslint/parser`
+    * [#68] - `1.12.0` -> `1.13.0`
 * `husky`
     * [#66] - `3.0.0` -> `3.0.1`
 
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.1...HEAD
 [#66]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/66
+[#68]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/68
 [#69]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/69
 
 ## [1.1.1] (2019-07-15)
