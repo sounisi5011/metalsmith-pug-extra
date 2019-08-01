@@ -73,9 +73,6 @@
     ]
   },
   "dependencies": {
-    "@types/debug": "4.1.4",
-    "@types/deep-freeze-strict": "1.1.0",
-    "@types/lodash.clonedeep": "4.5.6",
     "@types/metalsmith": "2.3.0",
     "@types/pug": "2.0.4",
     "debug": "4.1.1",
@@ -87,6 +84,9 @@
   },
   "devDependencies": {
     "@sounisi5011/check-peer-deps": "sounisi5011/check-peer-deps",
+    "@types/debug": "4.1.4",
+    "@types/deep-freeze-strict": "1.1.0",
+    "@types/lodash.clonedeep": "4.5.6",
     "@types/node": "*",
     "@types/sinon": "7.0.13",
     "@types/slug": "0.9.1",
