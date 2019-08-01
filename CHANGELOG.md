@@ -16,11 +16,13 @@
     * [#68] - `1.12.0` -> `1.13.0`
 * `husky`
     * [#66] - `3.0.0` -> `3.0.1`
+    * [#72] - `3.0.1` -> `3.0.2`
 
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.1...HEAD
 [#66]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/66
 [#68]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/68
 [#69]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/69
+[#72]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/72
 
 ## [1.1.1] (2019-07-15)
 
