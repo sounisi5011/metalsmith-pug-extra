@@ -18,11 +18,25 @@
     * [#66] - `3.0.0` -> `3.0.1`
     * [#72] - `3.0.1` -> `3.0.2`
 
+### Removed Dependencies
+
+#### dependencies
+
+* [#73] - `clone-deep`
+
+#### devDependencies
+
+* [#73] - `@types/recursive-readdir`
+* [#73] - `@types/semver`
+* [#73] - `recursive-readdir`
+* [#73] - `semver`
+
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.1...HEAD
 [#66]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/66
 [#68]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/68
 [#69]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/69
 [#72]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/72
+[#73]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/73
 
 ## [1.1.1] (2019-07-15)
 
