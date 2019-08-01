@@ -17,6 +17,8 @@
 * `husky`
     * [#66] - `3.0.0` -> `3.0.1`
     * [#72] - `3.0.1` -> `3.0.2`
+* `lint-staged`
+    * [#71] - `9.2.0` -> `9.2.1`
 
 ### Removed Dependencies
 
@@ -35,6 +37,7 @@
 [#66]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/66
 [#68]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/68
 [#69]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/69
+[#71]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/71
 [#72]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/72
 [#73]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/73
 
