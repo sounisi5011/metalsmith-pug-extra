@@ -1,3 +1,4 @@
+const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
@@ -12,8 +13,49 @@ const AST_IMPORT_TYPES = Object.entries(parser.AST_NODE_TYPES)
 
 const readFileAsync = util.promisify(fs.readFile);
 
-async function main(distDir) {
+function spawnAsync(...args) {
+  return new Promise((resolve, reject) => {
+    const process = spawn(...args);
+    const stdoutList = [];
+    const stderrList = [];
+
+    if (process.stdout) {
+      process.stdout.on('data', data => {
+        stdoutList.push(data);
+      });
+    }
+
+    if (process.stderr) {
+      process.stderr.on('data', data => {
+        stderrList.push(data);
+      });
+    }
+
+    process.on('close', (code, signal) => {
+      const data = {
+        stdout: stdoutList.join(''),
+        stderr: stderrList.join(''),
+      };
+
+      if (code === 0) {
+        resolve(data);
+      } else {
+        reject(Object.assign(new Error(`command failed with exit code ${code}`), data));
+      }
+    });
+
+    process.on('error', err => {
+      reject(err);
+    });
+  });
+}
+
+async function main(distDir, buildTask) {
   const distDirpath = path.resolve(process.cwd(), distDir);
+
+  if (buildTask) {
+    await spawnAsync('npm', ['run', buildTask], { stdio: 'inherit' });
+  }
 
   const tsFilepathList = (
     (await recursive(distDirpath))
@@ -93,7 +135,7 @@ function getImportNames(ast) {
 
 (async () => {
   try {
-    await main(process.argv[2]);
+    await main(process.argv[2], process.argv[3]);
   } catch (err) {
     process.exitCode = 1;
     console.error(err);
