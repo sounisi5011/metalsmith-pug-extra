@@ -20,6 +20,20 @@
 * `lint-staged`
     * [#71] - `9.2.0` -> `9.2.1`
 
+### Added Dependencies
+
+#### devDependencies
+
+* [#74] - `cross-spawn@6.0.5`
+
+### Moved Dependencies
+
+#### dependencies -> devDependencies
+
+* [#74] - `@types/debug@4.1.4`
+* [#74] - `@types/deep-freeze-strict@1.1.0`
+* [#74] - `@types/lodash.clonedeep@4.5.6`
+
 ### Removed Dependencies
 
 #### dependencies
@@ -40,6 +54,7 @@
 [#71]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/71
 [#72]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/72
 [#73]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/73
+[#74]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/74
 
 ## [1.1.1] (2019-07-15)
 
