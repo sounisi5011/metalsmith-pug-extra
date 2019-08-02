@@ -19,6 +19,8 @@
     * [#72] - `3.0.1` -> `3.0.2`
 * `lint-staged`
     * [#71] - `9.2.0` -> `9.2.1`
+* `package-version-git-tag`
+    * [#75] - `1.0.0` -> `1.1.0`
 
 ### Added Dependencies
 
@@ -55,6 +57,7 @@
 [#72]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/72
 [#73]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/73
 [#74]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/74
+[#75]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/75
 
 ## [1.1.1] (2019-07-15)
 
