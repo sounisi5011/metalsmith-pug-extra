@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [1.1.2] (2019-08-02)
 
 ### Documentation
 
@@ -14,6 +14,8 @@
     * [#68] - `1.12.0` -> `1.13.0`
 * `@typescript-eslint/parser`
     * [#68] - `1.12.0` -> `1.13.0`
+* `eslint-plugin-import`
+    * [#67] - `2.18.0` -> `2.18.2`
 * `husky`
     * [#66] - `3.0.0` -> `3.0.1`
     * [#72] - `3.0.1` -> `3.0.2`
@@ -49,8 +51,9 @@
 * [#73] - `recursive-readdir`
 * [#73] - `semver`
 
-[Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.1...HEAD
+[1.1.2]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.1...v1.1.2
 [#66]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/66
+[#67]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/67
 [#68]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/68
 [#69]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/69
 [#71]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/71
