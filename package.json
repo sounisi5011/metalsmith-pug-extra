@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-pug-extra",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Metalsmith plugin to convert or compile and render Pug files.",
   "keywords": [
     "metalsmith",
@@ -44,7 +44,7 @@
     "release:publish": "run-s release:publish:git release:publish:npm",
     "release:publish:git": "package-version-git-tag --push",
     "release:publish:npm": "npm publish --access=public",
-    "release:validation": "run-p release:validation:* test",
+    "release:validation": "npm-run-all release:validation:publishable -p 'release:validation:!(publishable)' test",
     "release:validation:git-branch": "git-branch-is master",
     "release:validation:git-work-dir": "is-git-status-clean",
     "release:validation:publishable": "can-npm-publish --verbose",
