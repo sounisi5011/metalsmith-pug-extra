@@ -43,7 +43,8 @@ export const createPluginGeneratorWithPugOptions: <T>(
 export function isFile(value: unknown): value is FileInterface {
     if (isObject(value)) {
         return (
-            value.hasOwnProperty('contents') && Buffer.isBuffer(value.contents)
+            Object.prototype.hasOwnProperty.call(value, 'contents') &&
+            Buffer.isBuffer(value.contents)
         );
     }
     return false;
