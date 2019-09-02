@@ -13,6 +13,10 @@
 * `eslint`
     * [#29] - `5.16.0` -> `6.3.0`
 
+### Others
+
+* [#93] - Exclude updates that cannot be tested with CI
+
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
 [#29]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/29
 [#82]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/82
