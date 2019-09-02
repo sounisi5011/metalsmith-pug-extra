@@ -1,5 +1,19 @@
 # Change Log
 
+## [Unreleased]
+
+### Updated Dependencies
+
+#### devDependencies
+
+* `@typescript-eslint/eslint-plugin`
+    * [#82] - `1.13.0` -> `2.0.0`
+* `@typescript-eslint/parser`
+    * [#82] - `1.13.0` -> `2.0.0`
+
+[Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
+[#82]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/82
+
 ## [1.1.2] (2019-08-02)
 
 ### Documentation
