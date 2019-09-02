@@ -27,3 +27,8 @@ rules:
     - allowExpressions: true
   simple-import-sort/sort: error
   prettier/prettier: error
+overrides:
+  - files:
+      - test/**/*.ts
+    rules:
+      "@typescript-eslint/ban-ts-ignore": off
