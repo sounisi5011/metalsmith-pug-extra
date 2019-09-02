@@ -12,10 +12,13 @@
     * [#82] - `1.13.0` -> `2.0.0`
 * `eslint`
     * [#29] - `5.16.0` -> `6.3.0`
+* `eslint-plugin-node`
+    * [#90] - `9.1.0` -> `9.2.0`
 
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
 [#29]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/29
 [#82]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/82
+[#90]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/90
 
 ## [1.1.2] (2019-08-02)
 
