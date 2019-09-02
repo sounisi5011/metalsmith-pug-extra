@@ -6,6 +6,8 @@
 
 #### devDependencies
 
+* `@types/debug`
+    * [#79] - `4.1.4` -> `4.1.5`
 * `@typescript-eslint/eslint-plugin`
     * [#82] - `1.13.0` -> `2.0.0`
 * `@typescript-eslint/parser`
@@ -21,6 +23,7 @@
 
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
 [#29]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/29
+[#79]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/79
 [#82]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/82
 [#90]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/90
 [#93]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/93
