@@ -22,6 +22,8 @@
     * [#87] - `4.0.0` -> `4.0.1`
 * `husky`
     * [#80] - `3.0.2` -> `3.0.5`
+* `package-version-git-tag`
+    * [#92] - `1.1.0` -> `1.1.1`
 * `sinon`
     * [#78] - `7.3.2` -> `7.4.2`
 
@@ -38,6 +40,7 @@
 [#86]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/86
 [#87]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/87
 [#90]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/90
+[#92]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/92
 [#93]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/93
 
 ## [1.1.2] (2019-08-02)
