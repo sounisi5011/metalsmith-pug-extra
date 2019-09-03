@@ -40,7 +40,7 @@ export function objIgnoreKeys<T>(obj: T, keyList: string[]): T {
 
 const destDirSet = new Set();
 export function getDestDir(t: ExecutionContext, namespace?: string): string {
-    const dirName = slug(t.title, slug.defaults.modes['rfc3986']);
+    const dirName = slug(t.title, slug.defaults.modes.rfc3986);
     const dirpath = namespace ? path.join(dirName, namespace) : dirName;
     if (destDirSet.has(dirpath)) {
         throw new Error(`Duplicate test dir: ${dirpath}`);
