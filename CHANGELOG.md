@@ -20,6 +20,8 @@
     * [#90] - `9.1.0` -> `9.2.0`
 * `eslint-plugin-standard`
     * [#87] - `4.0.0` -> `4.0.1`
+* `sinon`
+    * [#78] - `7.3.2` -> `7.4.2`
 
 ### Others
 
@@ -27,6 +29,7 @@
 
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
 [#29]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/29
+[#78]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/78
 [#79]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/79
 [#82]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/82
 [#86]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/86
