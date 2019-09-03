@@ -10,8 +10,10 @@
     * [#79] - `4.1.4` -> `4.1.5`
 * `@typescript-eslint/eslint-plugin`
     * [#82] - `1.13.0` -> `2.0.0`
+    * [#91] - `2.0.0` -> `2.1.0`
 * `@typescript-eslint/parser`
     * [#82] - `1.13.0` -> `2.0.0`
+    * [#91] - `2.0.0` -> `2.1.0`
 * `eslint`
     * [#29] - `5.16.0` -> `6.3.0`
 * `eslint-config-prettier`
@@ -43,6 +45,7 @@
 [#86]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/86
 [#87]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/87
 [#90]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/90
+[#91]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/91
 [#92]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/92
 [#93]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/93
 
