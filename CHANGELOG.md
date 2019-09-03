@@ -24,6 +24,8 @@
     * [#87] - `4.0.0` -> `4.0.1`
 * `husky`
     * [#80] - `3.0.2` -> `3.0.5`
+* `lint-staged`
+    * [#83] - `9.2.1` -> `9.2.5`
 * `package-version-git-tag`
     * [#92] - `1.1.0` -> `1.1.1`
 * `sinon`
@@ -39,6 +41,7 @@
 [#79]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/79
 [#80]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/80
 [#82]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/82
+[#83]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/83
 [#85]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/85
 [#86]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/86
 [#87]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/87
