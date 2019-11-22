@@ -3,7 +3,7 @@
   "packageRules": [
     {
       "packagePatterns": ["^@typescript-eslint/", "^eslint-"],
-      "groupName": "eslint packages"
+      "groupName": "dependencies: eslint packages"
     },
     {
       "packageNames": [
@@ -13,11 +13,11 @@
         "prettier-package-json",
         "sort-package-json"
       ],
-      "groupName": "code formatter packages"
+      "groupName": "dependencies: code formatter packages"
     },
     {
       "packageNames": ["ava", "cross-spawn", "sinon", "slug", "ts-node"],
-      "groupName": "test packages"
+      "groupName": "dependencies: test packages"
     },
     {
       "packageNames": [
@@ -29,7 +29,7 @@
         "npm-run-all",
         "package-version-git-tag"
       ],
-      "groupName": "npm-scripts packages"
+      "groupName": "dependencies: npm-scripts packages"
     }
   ]
 }
