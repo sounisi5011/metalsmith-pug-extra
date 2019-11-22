@@ -1,5 +1,35 @@
 {
-  "extends": [
-    "config:base"
+  "extends": ["config:base"],
+  "packageRules": [
+    {
+      "packagePatterns": ["^@typescript-eslint/", "^eslint-"],
+      "groupName": "eslint packages"
+    },
+    {
+      "packageNames": [
+        "husky",
+        "lint-staged",
+        "prettier",
+        "prettier-package-json",
+        "sort-package-json"
+      ],
+      "groupName": "code formatter packages"
+    },
+    {
+      "packageNames": ["ava", "cross-spawn", "sinon", "slug", "ts-node"],
+      "groupName": "test packages"
+    },
+    {
+      "packageNames": [
+        "@sounisi5011/check-peer-deps",
+        "can-npm-publish",
+        "del-cli",
+        "git-branch-is",
+        "is-git-status-clean",
+        "npm-run-all",
+        "package-version-git-tag"
+      ],
+      "groupName": "npm-scripts packages"
+    }
   ]
 }
