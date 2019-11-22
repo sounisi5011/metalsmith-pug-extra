@@ -42,6 +42,7 @@
 * [#93] - Exclude updates that cannot be tested with CI
 * [#113] - Renovate package groups
 * [#115] - Fix renovate package groups
+* [#116] - Fix renovate package groups
 
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
 [#29]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/29
@@ -61,6 +62,7 @@
 [#93]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/93
 [#113]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/113
 [#115]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/115
+[#116]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/116
 
 ## [1.1.2] (2019-08-02)
 

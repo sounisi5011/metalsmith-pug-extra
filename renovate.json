@@ -4,7 +4,8 @@
     {
       "packageNames": ["eslint"],
       "packagePatterns": ["^@typescript-eslint/", "^eslint-"],
-      "groupName": "dependencies: eslint packages"
+      "groupName": "dependencies: eslint packages",
+      "groupSlug": "eslint-packages"
     },
     {
       "packageNames": [
@@ -14,11 +15,13 @@
         "prettier-package-json",
         "sort-package-json"
       ],
-      "groupName": "dependencies: code formatter packages"
+      "groupName": "dependencies: code formatter packages",
+      "groupSlug": "code-formatter-packages"
     },
     {
       "packageNames": ["ava", "cross-spawn", "sinon", "slug", "ts-node"],
-      "groupName": "dependencies: test packages"
+      "groupName": "dependencies: test packages",
+      "groupSlug": "tester-packages"
     },
     {
       "packageNames": [
@@ -30,7 +33,8 @@
         "npm-run-all",
         "package-version-git-tag"
       ],
-      "groupName": "dependencies: npm-scripts packages"
+      "groupName": "dependencies: npm-scripts packages",
+      "groupSlug": "npm-scripts-packages"
     }
   ]
 }
