@@ -39,7 +39,15 @@
       ]
     },
     {
-      "packageNames": ["ava", "cross-spawn", "sinon", "slug", "ts-node"],
+      "packageNames": [
+        "ava",
+        "cross-spawn",
+        "sinon",
+        "@types/sinon",
+        "slug",
+        "@types/slug",
+        "ts-node"
+      ],
       "groupName": "dependencies: test packages",
       "groupSlug": "tester-packages",
       "updateTypes": [
