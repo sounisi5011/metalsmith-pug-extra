@@ -6,16 +6,7 @@
       "packagePatterns": ["^@typescript-eslint/", "^eslint-"],
       "groupName": "dependencies: eslint packages",
       "groupSlug": "eslint-packages",
-      "updateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "pin",
-        "digest",
-        "lockFileMaintenance",
-        "rollback",
-        "bump"
-      ]
+      "updateTypes": ["major", "minor", "patch"]
     },
     {
       "packageNames": [
@@ -27,16 +18,7 @@
       ],
       "groupName": "dependencies: code formatter packages",
       "groupSlug": "code-formatter-packages",
-      "updateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "pin",
-        "digest",
-        "lockFileMaintenance",
-        "rollback",
-        "bump"
-      ]
+      "updateTypes": ["major", "minor", "patch"]
     },
     {
       "packageNames": [
@@ -50,16 +32,7 @@
       ],
       "groupName": "dependencies: test packages",
       "groupSlug": "tester-packages",
-      "updateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "pin",
-        "digest",
-        "lockFileMaintenance",
-        "rollback",
-        "bump"
-      ]
+      "updateTypes": ["major", "minor", "patch"]
     },
     {
       "packageNames": [
@@ -73,16 +46,7 @@
       ],
       "groupName": "dependencies: npm-scripts packages",
       "groupSlug": "npm-scripts-packages",
-      "updateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "pin",
-        "digest",
-        "lockFileMaintenance",
-        "rollback",
-        "bump"
-      ]
+      "updateTypes": ["major", "minor", "patch"]
     }
   ]
 }
