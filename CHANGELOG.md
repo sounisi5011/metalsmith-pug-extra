@@ -46,7 +46,6 @@
 * [#118] - Fix renovate package groups
 * [#119] - Fix renovate package groups
 * [#120] - Fix renovate package groups
-* [#122] - Fix renovate package groups
 
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
 [#29]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/29
@@ -70,7 +69,6 @@
 [#118]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/118
 [#119]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/119
 [#120]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/120
-[#122]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/122
 
 ## [1.1.2] (2019-08-02)
 
