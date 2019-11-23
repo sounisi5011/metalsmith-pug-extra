@@ -16,6 +16,8 @@
     * [#91] - `2.0.0` -> `2.1.0`
 * `ava`
     * [#84] - `2.2.0` -> `2.3.0`
+* `del-cli`
+    * [#133] - `2.0.0` -> `3.0.0`
 * `eslint`
     * [#29] - `5.16.0` -> `6.3.0`
 * `eslint-config-prettier`
@@ -34,6 +36,7 @@
     * [#83] - `9.2.1` -> `9.2.5`
 * `package-version-git-tag`
     * [#92] - `1.1.0` -> `1.1.1`
+    * [#133] - `1.1.1` -> `2.0.2`
 * `sinon`
     * [#78] - `7.3.2` -> `7.4.2`
 
@@ -68,6 +71,7 @@
 [#116]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/116
 [#119]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/119
 [#120]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/120
+[#133]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/133
 [#136]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/136
 
 ## [1.1.2] (2019-08-02)
