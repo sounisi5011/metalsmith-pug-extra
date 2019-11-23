@@ -32,8 +32,11 @@
     * [#86] - `12.0.0` -> `14.1.0`
 * `eslint-plugin-node`
     * [#90] - `9.1.0` -> `9.2.0`
+    * [#132] - `9.2.0` -> `10.0.0`
 * `eslint-plugin-prettier`
     * [#128] - `3.1.0` -> `3.1.1`
+* `eslint-plugin-simple-import-sort`
+    * [#132] - `4.0.0` -> `5.0.0`
 * `eslint-plugin-standard`
     * [#87] - `4.0.0` -> `4.0.1`
 * `git-branch-is`
@@ -89,6 +92,7 @@
 [#127]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/127
 [#128]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/128
 [#129]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/129
+[#132]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/132
 [#133]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/133
 [#136]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/136
 
