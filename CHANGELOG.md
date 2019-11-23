@@ -43,7 +43,6 @@
 * [#113] - Renovate package groups
 * [#115] - Fix renovate package groups
 * [#116] - Fix renovate package groups
-* [#118] - Fix renovate package groups
 * [#119] - Fix renovate package groups
 * [#120] - Fix renovate package groups
 
@@ -66,7 +65,6 @@
 [#113]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/113
 [#115]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/115
 [#116]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/116
-[#118]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/118
 [#119]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/119
 [#120]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/120
 

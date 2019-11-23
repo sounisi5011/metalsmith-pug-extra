@@ -5,8 +5,7 @@
       "packageNames": ["eslint"],
       "packagePatterns": ["^@typescript-eslint/", "^eslint-"],
       "groupName": "dependencies: eslint packages",
-      "groupSlug": "eslint-packages",
-      "updateTypes": ["major", "minor", "patch"]
+      "groupSlug": "eslint-packages"
     },
     {
       "packageNames": [
@@ -17,8 +16,7 @@
         "sort-package-json"
       ],
       "groupName": "dependencies: code formatter packages",
-      "groupSlug": "code-formatter-packages",
-      "updateTypes": ["major", "minor", "patch"]
+      "groupSlug": "code-formatter-packages"
     },
     {
       "packageNames": [
@@ -31,8 +29,7 @@
         "ts-node"
       ],
       "groupName": "dependencies: test packages",
-      "groupSlug": "tester-packages",
-      "updateTypes": ["major", "minor", "patch"]
+      "groupSlug": "tester-packages"
     },
     {
       "packageNames": [
@@ -45,8 +42,7 @@
         "package-version-git-tag"
       ],
       "groupName": "dependencies: npm-scripts packages",
-      "groupSlug": "npm-scripts-packages",
-      "updateTypes": ["major", "minor", "patch"]
+      "groupSlug": "npm-scripts-packages"
     }
   ]
 }
