@@ -4,8 +4,7 @@
 [![GitHub License](https://img.shields.io/github/license/sounisi5011/metalsmith-pug-extra.svg)][github-license]
 ![](https://img.shields.io/node/v/metalsmith-pug-extra.svg)
 [![Dependencies Status](https://david-dm.org/sounisi5011/metalsmith-pug-extra/status.svg)](https://david-dm.org/sounisi5011/metalsmith-pug-extra)
-[![Linux Build Status](https://img.shields.io/travis/com/sounisi5011/metalsmith-pug-extra/master.svg?label=Linux%20build)](https://travis-ci.com/sounisi5011/metalsmith-pug-extra)
-[![Windows Build Status](https://img.shields.io/appveyor/ci/sounisi5011/metalsmith-pug-extra/master.svg?label=Windows%20build&logo=appveyor)](https://ci.appveyor.com/project/sounisi5011/metalsmith-pug-extra/branch/master)
+[![Build Status](https://dev.azure.com/sounisi5011/npm%20projects/_apis/build/status/sounisi5011.metalsmith-pug-extra?branchName=master)](https://dev.azure.com/sounisi5011/npm%20projects/_build/latest?definitionId=4&branchName=master)
 [![Maintainability Status](https://api.codeclimate.com/v1/badges/f8efa3c8c8bc40f9da37/maintainability)](https://codeclimate.com/github/sounisi5011/metalsmith-pug-extra/maintainability)
 
 [npm]: https://www.npmjs.com/package/metalsmith-pug-extra
