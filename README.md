@@ -1,6 +1,6 @@
 # metalsmith-pug-extra
 
-[![npm package](https://img.shields.io/npm/v/metalsmith-pug-extra.svg)][npm]
+[![Go to the latest release page on npm](https://img.shields.io/npm/v/metalsmith-pug-extra.svg)][npm]
 [![GitHub License](https://img.shields.io/github/license/sounisi5011/metalsmith-pug-extra.svg)][github-license]
 ![](https://img.shields.io/node/v/metalsmith-pug-extra.svg)
 [![Dependencies Status](https://david-dm.org/sounisi5011/metalsmith-pug-extra/status.svg)](https://david-dm.org/sounisi5011/metalsmith-pug-extra)
@@ -258,8 +258,8 @@ It can be used to specify an options based on the default value.
 ```js
 Metalsmith(__dirname)
   .use(convert({
-    pattern: [].concat(convert.defaultOptions.pattern, '!_*/**', '!**/_*', '!**/_*/**')
-    // equals to: [ '**/*.pug', '!_*/**', '!**/_*', '!**/_*/**' ]
+    pattern: [].concat(convert.defaultOptions.pattern, '!**/_*', '!**/_*/**')
+    // equals to: [ '**/*.pug', '!**/_*', '!**/_*/**' ]
   }))
 ```
 
