@@ -65,6 +65,8 @@
     * [#127] - `1.22.1` -> `1.23.1`
 * `ts-node`
     * [#130] - `8.3.0` -> `8.5.2`
+* `typescript`
+    * [#100] - `3.5.3` -> `3.7.2`
 
 ### Others
 
@@ -92,6 +94,7 @@
 [#91]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/91
 [#92]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/92
 [#93]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/93
+[#100]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/100
 [#113]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/113
 [#115]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/115
 [#116]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/116
