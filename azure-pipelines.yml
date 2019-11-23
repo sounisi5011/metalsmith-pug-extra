@@ -6,16 +6,18 @@
 # no PR builds
 pr: none
 
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+  - stage: Test
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+    jobs:
+      - template: azure-pipelines-templates/jobs/lint.yml
 
-- script: |
-    npm install
-    npm test
-  displayName: 'npm install and test'
+      - template: azure-pipelines-templates/jobs/unit-test.yml
+        parameters:
+          name: Linux
+          vmImage: ubuntu-latest
+
+      - template: azure-pipelines-templates/jobs/unit-test.yml
+        parameters:
+          name: Windows
+          vmImage: windows-latest
