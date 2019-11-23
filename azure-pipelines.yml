@@ -6,18 +6,15 @@
 # no PR builds
 pr: none
 
-stages:
-  - stage:
+jobs:
+  - template: azure-pipelines-templates/jobs/lint.yml
 
-    jobs:
-      - template: azure-pipelines-templates/jobs/lint.yml
+  - template: azure-pipelines-templates/jobs/unit-test.yml
+    parameters:
+      name: Linux
+      vmImage: ubuntu-latest
 
-      - template: azure-pipelines-templates/jobs/unit-test.yml
-        parameters:
-          name: Linux
-          vmImage: ubuntu-latest
-
-      - template: azure-pipelines-templates/jobs/unit-test.yml
-        parameters:
-          name: Windows
-          vmImage: windows-latest
+  - template: azure-pipelines-templates/jobs/unit-test.yml
+    parameters:
+      name: Windows
+      vmImage: windows-latest
