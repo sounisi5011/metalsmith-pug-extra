@@ -61,7 +61,7 @@
     }
   },
   "lint-staged": {
-    "!(package).json|*.{yaml,yml}": [
+    "!(package).json|*.{js,yaml,yml}": [
       "prettier --write",
       "git add"
     ],
