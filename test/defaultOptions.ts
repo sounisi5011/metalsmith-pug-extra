@@ -5,7 +5,11 @@ import { compile, convert, render } from '../src';
 const methodMap = new Map<
     string,
     typeof convert | typeof compile | typeof render
->([['convert()', convert], ['compile()', compile], ['render()', render]]);
+>([
+    ['convert()', convert],
+    ['compile()', compile],
+    ['render()', render],
+]);
 
 const compileMethodMap = new Map<string, typeof convert | typeof compile>([
     ['convert()', convert],
