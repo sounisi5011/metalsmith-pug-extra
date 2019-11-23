@@ -16,6 +16,8 @@
     * [#91] - `2.0.0` -> `2.1.0`
 * `ava`
     * [#84] - `2.2.0` -> `2.3.0`
+* `can-npm-publish`
+    * [#129] - `1.3.1` -> `1.3.2`
 * `del-cli`
     * [#133] - `2.0.0` -> `3.0.0`
 * `eslint`
@@ -30,6 +32,7 @@
     * [#87] - `4.0.0` -> `4.0.1`
 * `git-branch-is`
     * [#81] - `2.1.0` -> `3.0.0`
+    * [#129] - `3.0.0` -> `3.1.0`
 * `husky`
     * [#80] - `3.0.2` -> `3.0.5`
 * `lint-staged`
@@ -71,6 +74,7 @@
 [#116]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/116
 [#119]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/119
 [#120]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/120
+[#129]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/129
 [#133]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/133
 [#136]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/136
 
