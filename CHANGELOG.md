@@ -8,6 +8,8 @@
 
 * `@types/debug`
     * [#79] - `4.1.4` -> `4.1.5`
+* `@types/sinon`
+    * [#130] - `7.0.13` -> `7.5.1`
 * `@typescript-eslint/eslint-plugin`
     * [#82] - `1.13.0` -> `2.0.0`
     * [#91] - `2.0.0` -> `2.1.0`
@@ -18,6 +20,7 @@
     * [#128] - `2.1.0` -> `2.8.0`
 * `ava`
     * [#84] - `2.2.0` -> `2.3.0`
+    * [#130] - `2.3.0` -> `2.4.0`
 * `can-npm-publish`
     * [#129] - `1.3.1` -> `1.3.2`
 * `del-cli`
@@ -55,8 +58,11 @@
     * [#127] - `1.18.2` -> `1.19.1`
 * `sinon`
     * [#78] - `7.3.2` -> `7.4.2`
+    * [#130] - `7.4.2` -> `7.5.0`
 * `sort-package-json`
     * [#127] - `1.22.1` -> `1.23.1`
+* `ts-node`
+    * [#130] - `8.3.0` -> `8.5.2`
 
 ### Others
 
@@ -92,6 +98,7 @@
 [#127]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/127
 [#128]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/128
 [#129]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/129
+[#130]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/130
 [#132]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/132
 [#133]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/133
 [#136]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/136
