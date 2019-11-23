@@ -11,9 +11,11 @@
 * `@typescript-eslint/eslint-plugin`
     * [#82] - `1.13.0` -> `2.0.0`
     * [#91] - `2.0.0` -> `2.1.0`
+    * [#128] - `2.1.0` -> `2.8.0`
 * `@typescript-eslint/parser`
     * [#82] - `1.13.0` -> `2.0.0`
     * [#91] - `2.0.0` -> `2.1.0`
+    * [#128] - `2.1.0` -> `2.8.0`
 * `ava`
     * [#84] - `2.2.0` -> `2.3.0`
 * `can-npm-publish`
@@ -22,12 +24,16 @@
     * [#133] - `2.0.0` -> `3.0.0`
 * `eslint`
     * [#29] - `5.16.0` -> `6.3.0`
+    * [#128] - `6.3.0` -> `6.7.0`
 * `eslint-config-prettier`
     * [#85] - `6.0.0` -> `6.1.0`
+    * [#128] - `6.1.0` -> `6.7.0`
 * `eslint-config-standard`
     * [#86] - `12.0.0` -> `14.1.0`
 * `eslint-plugin-node`
     * [#90] - `9.1.0` -> `9.2.0`
+* `eslint-plugin-prettier`
+    * [#128] - `3.1.0` -> `3.1.1`
 * `eslint-plugin-standard`
     * [#87] - `4.0.0` -> `4.0.1`
 * `git-branch-is`
@@ -81,6 +87,7 @@
 [#119]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/119
 [#120]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/120
 [#127]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/127
+[#128]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/128
 [#129]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/129
 [#133]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/133
 [#136]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/136
