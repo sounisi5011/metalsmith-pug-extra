@@ -30,7 +30,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "clean": "del ./dist/*",
+    "clean": "del ./dist/ ./test/fixtures/build/",
     "fmt-pkg": "run-s fmt-pkg:prettier fmt-pkg:sort",
     "fmt-pkg:prettier": "prettier-package-json --write ./package.json",
     "fmt-pkg:sort": "sort-package-json ./package.json",
@@ -134,9 +134,8 @@
       "./test/**/*.ts"
     ],
     "helpers": [
-      "**/helpers/**/*"
+      "**/{fixtures,helpers}/**/*"
     ],
-    "snapshotDir": "./test/.snapshots/ava/",
     "compileEnhancements": false,
     "require": [
       "ts-node/register/transpile-only"
