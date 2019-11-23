@@ -45,6 +45,7 @@
 * [#116] - Fix renovate package groups
 * [#119] - Fix renovate package groups
 * [#120] - Fix renovate package groups
+* [#136] - Migrate from Travis CI to Azure Pipelines
 
 [Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
 [#29]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/29
@@ -67,6 +68,7 @@
 [#116]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/116
 [#119]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/119
 [#120]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/120
+[#136]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/136
 
 ## [1.1.2] (2019-08-02)
 
