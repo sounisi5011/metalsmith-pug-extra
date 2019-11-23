@@ -7,7 +7,7 @@
 pr: none
 
 stages:
-  - stage: Test
+  - stage:
 
     jobs:
       - template: azure-pipelines-templates/jobs/lint.yml
