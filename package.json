@@ -134,9 +134,8 @@
       "./test/**/*.ts"
     ],
     "helpers": [
-      "**/helpers/**/*"
+      "**/{fixtures,helpers}/**/*"
     ],
-    "snapshotDir": "./test/.snapshots/ava/",
     "compileEnhancements": false,
     "require": [
       "ts-node/register/transpile-only"
