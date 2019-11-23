@@ -40,7 +40,12 @@ function spawnAsync(...args) {
       if (code === 0) {
         resolve(data);
       } else {
-        reject(Object.assign(new Error(`command failed with exit code ${code}`), data));
+        reject(
+          Object.assign(
+            new Error(`command failed with exit code ${code}`),
+            data,
+          ),
+        );
       }
     });
 
@@ -57,9 +62,8 @@ async function main(distDir, buildTask) {
     await spawnAsync('npm', ['run', buildTask], { stdio: 'inherit' });
   }
 
-  const tsFilepathList = (
-    (await recursive(distDirpath))
-      .filter(path => /\.ts$/.test(path))
+  const tsFilepathList = (await recursive(distDirpath)).filter(path =>
+    /\.ts$/.test(path),
   );
 
   if (tsFilepathList.length < 1) {
@@ -67,21 +71,22 @@ async function main(distDir, buildTask) {
   }
 
   const importSet = new Set(
-    (await Promise.all(
-      tsFilepathList
-        .map(filepath => readFileAsync(filepath, 'utf8'))
-        .map(async (code) => parser.parse(await code))
-        .map(async (ast) => getImportNames(await ast))
-    ))
-      .reduce((a, b) => a.concat(b))
+    (
+      await Promise.all(
+        tsFilepathList
+          .map(filepath => readFileAsync(filepath, 'utf8'))
+          .map(async code => parser.parse(await code))
+          .map(async ast => getImportNames(await ast)),
+      )
+    ).reduce((a, b) => a.concat(b)),
   );
 
   const typePkgNames = {
-    deps: (
-      Object.keys(PKG.dependencies)
-        .filter(pkgName => /^@types\//.test(pkgName))
-        .filter(typePkgName => !importSet.has(typePkgName.replace(/^@types\//, '')))
-    ),
+    deps: Object.keys(PKG.dependencies)
+      .filter(pkgName => /^@types\//.test(pkgName))
+      .filter(
+        typePkgName => !importSet.has(typePkgName.replace(/^@types\//, '')),
+      ),
     devDeps: [],
   };
   importSet.forEach(name => {
@@ -92,13 +97,21 @@ async function main(distDir, buildTask) {
   });
 
   if (0 < typePkgNames.deps.length) {
-    const pkgNamesStr = typePkgNames.deps.map(pkgName => `* ${pkgName}`).join('\n');
-    console.log(`Some packages do not need to be listed in the "dependencies" field:\n${pkgNamesStr}`);
+    const pkgNamesStr = typePkgNames.deps
+      .map(pkgName => `* ${pkgName}`)
+      .join('\n');
+    console.log(
+      `Some packages do not need to be listed in the "dependencies" field:\n${pkgNamesStr}`,
+    );
   }
 
   if (0 < typePkgNames.devDeps.length) {
-    const pkgNamesStr = typePkgNames.devDeps.map(pkgName => `* ${pkgName}`).join('\n');
-    throw new Error(`Some packages need to be listed in the "dependencies" field:\n${pkgNamesStr}`);
+    const pkgNamesStr = typePkgNames.devDeps
+      .map(pkgName => `* ${pkgName}`)
+      .join('\n');
+    throw new Error(
+      `Some packages need to be listed in the "dependencies" field:\n${pkgNamesStr}`,
+    );
   }
 }
 
@@ -111,7 +124,9 @@ function getImportNames(ast) {
         if (ast.source.type === 'Literal') {
           return [ast.source.value];
         }
-        throw new TypeError(`AST type "${ast.type}" / Source AST type "${ast.source.type}" not supported`);
+        throw new TypeError(
+          `AST type "${ast.type}" / Source AST type "${ast.source.type}" not supported`,
+        );
       }
 
       if (ast.type === 'TSImportType') {
@@ -119,9 +134,13 @@ function getImportNames(ast) {
           if (ast.parameter.literal.type === 'Literal') {
             return [ast.parameter.literal.value];
           }
-          throw new TypeError(`AST type "${ast.type}" / Parameter AST type "${ast.parameter.type}" / Literal AST type "${ast.parameter.literal.type}" not supported`);
+          throw new TypeError(
+            `AST type "${ast.type}" / Parameter AST type "${ast.parameter.type}" / Literal AST type "${ast.parameter.literal.type}" not supported`,
+          );
         }
-        throw new TypeError(`AST type "${ast.type}" / Parameter AST type "${ast.parameter.type}" not supported`);
+        throw new TypeError(
+          `AST type "${ast.type}" / Parameter AST type "${ast.parameter.type}" not supported`,
+        );
       }
 
       throw new TypeError(`AST type "${ast.type}" not supported`);
