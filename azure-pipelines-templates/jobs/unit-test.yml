@@ -33,7 +33,7 @@ jobs:
         parameters:
           nodeVersion: $(node_version)
 
-      - script: npm run test:ava
+      - script: npm run test:unit-test
         displayName: Run unit test
         timeoutInMinutes: 5
 
