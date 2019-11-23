@@ -23,6 +23,8 @@
     * [#130] - `2.3.0` -> `2.4.0`
 * `can-npm-publish`
     * [#129] - `1.3.1` -> `1.3.2`
+* `cross-spawn`
+    * [#134] - `6.0.5` -> `7.0.1`
 * `del-cli`
     * [#133] - `2.0.0` -> `3.0.0`
 * `eslint`
@@ -101,6 +103,7 @@
 [#130]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/130
 [#132]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/132
 [#133]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/133
+[#134]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/134
 [#136]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/136
 
 ## [1.1.2] (2019-08-02)
