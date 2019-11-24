@@ -1,8 +1,9 @@
 # metalsmith-pug-extra
 
-[![npm package](https://img.shields.io/npm/v/metalsmith-pug-extra.svg)][npm]
+[![Go to the latest release page on npm](https://img.shields.io/npm/v/metalsmith-pug-extra.svg)][npm]
 [![GitHub License](https://img.shields.io/github/license/sounisi5011/metalsmith-pug-extra.svg)][github-license]
 ![](https://img.shields.io/node/v/metalsmith-pug-extra.svg)
+[![bundle size](https://img.shields.io/bundlephobia/min/metalsmith-pug-extra/1.1.3)](https://bundlephobia.com/result?p=metalsmith-pug-extra@1.1.3)
 [![Dependencies Status](https://david-dm.org/sounisi5011/metalsmith-pug-extra/status.svg)](https://david-dm.org/sounisi5011/metalsmith-pug-extra)
 [![Build Status](https://dev.azure.com/sounisi5011/npm%20projects/_apis/build/status/sounisi5011.metalsmith-pug-extra?branchName=master)](https://dev.azure.com/sounisi5011/npm%20projects/_build/latest?definitionId=4&branchName=master)
 [![Maintainability Status](https://api.codeclimate.com/v1/badges/f8efa3c8c8bc40f9da37/maintainability)](https://codeclimate.com/github/sounisi5011/metalsmith-pug-extra/maintainability)
@@ -258,8 +259,8 @@ It can be used to specify an options based on the default value.
 ```js
 Metalsmith(__dirname)
   .use(convert({
-    pattern: [].concat(convert.defaultOptions.pattern, '!_*/**', '!**/_*', '!**/_*/**')
-    // equals to: [ '**/*.pug', '!_*/**', '!**/_*', '!**/_*/**' ]
+    pattern: [].concat(convert.defaultOptions.pattern, '!**/_*', '!**/_*/**')
+    // equals to: [ '**/*.pug', '!**/_*', '!**/_*/**' ]
   }))
 ```
 
