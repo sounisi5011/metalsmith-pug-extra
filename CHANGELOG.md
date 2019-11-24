@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.3...master
+
+## [1.1.3] (2019-11-24)
+
 ### Updated Dependencies
 
 #### devDependencies
@@ -70,17 +74,15 @@
 
 ### Others
 
-* [#93] - Exclude updates that cannot be tested with CI
 * [#113] - Renovate package groups
 * [#115] - Fix renovate package groups
 * [#116] - Fix renovate package groups
 * [#119] - Fix renovate package groups
-* [#120] - Fix renovate package groups
 * [#136] - Migrate from Travis CI to Azure Pipelines
 * [#137] - Format `.js` codes
 * [#138] - Settings refactoring
 
-[Unreleased]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...HEAD
+[1.1.3]: https://github.com/sounisi5011/metalsmith-pug-extra/compare/v1.1.2...v1.1.3
 [#29]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/29
 [#78]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/78
 [#79]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/79
@@ -95,13 +97,11 @@
 [#90]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/90
 [#91]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/91
 [#92]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/92
-[#93]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/93
 [#100]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/100
 [#113]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/113
 [#115]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/115
 [#116]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/116
 [#119]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/119
-[#120]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/120
 [#127]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/127
 [#128]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/128
 [#129]: https://github.com/sounisi5011/metalsmith-pug-extra/pull/129
